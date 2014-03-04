@@ -20,8 +20,7 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="1.2f",dependencies="required-after:FML")
-//@NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={"MTH|Tool"}, packetHandler=PacketHandler.class)
+@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="1.2f",dependencies="required-after:FML", useMetadata = true)
 public class MultiToolHolders
 {
 	public static  Item ItemMultiToolHolder3;
@@ -94,7 +93,7 @@ public class MultiToolHolders
 	@SubscribeEvent
 	public void KeyPressEvent(KeyInputEvent event)
 	{
-		if (ClientProxy.OpenKey.isPressed()) {
+		while (ClientProxy.OpenKey.isPressed()) {
 			ItemMultiToolHolder.OpenKeydown = true;
 		}
 		if (ClientProxy.NextKey.isPressed()) {

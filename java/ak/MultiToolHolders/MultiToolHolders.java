@@ -1,10 +1,13 @@
 package ak.MultiToolHolders;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.config.Configuration;
@@ -128,5 +131,23 @@ public class MultiToolHolders
 	{
 
 	}
+    public static void addEnchantmentToItem(ItemStack item,
+                                            Enchantment enchantment, int Lv) {
+        if (item == null || enchantment == null || Lv < 0) {
+            return;
+        }
+        if (item.stackTagCompound == null) {
+            item.setTagCompound(new NBTTagCompound());
+        }
 
+        if (!item.stackTagCompound.hasKey("ench", 9)) {
+            item.stackTagCompound.setTag("ench", new NBTTagList());
+        }
+
+        NBTTagList var3 =item.stackTagCompound.getTagList("ench", 10);
+        NBTTagCompound var4 = new NBTTagCompound();
+        var4.setShort("id", (short) enchantment.effectId);
+        var4.setShort("lvl", (short) (Lv));
+        var3.appendTag(var4);
+    }
 }

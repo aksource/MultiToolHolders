@@ -9,6 +9,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -50,13 +51,11 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 {
 	public int SlotNum;
 	public InventoryToolHolder tools = null;
-	private Random rand = new Random();
 	private int Slotsize;
 	public static boolean OpenKeydown = false;
 	public boolean openKeyToggle = false;
 	public static boolean NextKeydown = false;
 	public static boolean PrevKeydown = false;
-	private Minecraft mc;
 
 	public ItemMultiToolHolder(int slot)
 	{
@@ -88,10 +87,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 	@SideOnly(Side.CLIENT)
 	public boolean isFull3D()
 	{
-		if (this.tools != null && this.tools.getStackInSlot(SlotNum) != null)
-			return this.tools.getStackInSlot(SlotNum).getItem().isFull3D();
-		else
-			return false;
+        return this.tools != null && this.tools.getStackInSlot(SlotNum) != null && this.tools.getStackInSlot(SlotNum).getItem().isFull3D();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -133,7 +129,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 	@SideOnly(Side.CLIENT)
 	public void renderToolHolder(EntityLivingBase entity, ItemStack stack)
 	{
-		mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager texturemanager = mc.getTextureManager();
 		IIcon icon = entity.getItemIcon(stack, 0);
 		if (icon == null) {
@@ -157,8 +153,8 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 		GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
 		GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
-		RenderManager.instance.itemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getIconWidth(),
-				icon.getIconHeight(), 0.0625F);
+		ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getIconWidth(),
+                icon.getIconHeight(), 0.0625F);
 
 		if (stack != null && stack.hasEffect(0)/* && par3 == 0*/) {
 			GL11.glDepthFunc(GL11.GL_EQUAL);
@@ -175,14 +171,14 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 			float f9 = (float) (Minecraft.getSystemTime() % 3000L) / 3000.0F * 8.0F;
 			GL11.glTranslatef(f9, 0.0F, 0.0F);
 			GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
-			RenderManager.instance.itemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
+            ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
 			GL11.glPopMatrix();
 			GL11.glPushMatrix();
 			GL11.glScalef(f8, f8, f8);
 			f9 = (float) (Minecraft.getSystemTime() % 4873L) / 4873.0F * 8.0F;
 			GL11.glTranslatef(-f9, 0.0F, 0.0F);
 			GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
-			RenderManager.instance.itemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
+            ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
 			GL11.glPopMatrix();
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glDisable(GL11.GL_BLEND);
@@ -214,14 +210,14 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 			}
 			if (entityPlayer.openContainer == null || !(entityPlayer.openContainer instanceof ContainerToolHolder)) {
 				if (par2World.isRemote) {
-					this.openKeyToggle = this.OpenKeydown;
-					if (this.NextKeydown) {
-						this.NextKeydown = false;
+					this.openKeyToggle = OpenKeydown;
+					if (NextKeydown) {
+						NextKeydown = false;
 						this.SlotNum++;
 						if (this.SlotNum == this.Slotsize)
 							this.SlotNum = 0;
-					} else if (this.PrevKeydown) {
-						this.PrevKeydown = false;
+					} else if (PrevKeydown) {
+						PrevKeydown = false;
 						this.SlotNum--;
 						if (this.SlotNum == -1)
 							this.SlotNum = this.Slotsize - 1;
@@ -230,7 +226,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 							.sendToServer(new KeyHandlingPacket(this.openKeyToggle, this.SlotNum));
 				}
 				if (this.openKeyToggle) {
-					this.OpenKeydown = false;
+					OpenKeydown = false;
 					int GuiID;
 					if (this.Slotsize == 3)
 						GuiID = MultiToolHolders.guiIdHolder3;
@@ -253,7 +249,6 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 		String itemName = "Holder" + this.Slotsize;
 		int itemDamage = var1.getItemDamage();
 		String var3 = String.format("%s_%s", itemName, itemDamage);
-		;
 		ToolHolderData var4 = (ToolHolderData) var2.loadItemData(ToolHolderData.class, var3);
 
 		if (var4 == null)
@@ -379,14 +374,11 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
 			EntityLivingBase par3EntityLivingBase)
 	{
-		if (this.tools != null && this.tools.getStackInSlot(SlotNum) != null)
-			return this.tools
-					.getStackInSlot(SlotNum)
-					.getItem()
-					.itemInteractionForEntity(this.tools.getStackInSlot(SlotNum), par2EntityPlayer,
-							par3EntityLivingBase);
-		else
-			return false;
+        return this.tools != null && this.tools.getStackInSlot(SlotNum) != null && this.tools
+                .getStackInSlot(SlotNum)
+                .getItem()
+                .itemInteractionForEntity(this.tools.getStackInSlot(SlotNum), par2EntityPlayer,
+                        par3EntityLivingBase);
 	}
 
 	@Override
@@ -528,12 +520,10 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 						}
 					}
 
-					ItemStack var9 = stack;
+					if (stack != null && par1Entity instanceof EntityLivingBase) {
+						stack.hitEntity((EntityLivingBase) par1Entity, player);
 
-					if (var9 != null && par1Entity instanceof EntityLivingBase) {
-						var9.hitEntity((EntityLivingBase) par1Entity, player);
-
-						if (var9.stackSize <= 0) {
+						if (stack.stackSize <= 0) {
 							this.destroyTheItem(player, stack);
 						}
 					}
@@ -558,29 +548,26 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 	private double getItemStrength(ItemStack item)
 	{
 		Multimap multimap = item.getAttributeModifiers();
-		double d0;
 		double d1 = 0;
 		if (!multimap.isEmpty()) {
-			Iterator iterator = multimap.entries().iterator();
+            for (Object object : multimap.entries()) {
+                Entry entry = (Entry) object;
+                AttributeModifier attributemodifier = (AttributeModifier) entry.getValue();
+                d1 = attributemodifier.getAmount();
 
-			while (iterator.hasNext()) {
-				Entry entry = (Entry) iterator.next();
-				AttributeModifier attributemodifier = (AttributeModifier) entry.getValue();
-				d0 = attributemodifier.getAmount();
-
-				if (attributemodifier.getOperation() != 1 && attributemodifier.getOperation() != 2) {
-					d1 = attributemodifier.getAmount();
-				} else {
-					d1 = attributemodifier.getAmount() * 100.0D;
-				}
-			}
+                if (attributemodifier.getOperation() != 1 && attributemodifier.getOperation() != 2) {
+                    d1 = attributemodifier.getAmount();
+                } else {
+                    d1 = attributemodifier.getAmount() * 100.0D;
+                }
+            }
 		}
 		return d1;
 	}
 
 	private void destroyTheItem(EntityPlayer player, ItemStack orig)
 	{
-		this.tools.setInventorySlotContents(this.SlotNum, (ItemStack) null);
+		this.tools.setInventorySlotContents(this.SlotNum, null);
 		MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, orig));
 	}
 
@@ -592,8 +579,8 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 
 			if (nbttaglist != null) {
 				for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-					short short1 = ((NBTTagCompound) nbttaglist.getCompoundTagAt(i)).getShort("id");
-					short short2 = ((NBTTagCompound) nbttaglist.getCompoundTagAt(i)).getShort("lvl");
+					short short1 = nbttaglist.getCompoundTagAt(i).getShort("id");
+					short short2 = nbttaglist.getCompoundTagAt(i).getShort("lvl");
 
 					if (Enchantment.enchantmentsList[short1] != null) {
 						calc += Enchantment.enchantmentsList[short1].calcModifierLiving(short2, enemy);
@@ -601,7 +588,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 				}
 			}
 		}
-		return calc > 0 ? 1 + rand.nextInt(calc) : 0;
+		return calc > 0 ? 1 + attacker.worldObj.rand.nextInt(calc) : 0;
 	}
 
 	private void setEnchantments(ItemStack ToEnchant, ItemStack Enchanted)
@@ -611,10 +598,11 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 		NBTTagList list = Enchanted.getEnchantmentTagList();
 		if (list != null) {
 			for (int i = 0; i < list.tagCount(); ++i) {
-				if (((NBTTagCompound) list.getCompoundTagAt(i)).getShort("lvl") > 0) {
-					EnchNum = ((NBTTagCompound) list.getCompoundTagAt(i)).getShort("id");
-					EnchLv = ((NBTTagCompound) list.getCompoundTagAt(i)).getShort("lvl");
-					ToEnchant.addEnchantment(Enchantment.enchantmentsList[EnchNum], EnchLv);
+				if (list.getCompoundTagAt(i).getShort("lvl") > 0) {
+					EnchNum = list.getCompoundTagAt(i).getShort("id");
+					EnchLv = list.getCompoundTagAt(i).getShort("lvl");
+                    MultiToolHolders.addEnchantmentToItem(ToEnchant, Enchantment.enchantmentsList[EnchNum], EnchLv);
+//					ToEnchant.addEnchantment(Enchantment.enchantmentsList[EnchNum], EnchLv);
 				}
 			}
 		}

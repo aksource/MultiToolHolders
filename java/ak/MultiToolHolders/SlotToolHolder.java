@@ -2,7 +2,6 @@ package ak.MultiToolHolders;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 public class SlotToolHolder extends Slot

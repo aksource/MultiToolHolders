@@ -23,7 +23,7 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="1.2f",dependencies="required-after:FML", useMetadata = true)
+@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="1.2g",dependencies="required-after:FML", useMetadata = true)
 public class MultiToolHolders
 {
 	public static  Item ItemMultiToolHolder3;

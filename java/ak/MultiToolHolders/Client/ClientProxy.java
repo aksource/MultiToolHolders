@@ -14,9 +14,9 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy
 {
-	public static KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "MTH:KeyOpen");
-	public static KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "MTH:KeyNext");
-	public static KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "MTH:KeyPrevious");
+	public static KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "MultiToolHolders");
+	public static KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "MultiToolHolders");
+	public static KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "MultiToolHolders");
 	@Override
 	public void registerClientInformation()
 	{

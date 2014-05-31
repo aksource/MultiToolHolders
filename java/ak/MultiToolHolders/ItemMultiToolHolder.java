@@ -1,19 +1,17 @@
 package ak.MultiToolHolders;
 
-import static net.minecraftforge.client.IItemRenderer.ItemRenderType.*;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
-
+import ak.MultiToolHolders.inventory.ContainerToolHolder;
+import ak.MultiToolHolders.inventory.InventoryToolHolder;
+import ak.MultiToolHolders.inventory.ToolHolderData;
+import com.google.common.collect.Multimap;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -23,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
@@ -38,36 +37,42 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.google.common.collect.Multimap;
+import java.util.List;
+import java.util.Map.Entry;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
 
-public class ItemMultiToolHolder extends Item implements IItemRenderer
+public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEvent
 {
 	public int SlotNum;
 	public InventoryToolHolder tools = null;
-	private int Slotsize;
-	public static boolean OpenKeydown = false;
+	public int Slotsize;
+    private int guiId;
+//	public static boolean OpenKeydown = false;
 	public boolean openKeyToggle = false;
-	public static boolean NextKeydown = false;
-	public static boolean PrevKeydown = false;
+//	public static boolean NextKeydown = false;
+//	public static boolean PrevKeydown = false;
+    public static final byte OPENKEY = 0;
+    public static final byte NEXTKEY = 1;
+    public static final byte PREVKEY = 2;
 
-	public ItemMultiToolHolder(int slot)
+	public ItemMultiToolHolder(int slot, int guiId)
 	{
 		super();
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
+        this.setMaxDamage(0);
+        this.setCreativeTab(CreativeTabs.tabTools);
 		this.Slotsize = slot;
-		this.SlotNum = 0;
+        this.guiId = guiId;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
 		String ToolName;
 		for (int i = 0; i < Slotsize; i++) {
@@ -78,11 +83,11 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
-		this.itemIcon = par1IconRegister.registerIcon(MultiToolHolders.TextureDomain + "Holder" + this.Slotsize);
-	}
+//	@SideOnly(Side.CLIENT)
+//	public void registerIcons(IIconRegister par1IconRegister)
+//	{
+//		this.itemIcon = par1IconRegister.registerIcon(MultiToolHolders.TextureDomain + "Holder" + this.Slotsize);
+//	}
 
 	@SideOnly(Side.CLIENT)
 	public boolean isFull3D()
@@ -156,7 +161,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 		ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getIconWidth(),
                 icon.getIconHeight(), 0.0625F);
 
-		if (stack != null && stack.hasEffect(0)/* && par3 == 0*/) {
+		if (stack.hasEffect(0)/* && par3 == 0*/) {
 			GL11.glDepthFunc(GL11.GL_EQUAL);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			texturemanager.bindTexture(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
@@ -205,42 +210,42 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 			}
 			if (this.tools != null && this.tools.getStackInSlot(SlotNum) != null) {
 				this.tools.getStackInSlot(SlotNum).getItem()
-						.onUpdate(this.tools.getStackInSlot(SlotNum), par2World, par3Entity, par4, par5);
+						.onUpdate(this.tools.getStackInSlot(SlotNum), par2World, par3Entity, par4, true);
 				this.setEnchantments(par1ItemStack, this.tools.getStackInSlot(SlotNum));
 			}
-			if (entityPlayer.openContainer == null || !(entityPlayer.openContainer instanceof ContainerToolHolder)) {
-				if (par2World.isRemote) {
-					this.openKeyToggle = OpenKeydown;
-					if (NextKeydown) {
-						NextKeydown = false;
-						this.SlotNum++;
-						if (this.SlotNum == this.Slotsize)
-							this.SlotNum = 0;
-					} else if (PrevKeydown) {
-						PrevKeydown = false;
-						this.SlotNum--;
-						if (this.SlotNum == -1)
-							this.SlotNum = this.Slotsize - 1;
-					}
-					MultiToolHolders.packetPipeline
-							.sendToServer(new KeyHandlingPacket(this.openKeyToggle, this.SlotNum));
-				}
-				if (this.openKeyToggle) {
-					OpenKeydown = false;
-					int GuiID;
-					if (this.Slotsize == 3)
-						GuiID = MultiToolHolders.guiIdHolder3;
-					else if (this.Slotsize == 5)
-						GuiID = MultiToolHolders.guiIdHolder5;
-					else if (this.Slotsize == 7)
-						GuiID = MultiToolHolders.guiIdHolder7;
-					else if (this.Slotsize == 9)
-						GuiID = MultiToolHolders.guiIdHolder9;
-					else
-						GuiID = MultiToolHolders.guiIdHolder3;
-					entityPlayer.openGui(MultiToolHolders.instance, GuiID, par2World, 0, 0, 0);
-				}
-			}
+//			if (entityPlayer.openContainer == null || !(entityPlayer.openContainer instanceof ContainerToolHolder)) {
+//				if (par2World.isRemote) {
+//					this.openKeyToggle = OpenKeydown;
+//					if (NextKeydown) {
+//						NextKeydown = false;
+//						this.SlotNum++;
+//						if (this.SlotNum == this.Slotsize)
+//							this.SlotNum = 0;
+//					} else if (PrevKeydown) {
+//						PrevKeydown = false;
+//						this.SlotNum--;
+//						if (this.SlotNum == -1)
+//							this.SlotNum = this.Slotsize - 1;
+//					}
+//					MultiToolHolders.packetPipeline
+//							.sendToServer(new KeyHandlingPacket(this.openKeyToggle, this.SlotNum));
+//				}
+//				if (this.openKeyToggle) {
+//					OpenKeydown = false;
+//					int GuiID;
+//					if (this.Slotsize == 3)
+//						GuiID = MultiToolHolders.guiIdHolder3;
+//					else if (this.Slotsize == 5)
+//						GuiID = MultiToolHolders.guiIdHolder5;
+//					else if (this.Slotsize == 7)
+//						GuiID = MultiToolHolders.guiIdHolder7;
+//					else if (this.Slotsize == 9)
+//						GuiID = MultiToolHolders.guiIdHolder9;
+//					else
+//						GuiID = MultiToolHolders.guiIdHolder3;
+//					entityPlayer.openGui(MultiToolHolders.instance, GuiID, par2World, 0, 0, 0);
+//				}
+//			}
 		}
 	}
 
@@ -267,7 +272,6 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 		var1.setItemDamage(var2.getUniqueDataId(itemName));
 		int itemDamage = var1.getItemDamage();
 		String var3 = String.format("%s_%s", itemName, itemDamage);
-		;
 		ToolHolderData var4 = new ToolHolderData(var3);
 		var4.markDirty();
 		var2.setItemData(var3, var4);
@@ -553,7 +557,6 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
             for (Object object : multimap.entries()) {
                 Entry entry = (Entry) object;
                 AttributeModifier attributemodifier = (AttributeModifier) entry.getValue();
-                d1 = attributemodifier.getAmount();
 
                 if (attributemodifier.getOperation() != 1 && attributemodifier.getOperation() != 2) {
                     d1 = attributemodifier.getAmount();
@@ -602,9 +605,41 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer
 					EnchNum = list.getCompoundTagAt(i).getShort("id");
 					EnchLv = list.getCompoundTagAt(i).getShort("lvl");
                     MultiToolHolders.addEnchantmentToItem(ToEnchant, Enchantment.enchantmentsList[EnchNum], EnchLv);
-//					ToEnchant.addEnchantment(Enchantment.enchantmentsList[EnchNum], EnchLv);
 				}
 			}
 		}
 	}
+    //todo マルチのためにItemStackで判定したかった。
+    public int getSlotNumFromItemStack(ItemStack itemStack) {
+        if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
+        if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
+            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            itemStack.getTagCompound().setTag("multitoolholders", nbtTagCompound);
+        }
+        NBTTagCompound nbt = (NBTTagCompound)itemStack.getTagCompound().getTag("multitoolholders");
+        return nbt.getInteger("slot");
+    }
+    //todo マルチのためにItemStackで判定したかった。
+    public void setSlotNumToItemStack(ItemStack itemStack, int slotNum) {
+        if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
+        if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
+            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            itemStack.getTagCompound().setTag("multitoolholders", nbtTagCompound);
+        }
+        NBTTagCompound nbt = (NBTTagCompound)itemStack.getTagCompound().getTag("multitoolholders");
+        nbt.setInteger("slot", slotNum);
+    }
+
+    @Override
+    public void doKeyAction(ItemStack itemStack, EntityPlayer player, byte key) {
+        if (key == OPENKEY) {
+            if (player.openContainer == null || !(player.openContainer instanceof ContainerToolHolder)) {
+                player.openGui(MultiToolHolders.instance, this.guiId, player.worldObj, 0, 0, 0);
+            }
+        } else if (key == NEXTKEY) {
+            this.SlotNum = (this.SlotNum + 1) % this.Slotsize;
+        } else if (key == PREVKEY) {
+            this.SlotNum = (this.Slotsize + this.SlotNum - 1) % this.Slotsize;
+        }
+    }
 }

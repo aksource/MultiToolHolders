@@ -1,5 +1,6 @@
-package ak.MultiToolHolders;
+package ak.MultiToolHolders.inventory;
 
+import ak.MultiToolHolders.ItemMultiToolHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

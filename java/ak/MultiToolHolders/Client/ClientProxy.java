@@ -1,5 +1,6 @@
 package ak.MultiToolHolders.Client;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
@@ -14,13 +15,13 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy
 {
-	public static KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "MultiToolHolders");
-	public static KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "MultiToolHolders");
-	public static KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "MultiToolHolders");
+	public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "MultiToolHolders");
+	public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "MultiToolHolders");
+	public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "MultiToolHolders");
 	@Override
 	public void registerClientInformation()
 	{
-
+        FMLCommonHandler.instance().bus().register(new KeyInputHandler());
 		ClientRegistry.registerKeyBinding(OpenKey);
 		ClientRegistry.registerKeyBinding(NextKey);
 		ClientRegistry.registerKeyBinding(PrevKey);
@@ -28,17 +29,5 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder5, (IItemRenderer) MultiToolHolders.ItemMultiToolHolder5);
 		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder9, (IItemRenderer) MultiToolHolders.ItemMultiToolHolder9);
 		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder7, (IItemRenderer) MultiToolHolders.ItemMultiToolHolder7);
-	}
-
-	@Override
-	public void registerTileEntitySpecialRenderer()
-	{
-//		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPEnchantmentTable.class, new RenderPEnchantmentTable());
-	}
-
-	@Override
-	public World getClientWorld()
-	{
-		return FMLClientHandler.instance().getClient().theWorld;
 	}
 }

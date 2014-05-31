@@ -9,7 +9,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import ak.MultiToolHolders.ContainerToolHolder;
+import ak.MultiToolHolders.inventory.ContainerToolHolder;
 import ak.MultiToolHolders.MultiToolHolders;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -1,17 +1,13 @@
 package ak.MultiToolHolders.Client;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.world.World;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.MinecraftForgeClient;
-
-import org.lwjgl.input.Keyboard;
-
 import ak.MultiToolHolders.CommonProxy;
 import ak.MultiToolHolders.MultiToolHolders;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
+import org.lwjgl.input.Keyboard;
 
 public class ClientProxy extends CommonProxy
 {

@@ -18,10 +18,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiToolHolder extends GuiContainer
 {
 	private int Num;
-	private ResourceLocation gui3 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder3);
-	private ResourceLocation gui5 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder5);
-	private ResourceLocation gui7 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder7);
-	private ResourceLocation gui9 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder9);
+	private static final ResourceLocation gui3 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder3);
+	private static final ResourceLocation gui5 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder5);
+	private static final ResourceLocation gui7 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder7);
+	private static final ResourceLocation gui9 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder9);
 	public GuiToolHolder(InventoryPlayer inventoryPlayer, IInventory par2IInventory, int num)
 	{
 		super(new ContainerToolHolder(inventoryPlayer, par2IInventory, num));

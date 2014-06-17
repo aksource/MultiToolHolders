@@ -21,7 +21,7 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.logging.Logger;
 
-@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="1.2h",dependencies="required-after:Forge@[10.12.1.1090,)", useMetadata = true)
+@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="1.2i",dependencies="required-after:Forge@[10.12.1.1090,)", useMetadata = true)
 public class MultiToolHolders
 {
     public static final String MOD_ID = "MultiToolHolders";
@@ -50,9 +50,6 @@ public class MultiToolHolders
 
     //Logger
     public static final Logger logger = Logger.getLogger("MultiToolHolders");
-	
-//	public static final PacketPipeline packetPipeline = new PacketPipeline();
-
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -80,7 +77,6 @@ public class MultiToolHolders
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
-//		packetPipeline.initialise();
         ItemStack[] toolHolders = new ItemStack[]{new ItemStack(ItemMultiToolHolder3), new ItemStack(ItemMultiToolHolder5), new ItemStack(ItemMultiToolHolder7), new ItemStack(ItemMultiToolHolder9)};
         ItemStack[] holderMaterials = new ItemStack[]{new ItemStack(Items.iron_ingot), new ItemStack(Items.dye,1,4), new ItemStack(Items.gold_ingot), new ItemStack(Items.diamond)};
         for (int i = 0; i < toolHolders.length;i++) {
@@ -95,11 +91,6 @@ public class MultiToolHolders
         proxy.registerClientInformation();
 //        if(Debug) DebugSystem();
 	}
-//	@Mod.EventHandler
-//	public void postInit(FMLPostInitializationEvent event)
-//	{
-//		packetPipeline.postInitialise();
-//	}
 
 //	public void DungeonLootItemResist()
 //	{

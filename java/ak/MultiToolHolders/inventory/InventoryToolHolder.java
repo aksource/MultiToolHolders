@@ -100,4 +100,12 @@ public class InventoryToolHolder implements IInventory{
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
         return false;
     }
+
+//    public void setData(ToolHolderData data) {
+//        this.data = data;
+//    }
+//
+//    public ToolHolderData getData() {
+//        return this.data;
+//    }
 }

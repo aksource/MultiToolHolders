@@ -3,6 +3,8 @@ package ak.MultiToolHolders;
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
 import ak.MultiToolHolders.inventory.InventoryToolHolder;
 import ak.MultiToolHolders.inventory.ToolHolderData;
+import ak.MultiToolHolders.network.MessageHolderData;
+import ak.MultiToolHolders.network.PacketHandler;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,6 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -110,7 +113,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
         int SlotNum = this.getSlotNumFromItemStack(item);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
 			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(tools.getStackInSlot(SlotNum),
-					EQUIPPED);
+                    EQUIPPED);
 			if (customRenderer != null)
 				return customRenderer.shouldUseRenderHelper(type, tools.getStackInSlot(SlotNum), helper);
 			else
@@ -122,12 +125,11 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		//		this.tools = this.getData(item, ((EntityLivingBase) data[1]).worldObj);
         InventoryToolHolder tools = this.getInventoryFromItemStack(item);
         int SlotNum = this.getSlotNumFromItemStack(item);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
 			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(tools.getStackInSlot(SlotNum),
-					EQUIPPED);
+                    EQUIPPED);
 			if (customRenderer != null)
 				customRenderer.renderItem(type, tools.getStackInSlot(SlotNum), data);
 			else
@@ -204,20 +206,24 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
 		if (par3Entity instanceof EntityPlayer && par5) {
 			EntityPlayer entityPlayer = (EntityPlayer) par3Entity;
+
+            if (par1ItemStack.hasTagCompound()) {
+                par1ItemStack.getTagCompound().removeTag("ench");
+            }
+
             InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
             int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
-            if(tools == null) {
-                this.addInventoryFromItemStack(par1ItemStack, par2World);
-                tools = this.getInventoryFromItemStack(par1ItemStack);
-            }
+
 			if (!par2World.isRemote) {
-				tools.data.onUpdate(par2World, entityPlayer);
-				tools.markDirty();
+                if(tools == null) {
+                    this.addInventoryFromItemStack(par1ItemStack, par2World);
+                    tools = this.getInventoryFromItemStack(par1ItemStack);
+                }
+                tools.data.onUpdate(par2World, entityPlayer);
+                PacketHandler.INSTANCE.sendTo(new MessageHolderData(tools.data), (EntityPlayerMP)entityPlayer);
 			}
-			if (par1ItemStack.hasTagCompound()) {
-				par1ItemStack.getTagCompound().removeTag("ench");
-			}
-			if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+
+			if (tools != null &&  tools.getStackInSlot(SlotNum) != null) {
 				tools.getStackInSlot(SlotNum).getItem()
 						.onUpdate(tools.getStackInSlot(SlotNum), par2World, par3Entity, par4, true);
 				this.setEnchantments(par1ItemStack, tools.getStackInSlot(SlotNum));
@@ -307,7 +313,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 					.getStackInSlot(SlotNum)
 					.getItem()
 					.onItemUse(tools.getStackInSlot(SlotNum), par2EntityPlayer, par3World, par4, par5, par6, par7,
-							par8, par9, par10);
+                            par8, par9, par10);
 			if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
 				this.destroyTheItem(par2EntityPlayer, tools.getStackInSlot(SlotNum));
 			}
@@ -352,9 +358,9 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 		if (tools != null && tools.getStackInSlot(SlotNum) != null)
 		{
 			tools.setInventorySlotContents(
-					SlotNum,
-					tools.getStackInSlot(SlotNum).getItem()
-							.onItemRightClick(tools.getStackInSlot(SlotNum), par2World, par3EntityPlayer));
+                    SlotNum,
+                    tools.getStackInSlot(SlotNum).getItem()
+                            .onItemRightClick(tools.getStackInSlot(SlotNum), par2World, par3EntityPlayer));
 		}
 		if (this.getItemUseAction(par1ItemStack) != EnumAction.none)
 			par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
@@ -430,7 +436,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 					.getStackInSlot(SlotNum)
 					.getItem()
 					.onBlockDestroyed(tools.getStackInSlot(SlotNum), par2World, par3, par4, par5, par6,
-							par7EntityLiving);
+                            par7EntityLiving);
 			if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
 				this.destroyTheItem((EntityPlayer) par7EntityLiving, tools.getStackInSlot(SlotNum));
 			}
@@ -610,7 +616,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 			}
 		}
 	}
-    //todo マルチのためにItemStackで判定したかった。
+
     public int getSlotNumFromItemStack(ItemStack itemStack) {
         if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
         if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
@@ -620,7 +626,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
         NBTTagCompound nbt = (NBTTagCompound)itemStack.getTagCompound().getTag("multitoolholders");
         return nbt.getInteger("slot");
     }
-    //todo マルチのためにItemStackで判定したかった。
+
     public void setSlotNumToItemStack(ItemStack itemStack, int slotNum) {
         if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
         if (!itemStack.getTagCompound().hasKey("multitoolholders")) {

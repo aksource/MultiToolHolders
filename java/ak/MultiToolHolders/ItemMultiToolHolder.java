@@ -593,7 +593,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 					short short2 = nbttaglist.getCompoundTagAt(i).getShort("lvl");
 
 					if (Enchantment.enchantmentsList[short1] != null) {
-						calc += Enchantment.enchantmentsList[short1].calcModifierLiving(short2, enemy);
+						calc += Enchantment.enchantmentsList[short1].func_152376_a(short2, enemy.getCreatureAttribute());
 					}
 				}
 			}

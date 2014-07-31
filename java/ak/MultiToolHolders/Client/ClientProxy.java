@@ -4,7 +4,9 @@ import ak.MultiToolHolders.CommonProxy;
 import ak.MultiToolHolders.MultiToolHolders;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.input.Keyboard;
@@ -17,13 +19,19 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void registerClientInformation()
 	{
+        IItemRenderer multiToolRenderer = new HolderRenderer();
         FMLCommonHandler.instance().bus().register(new KeyInputHandler());
 		ClientRegistry.registerKeyBinding(OpenKey);
 		ClientRegistry.registerKeyBinding(NextKey);
 		ClientRegistry.registerKeyBinding(PrevKey);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder3, (IItemRenderer) MultiToolHolders.ItemMultiToolHolder3);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder5, (IItemRenderer) MultiToolHolders.ItemMultiToolHolder5);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder9, (IItemRenderer) MultiToolHolders.ItemMultiToolHolder9);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder7, (IItemRenderer) MultiToolHolders.ItemMultiToolHolder7);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder3, multiToolRenderer);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder5, multiToolRenderer);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder9, multiToolRenderer);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder7, multiToolRenderer);
 	}
+
+    @Override
+    public EntityPlayer getPlayer() {
+        return Minecraft.getMinecraft().thePlayer;
+    }
 }

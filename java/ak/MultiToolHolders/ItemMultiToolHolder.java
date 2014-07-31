@@ -9,10 +9,6 @@ import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -30,26 +26,18 @@ import net.minecraft.potion.Potion;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
-
-public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEvent
+public class ItemMultiToolHolder extends Item implements IKeyEvent
 {
     @Deprecated
 	public int SlotNum;
@@ -100,107 +88,6 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
         return true;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        InventoryToolHolder tools = this.getInventoryFromItemStack(item);
-        int SlotNum = this.getSlotNumFromItemStack(item);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
-			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(tools.getStackInSlot(SlotNum),
-                    EQUIPPED);
-			if (customRenderer != null)
-				return customRenderer.shouldUseRenderHelper(type, tools.getStackInSlot(SlotNum), helper);
-			else
-				return helper == ItemRendererHelper.EQUIPPED_BLOCK;
-		} else
-			return helper == ItemRendererHelper.EQUIPPED_BLOCK;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        InventoryToolHolder tools = this.getInventoryFromItemStack(item);
-        int SlotNum = this.getSlotNumFromItemStack(item);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
-			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(tools.getStackInSlot(SlotNum),
-                    EQUIPPED);
-			if (customRenderer != null)
-				customRenderer.renderItem(type, tools.getStackInSlot(SlotNum), data);
-			else
-				renderToolHolder((EntityLivingBase) data[1], tools.getStackInSlot(SlotNum));
-		} else {
-			renderToolHolder((EntityLivingBase) data[1], item);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void renderToolHolder(EntityLivingBase entity, ItemStack stack)
-	{
-		Minecraft mc = Minecraft.getMinecraft();
-		TextureManager texturemanager = mc.getTextureManager();
-		IIcon icon = entity.getItemIcon(stack, 0);
-		if (icon == null) {
-			//			GL11.glPopMatrix();
-			return;
-		}
-
-		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-		texturemanager.bindTexture(texturemanager.getResourceLocation(stack.getItemSpriteNumber()));
-		Tessellator tessellator = Tessellator.instance;
-		float f = icon.getMinU();
-		float f1 = icon.getMaxU();
-		float f2 = icon.getMinV();
-		float f3 = icon.getMaxV();
-		float f4 = 0.0F;
-		float f5 = 0.3F;
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		GL11.glTranslatef(-f4, -f5, 0.0F);
-		float f6 = 1.5F;
-		GL11.glScalef(f6, f6, f6);
-		GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
-		GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
-		ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getIconWidth(),
-                icon.getIconHeight(), 0.0625F);
-
-		if (stack.hasEffect(0)/* && par3 == 0*/) {
-			GL11.glDepthFunc(GL11.GL_EQUAL);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			texturemanager.bindTexture(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE);
-			float f7 = 0.76F;
-			GL11.glColor4f(0.5F * f7, 0.25F * f7, 0.8F * f7, 1.0F);
-			GL11.glMatrixMode(GL11.GL_TEXTURE);
-			GL11.glPushMatrix();
-			float f8 = 0.125F;
-			GL11.glScalef(f8, f8, f8);
-			float f9 = (float) (Minecraft.getSystemTime() % 3000L) / 3000.0F * 8.0F;
-			GL11.glTranslatef(f9, 0.0F, 0.0F);
-			GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
-            ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
-			GL11.glPopMatrix();
-			GL11.glPushMatrix();
-			GL11.glScalef(f8, f8, f8);
-			f9 = (float) (Minecraft.getSystemTime() % 4873L) / 4873.0F * 8.0F;
-			GL11.glTranslatef(-f9, 0.0F, 0.0F);
-			GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
-            ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glDepthFunc(GL11.GL_LEQUAL);
-		}
-
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-	}
 
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
@@ -212,7 +99,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
             }
 
             InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-            int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+            int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 
 			if (!par2World.isRemote) {
                 if(tools == null) {
@@ -273,7 +160,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
-        int SlotNum = this.getSlotNumFromItemStack(stack);
+        int SlotNum = getSlotNumFromItemStack(stack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null)
 		{
 			this.attackTargetEntityWithTheItem(entity, player, tools.getStackInSlot(SlotNum));
@@ -286,7 +173,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 			float hitX, float hitY, float hitZ)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
-        int SlotNum = this.getSlotNumFromItemStack(stack);
+        int SlotNum = getSlotNumFromItemStack(stack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null)
 		{
 			boolean ret = tools.getStackInSlot(SlotNum).getItem()
@@ -306,7 +193,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 			int par5, int par6, int par7, float par8, float par9, float par10)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null && !par3World.isRemote)
 		{
 			boolean ret = tools
@@ -325,7 +212,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	@Override
 	public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, int par4) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null)
 		{
 			tools.getStackInSlot(SlotNum).getItem()
@@ -341,7 +228,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null)
 		{
 			tools.getStackInSlot(SlotNum).getItem()
@@ -354,7 +241,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null)
 		{
 			tools.setInventorySlotContents(
@@ -372,7 +259,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 			EntityLivingBase par3EntityLivingBase)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
         return tools != null && tools.getStackInSlot(SlotNum) != null && tools
                 .getStackInSlot(SlotNum)
                 .getItem()
@@ -384,7 +271,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public EnumAction getItemUseAction(ItemStack par1ItemStack)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
 			return tools.getStackInSlot(SlotNum).getItemUseAction();
 		} else
@@ -395,7 +282,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public int getMaxItemUseDuration(ItemStack par1ItemStack)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
 			return tools.getStackInSlot(SlotNum).getMaxItemUseDuration();
 		} else
@@ -406,7 +293,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public float getDigSpeed(ItemStack stack, Block block, int meta)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
-        int SlotNum = this.getSlotNumFromItemStack(stack);
+        int SlotNum = getSlotNumFromItemStack(stack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
 			return tools.getStackInSlot(SlotNum).getItem()
 					.getDigSpeed(tools.getStackInSlot(SlotNum), block, meta);
@@ -418,7 +305,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 	public boolean canHarvestBlock(Block par1Block, ItemStack item)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(item);
-        int SlotNum = this.getSlotNumFromItemStack(item);
+        int SlotNum = getSlotNumFromItemStack(item);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
 			return tools.getStackInSlot(SlotNum).getItem().canHarvestBlock(par1Block, item);
 		} else
@@ -430,7 +317,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 			EntityLivingBase par7EntityLiving)
 	{
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = this.getSlotNumFromItemStack(par1ItemStack);
+        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
 		if (tools != null && tools.getStackInSlot(SlotNum) != null && !par2World.isRemote) {
 			boolean ret = tools
 					.getStackInSlot(SlotNum)
@@ -617,7 +504,7 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
 		}
 	}
 
-    public int getSlotNumFromItemStack(ItemStack itemStack) {
+    public static int getSlotNumFromItemStack(ItemStack itemStack) {
         if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
         if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
             NBTTagCompound nbtTagCompound = new NBTTagCompound();
@@ -652,11 +539,11 @@ public class ItemMultiToolHolder extends Item implements IItemRenderer, IKeyEven
                 player.openGui(MultiToolHolders.instance, this.guiId, player.worldObj, 0, 0, 0);
             }
         } else if (key == NEXTKEY) {
-            int slot = this.getSlotNumFromItemStack(itemStack);
+            int slot = getSlotNumFromItemStack(itemStack);
             this.setSlotNumToItemStack(itemStack, (slot + 1) % this.Slotsize);
 //            this.SlotNum = (this.SlotNum + 1) % this.Slotsize;
         } else if (key == PREVKEY) {
-            int slot = this.getSlotNumFromItemStack(itemStack);
+            int slot = getSlotNumFromItemStack(itemStack);
             this.setSlotNumToItemStack(itemStack, (this.Slotsize + slot - 1) % this.Slotsize);
 //            this.SlotNum = (this.Slotsize + this.SlotNum - 1) % this.Slotsize;
         }

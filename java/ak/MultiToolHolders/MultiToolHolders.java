@@ -1,10 +1,8 @@
 package ak.MultiToolHolders;
 
-import ak.MultiToolHolders.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -15,9 +13,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraftforge.common.ChestGenHooks;
-import net.minecraftforge.common.config.Configuration;
 
 import java.util.logging.Logger;
 
@@ -70,7 +65,7 @@ public class MultiToolHolders
 		ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, guiIdHolder7)).setUnlocalizedName(TextureDomain + "Holder7").setTextureName(TextureDomain + "Holder7");
 		GameRegistry.registerItem(ItemMultiToolHolder7, "itemmultitoolholder7");
 
-        PacketHandler.init();
+//        PacketHandler.init();
 	}
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event)

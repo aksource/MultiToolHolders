@@ -1,12 +1,12 @@
 package ak.MultiToolHolders;
 
+import ak.MultiToolHolders.Client.GuiToolHolder;
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
 import ak.MultiToolHolders.inventory.InventoryToolHolder;
+import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import ak.MultiToolHolders.Client.GuiToolHolder;
-import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler
 {

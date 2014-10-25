@@ -22,8 +22,10 @@ public class ClientProxy extends CommonProxy
 	{
         IItemRenderer multiToolRenderer = new HolderRenderer();
         FMLCommonHandler.instance().bus().register(new KeyInputHandler());
-        MinecraftForge.EVENT_BUS.register(new RenderingHolderInventoryHUD());
-		ClientRegistry.registerKeyBinding(OpenKey);
+        if (MultiToolHolders.enableDisplayToolHolderInventory) {
+            MinecraftForge.EVENT_BUS.register(new RenderingHolderInventoryHUD());
+        }
+        ClientRegistry.registerKeyBinding(OpenKey);
 		ClientRegistry.registerKeyBinding(NextKey);
 		ClientRegistry.registerKeyBinding(PrevKey);
 		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder3, multiToolRenderer);

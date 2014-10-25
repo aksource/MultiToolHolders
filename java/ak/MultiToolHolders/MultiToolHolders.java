@@ -29,6 +29,7 @@ public class MultiToolHolders
 
     public static int toolHolderInvX = 0;
     public static int toolHolderInvY = 0;
+    public static boolean enableDisplayToolHolderInventory = true;
 
 	public static final String GuiToolHolder3 ="textures/gui/ToolHolder3.png";
 	public static final String GuiToolHolder5 ="textures/gui/ToolHolder5.png";
@@ -56,6 +57,7 @@ public class MultiToolHolders
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
+        enableDisplayToolHolderInventory = config.get(Configuration.CATEGORY_GENERAL, "enableDisplayToolHolderInventory", enableDisplayToolHolderInventory, "enable to display toolholder inventory in HUD").getBoolean();
         toolHolderInvX = config.get(Configuration.CATEGORY_GENERAL, "toolHolderInvX", toolHolderInvX, "ToolHolder Inventory x-position in HUD").getInt();
         toolHolderInvY = config.get(Configuration.CATEGORY_GENERAL, "toolHolderInvY", toolHolderInvY, "ToolHolder Inventory y-position in HUD").getInt();
 

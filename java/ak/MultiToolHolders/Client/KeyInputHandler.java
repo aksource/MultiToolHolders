@@ -20,11 +20,11 @@ public class KeyInputHandler {
     private byte getKeyIndex() {
         byte key = -1;
         if (ClientProxy.OpenKey.isPressed()) {
-            key = ItemMultiToolHolder.OPENKEY;
+            key = ItemMultiToolHolder.OPEN_KEY;
         } else if (ClientProxy.NextKey.isPressed()) {
-            key = ItemMultiToolHolder.NEXTKEY;
+            key = ItemMultiToolHolder.NEXT_KEY;
         } else if (ClientProxy.PrevKey.isPressed()) {
-            key = ItemMultiToolHolder.PREVKEY;
+            key = ItemMultiToolHolder.PREV_KEY;
         }
         return key;
     }

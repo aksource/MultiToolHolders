@@ -12,15 +12,16 @@ public class ContainerToolHolder extends Container
 {
 	private IInventory holderInventory;
 	private int HolderNum;
+    private ItemStack holderStack;
 
-	public ContainerToolHolder(InventoryPlayer inventoryPlayer, IInventory par2IInventory, int num)
+	public ContainerToolHolder(InventoryPlayer inventoryPlayer, ItemStack holderStack, int num)
 	{
-		this.holderInventory = par2IInventory;
+		this.holderInventory = ((ItemMultiToolHolder)holderStack.getItem()).getInventoryFromItemStack(holderStack);
 		this.HolderNum = num;
-		par2IInventory.openInventory();
-		for (int k = 0; k < HolderNum; ++k)
-		{
-			this.addSlotToContainer(new SlotToolHolder(par2IInventory, k, 8 + k * 18, 18));
+        this.holderStack = holderStack;
+        holderInventory.openInventory();
+		for (int k = 0; k < HolderNum; ++k) {
+			this.addSlotToContainer(new SlotToolHolder(holderInventory, k, 8 + k * 18, 18));
 		}
         bindPlayerInventory(inventoryPlayer);
 	}
@@ -36,8 +37,7 @@ public class ContainerToolHolder extends Container
 			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 108));
 		}
 	}
-	public boolean canInteractWith(EntityPlayer par1EntityPlayer)
-	{
+	public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
 		return par1EntityPlayer.inventory.getCurrentItem() != null && par1EntityPlayer.inventory.getCurrentItem().getItem() instanceof ItemMultiToolHolder;
 	}
 
@@ -47,33 +47,25 @@ public class ContainerToolHolder extends Container
 	 public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
 	 {
 		 ItemStack itemstack = null;
-		 Slot slot = (Slot)this.inventorySlots.get(par2);
+		 Slot slot = this.getSlot(par2);
 
-		 if (slot != null && slot.getHasStack())
-		 {
+		 if (slot != null && slot.getHasStack()) {
 			 ItemStack itemstack1 = slot.getStack();
 			 itemstack = itemstack1.copy();
 
-			 if (par2 < this.HolderNum)
-			 {
-				 if (!this.mergeItemStack(itemstack1, this.HolderNum, this.inventorySlots.size(), true))
-				 {
+			 if (par2 < this.HolderNum) {
+				 if (!this.mergeItemStack(itemstack1, this.HolderNum, this.inventorySlots.size(), true)) {
 					 return null;
 				 }
-			 }
-			 else if(itemstack1.getItem() instanceof ItemMultiToolHolder || itemstack1.isStackable())
+			 }  else if(itemstack1.getItem() instanceof ItemMultiToolHolder || itemstack1.isStackable())
 				 return null;
-			 else if (!this.mergeItemStack(itemstack1, 0, this.HolderNum, false))
-			 {
+			 else if (!this.mergeItemStack(itemstack1, 0, this.HolderNum, false)) {
 				 return null;
 			 }
 
-			 if (itemstack1.stackSize == 0)
-			 {
+			 if (itemstack1.stackSize == 0) {
 				 slot.putStack(null);
-			 }
-			 else
-			 {
+			 } else {
 				 slot.onSlotChanged();
 			 }
 		 }
@@ -84,9 +76,9 @@ public class ContainerToolHolder extends Container
 	 /**
 	  * Callback for when the crafting gui is closed.
 	  */
-	 public void onContainerClosed(EntityPlayer par1EntityPlayer)
-	 {
-		 super.onContainerClosed(par1EntityPlayer);
+	 public void onContainerClosed(EntityPlayer player) {
+		 super.onContainerClosed(player);
 		 this.holderInventory.closeInventory();
+         player.inventory.setInventorySlotContents(player.inventory.currentItem, this.holderStack.copy());
 	 }
 }

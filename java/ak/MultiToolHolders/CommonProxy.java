@@ -2,7 +2,6 @@ package ak.MultiToolHolders;
 
 import ak.MultiToolHolders.Client.GuiToolHolder;
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
-import ak.MultiToolHolders.inventory.InventoryToolHolder;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,55 +20,10 @@ public class CommonProxy implements IGuiHandler
         if (player.getCurrentEquippedItem() != null &&player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder) {
             ItemStack stack = player.getCurrentEquippedItem();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder)stack.getItem();
-            InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-            return new ContainerToolHolder(player.inventory, inventoryToolHolder, itemMultiToolHolder.Slotsize);
+//            InventoryToolHolder inventoryToolHolder = itemMultiToolHolder.getInventoryFromItemStack(stack);
+            return new ContainerToolHolder(player.inventory, stack, itemMultiToolHolder.inventorySize);
         }
-//		if(id == MultiToolHolders.guiIdHolder3)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new ContainerToolHolder(player.inventory, inventoryToolHolder, 3);
-//			}
-//			else
-//				return null;
-//		}
-//		else if(id == MultiToolHolders.guiIdHolder5)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new ContainerToolHolder(player.inventory, inventoryToolHolder, 5);
-//			}
-//			else
-//				return null;
-//		}
-//		else if(id == MultiToolHolders.guiIdHolder7)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new ContainerToolHolder(player.inventory, inventoryToolHolder, 7);
-//			}
-//			else
-//				return null;
-//		}
-//		else if(id == MultiToolHolders.guiIdHolder9)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new ContainerToolHolder(player.inventory, inventoryToolHolder, 9);
-//			}
-//			else
-//				return null;
-//		}
-		else
-			return null;
+        return null;
 	}
 
 	//returns an instance of the Gui you made earlier
@@ -78,54 +32,9 @@ public class CommonProxy implements IGuiHandler
         if (player.getCurrentEquippedItem() != null &&player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder) {
             ItemStack stack = player.getCurrentEquippedItem();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder)stack.getItem();
-            InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-            return new GuiToolHolder(player.inventory, inventoryToolHolder, itemMultiToolHolder.Slotsize);
+//            InventoryToolHolder inventoryToolHolder = itemMultiToolHolder.getInventoryFromItemStack(stack);
+            return new GuiToolHolder(player.inventory, stack, itemMultiToolHolder.inventorySize);
         }
-//		if(id == MultiToolHolders.guiIdHolder3)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new GuiToolHolder(player.inventory, inventoryToolHolder, 3);
-//			}
-//			else
-//				return null;
-//		}
-//		else if(id == MultiToolHolders.guiIdHolder5)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new GuiToolHolder(player.inventory, inventoryToolHolder, 5);
-//			}
-//			else
-//				return null;
-//		}
-//		else if(id == MultiToolHolders.guiIdHolder7)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new GuiToolHolder(player.inventory, inventoryToolHolder, 7);
-//			}
-//			else
-//				return null;
-//		}
-//		else if(id == MultiToolHolders.guiIdHolder9)
-//		{
-//			if(player.getCurrentEquippedItem().getItem() instanceof ItemMultiToolHolder)
-//			{
-//				ItemStack stack = player.getCurrentEquippedItem();
-//                InventoryToolHolder inventoryToolHolder = new InventoryToolHolder(stack, world);
-//				return new GuiToolHolder(player.inventory,inventoryToolHolder, 9);
-//			}
-//			else
-//				return null;
-//		}
-		else
-			return null;
+        return null;
 	}
 }

@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
@@ -20,9 +20,9 @@ public class GuiToolHolder extends GuiContainer
 	private static final ResourceLocation gui5 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder5);
 	private static final ResourceLocation gui7 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder7);
 	private static final ResourceLocation gui9 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder9);
-	public GuiToolHolder(InventoryPlayer inventoryPlayer, IInventory par2IInventory, int num)
+	public GuiToolHolder(InventoryPlayer inventoryPlayer, ItemStack holderStack, int num)
 	{
-		super(new ContainerToolHolder(inventoryPlayer, par2IInventory, num));
+		super(new ContainerToolHolder(inventoryPlayer, holderStack, num));
 		this.Num = num;
 	}
 

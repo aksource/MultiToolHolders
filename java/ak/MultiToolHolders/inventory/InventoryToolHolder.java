@@ -1,73 +1,24 @@
 package ak.MultiToolHolders.inventory;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
-public class InventoryToolHolder implements IInventory{
-    public ToolHolderData data;
+public class InventoryToolHolder extends InventoryBasic{
 
-    public InventoryToolHolder(ItemStack stack, World world) {
-        data = ((ItemMultiToolHolder)stack.getItem()).getData(stack, world);
-    }
-    @Override
-    public int getSizeInventory()
-    {
-        return 9;
-    }
+    private ItemStack holder;
+    private Container ownerContainer;
 
-    @Override
-    public ItemStack getStackInSlot(int var1)
-    {
-        return data.tools[var1];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int var1, int var2)
-    {
-        if(data.tools[var1] != null)
-        {
-            ItemStack var3;
-            if(data.tools[var1].stackSize <= var2)
-            {
-                var3 = data.tools[var1];
-                data.tools[var1] = null;
-                this.markDirty();
-                return var3;
-            }
-            else
-            {
-                var3 = data.tools[var1].splitStack(var2);
-
-                if (data.tools[var1].stackSize == 0)
-                {
-                    data.tools[var1] = null;
-                }
-
-                this.markDirty();
-                return var3;
-            }
+    public InventoryToolHolder(ItemStack stack) {
+        super("ToolHolder", false, 9);
+        holder = stack;
+        if (!holder.hasTagCompound()) {
+            holder.setTagCompound(new NBTTagCompound());
         }
-        else
-            return null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int var1)
-    {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int var1, ItemStack var2) {
-        data.tools[var1] = var2;
-    }
-
-    @Override
-    public String getInventoryName() {
-        return "ToolHolder";
+        readFromNBT(holder.getTagCompound());
     }
 
     @Override
@@ -77,35 +28,55 @@ public class InventoryToolHolder implements IInventory{
 
 	@Override
 	public void markDirty() {
-		data.upDate = true;
+        super.markDirty();
+//		data.upDate = true;
+//        writeToNBT(holder.getTagCompound());
 	}
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer var1) {
-        return true;
+    public void openInventory() {
+        super.openInventory();
+        if (!holder.hasTagCompound()) {
+            holder.setTagCompound(new NBTTagCompound());
+        }
+        readFromNBT(holder.getTagCompound());
     }
-
-    @Override
-    public void openInventory() {}
 
     @Override
     public void closeInventory() {
-        this.markDirty();
-    }
-    @Override
-    public boolean hasCustomInventoryName() {
-        return false;
-    }
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        return false;
+        super.closeInventory();
+        writeToNBT(holder.getTagCompound());
     }
 
-//    public void setData(ToolHolderData data) {
-//        this.data = data;
-//    }
-//
-//    public ToolHolderData getData() {
-//        return this.data;
-//    }
+    public void readFromNBT(NBTTagCompound nbt) {
+
+//        for (int i = 0; i < this.getSizeInventory(); ++i) {
+//            this.setInventorySlotContents(i, null);
+//        }
+        NBTTagList tagList = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+
+        for (int var3 = 0; var3 < tagList.tagCount(); ++var3) {
+            NBTTagCompound var4 = tagList.getCompoundTagAt(var3);
+            int var5 = var4.getByte("Slot") & 255;
+
+            if (var5 >= 0 && var5 < this.getSizeInventory()) {
+                this.setInventorySlotContents(var5, ItemStack.loadItemStackFromNBT(var4));
+            }
+        }
+    }
+
+    public void writeToNBT(NBTTagCompound nbt) {
+        NBTTagList tagList = new NBTTagList();
+
+        for (int var3 = 0; var3 < this.getSizeInventory(); ++var3) {
+            if (this.getStackInSlot(var3) != null) {
+                NBTTagCompound var4 = new NBTTagCompound();
+                var4.setByte("Slot", (byte)var3);
+                this.getStackInSlot(var3).writeToNBT(var4);
+                tagList.appendTag(var4);
+            }
+        }
+
+        nbt.setTag("Items", tagList);
+    }
 }

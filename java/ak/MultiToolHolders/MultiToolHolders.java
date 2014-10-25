@@ -1,5 +1,6 @@
 package ak.MultiToolHolders;
 
+import ak.MultiToolHolders.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -13,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.config.Configuration;
 
 import java.util.logging.Logger;
 
@@ -24,7 +26,9 @@ public class MultiToolHolders
 	public static  Item ItemMultiToolHolder5;
 	public static  Item ItemMultiToolHolder7;
 	public static  Item ItemMultiToolHolder9;
-//	public static boolean Debug;
+
+    public static int toolHolderInvX = 0;
+    public static int toolHolderInvY = 0;
 
 	public static final String GuiToolHolder3 ="textures/gui/ToolHolder3.png";
 	public static final String GuiToolHolder5 ="textures/gui/ToolHolder5.png";
@@ -49,12 +53,13 @@ public class MultiToolHolders
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-//		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
-//		config.load();
-//
-//		Debug = config.get(Configuration.CATEGORY_GENERAL, "Debug mode", false, "For Debugger").getBoolean(false);
-//
-//		config.save();
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+
+        toolHolderInvX = config.get(Configuration.CATEGORY_GENERAL, "toolHolderInvX", toolHolderInvX, "ToolHolder Inventory x-position in HUD").getInt();
+        toolHolderInvY = config.get(Configuration.CATEGORY_GENERAL, "toolHolderInvY", toolHolderInvY, "ToolHolder Inventory y-position in HUD").getInt();
+
+		config.save();
 
 		ItemMultiToolHolder3 = (new ItemMultiToolHolder(3, guiIdHolder3)).setUnlocalizedName(TextureDomain + "Holder3").setTextureName(TextureDomain + "Holder3");
 		GameRegistry.registerItem(ItemMultiToolHolder3, "itemmultitoolholder3");
@@ -65,7 +70,7 @@ public class MultiToolHolders
 		ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, guiIdHolder7)).setUnlocalizedName(TextureDomain + "Holder7").setTextureName(TextureDomain + "Holder7");
 		GameRegistry.registerItem(ItemMultiToolHolder7, "itemmultitoolholder7");
 
-//        PacketHandler.init();
+        PacketHandler.init();
 	}
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event)

@@ -9,6 +9,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 public class ClientProxy extends CommonProxy
@@ -21,6 +22,7 @@ public class ClientProxy extends CommonProxy
 	{
         IItemRenderer multiToolRenderer = new HolderRenderer();
         FMLCommonHandler.instance().bus().register(new KeyInputHandler());
+        MinecraftForge.EVENT_BUS.register(new RenderingHolderInventoryHUD());
 		ClientRegistry.registerKeyBinding(OpenKey);
 		ClientRegistry.registerKeyBinding(NextKey);
 		ClientRegistry.registerKeyBinding(PrevKey);

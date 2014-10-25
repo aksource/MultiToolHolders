@@ -1,6 +1,5 @@
 package ak.MultiToolHolders.inventory;
 
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,7 +9,6 @@ import net.minecraftforge.common.util.Constants;
 public class InventoryToolHolder extends InventoryBasic{
 
     private ItemStack holder;
-    private Container ownerContainer;
 
     public InventoryToolHolder(ItemStack stack) {
         super("ToolHolder", false, 9);

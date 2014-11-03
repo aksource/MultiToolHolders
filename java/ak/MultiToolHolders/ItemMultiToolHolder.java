@@ -2,7 +2,10 @@ package ak.MultiToolHolders;
 
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
 import ak.MultiToolHolders.inventory.InventoryToolHolder;
+import buildcraft.api.tools.IToolWrench;
+import cofh.api.item.IToolHammer;
 import com.google.common.collect.Multimap;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -30,8 +33,11 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 import java.util.List;
 import java.util.Map.Entry;
-
-public class ItemMultiToolHolder extends Item implements IKeyEvent {
+@Optional.InterfaceList(
+        {@Optional.Interface(iface = "cofh.api.item.IToolHammer", modid = "CoFHCore"),
+                @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraftAPI|core")}
+)
+public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer, IToolWrench {
 
 	public int inventorySize;
     private int guiId;
@@ -131,10 +137,10 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent {
 //		var2.setItemData(var3, var4);
 //	}
 
-    private void setNewIndex(ItemStack itemStack, World world) {
-        String itemName = String.format("Holder%d", this.inventorySize);
-        itemStack.setItemDamage(world.getUniqueDataId(itemName));
-    }
+//    private void setNewIndex(ItemStack itemStack, World world) {
+//        String itemName = String.format("Holder%d", this.inventorySize);
+//        itemStack.setItemDamage(world.getUniqueDataId(itemName));
+//    }
 
 	@Override
 	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
@@ -539,5 +545,33 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent {
             int slot = getSlotNumFromItemStack(itemStack);
             this.setSlotNumToItemStack(itemStack, (this.inventorySize + slot - 1) % this.inventorySize);
         }
+    }
+
+    @Optional.Method(modid = "CoFHCore")
+    @Override
+    public boolean isUsable(ItemStack itemStack, EntityLivingBase entityLivingBase, int x, int y, int z) {
+        ItemStack nowItem = getInventoryFromItemStack(itemStack).getStackInSlot(getSlotNumFromItemStack(itemStack));
+        return CoopTE.isUsable(nowItem, entityLivingBase, x, y, z);
+    }
+
+    @Optional.Method(modid = "CoFHCore")
+    @Override
+    public void toolUsed(ItemStack itemStack, EntityLivingBase entityLivingBase, int x, int y, int z) {
+        ItemStack nowItem = getInventoryFromItemStack(itemStack).getStackInSlot(getSlotNumFromItemStack(itemStack));
+        CoopTE.toolUsed(nowItem, entityLivingBase, x, y, z);
+    }
+
+    @Optional.Method(modid = "BuildCraftAPI|core")
+    @Override
+    public boolean canWrench(EntityPlayer player, int x, int y, int z) {
+        ItemStack nowItem = getInventoryFromItemStack(player.getCurrentEquippedItem()).getStackInSlot(getSlotNumFromItemStack(player.getCurrentEquippedItem()));
+        return CoopBC.canWrench(nowItem, player, x, y, z);
+    }
+
+    @Optional.Method(modid = "BuildCraftAPI|core")
+    @Override
+    public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
+        ItemStack nowItem = getInventoryFromItemStack(player.getCurrentEquippedItem()).getStackInSlot(getSlotNumFromItemStack(player.getCurrentEquippedItem()));
+        CoopBC.wrenchUsed(nowItem, player, x, y, z);
     }
 }

@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -55,26 +56,41 @@ public class HolderRenderer implements IItemRenderer {
                     EQUIPPED);
             if (customRenderer != null)
                 customRenderer.renderItem(type, tools.getStackInSlot(SlotNum), data);
-            else
-                renderToolHolder((EntityLivingBase) data[1], tools.getStackInSlot(SlotNum));
+            else {
+                ItemStack itemInHolder = tools.getStackInSlot(SlotNum);
+                if (itemInHolder.getItem().requiresMultipleRenderPasses()) {
+                    for (int pass = 0; pass < itemInHolder.getItem().getRenderPasses(itemInHolder.getItemDamage()); pass++) {
+                        int color = itemInHolder.getItem().getColorFromItemStack(itemInHolder, pass);
+                        float colorR = (float)(color >> 16 & 255) / 255.0F;
+                        float colorG = (float)(color >> 8 & 255) / 255.0F;
+                        float colorB = (float)(color & 255) / 255.0F;
+                        GL11.glColor4f(1.0F * colorR, 1.0F * colorG, 1.0F * colorB, 1.0F);
+                        renderToolHolder((EntityLivingBase) data[1], tools.getStackInSlot(SlotNum), pass);
+                    }
+                } else {
+                    renderToolHolder((EntityLivingBase) data[1], tools.getStackInSlot(SlotNum), 0);
+                }
+            }
         } else {
-            renderToolHolder((EntityLivingBase) data[1], item);
+            renderToolHolder((EntityLivingBase) data[1], item, 0);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    public void renderToolHolder(EntityLivingBase entity, ItemStack stack)
+    public void renderToolHolder(EntityLivingBase entity, ItemStack stack, int pass)
     {
+        GL11.glPushMatrix();
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager texturemanager = mc.getTextureManager();
-        IIcon icon = entity.getItemIcon(stack, 0);
+        IIcon icon = entity.getItemIcon(stack, pass);
         if (icon == null) {
-            //			GL11.glPopMatrix();
+            GL11.glPopMatrix();
             return;
         }
 
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
         texturemanager.bindTexture(texturemanager.getResourceLocation(stack.getItemSpriteNumber()));
+        TextureUtil.func_152777_a(false, false, 1.0F);
         Tessellator tessellator = Tessellator.instance;
         float f = icon.getMinU();
         float f1 = icon.getMaxU();
@@ -92,7 +108,7 @@ public class HolderRenderer implements IItemRenderer {
         ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getIconWidth(),
                 icon.getIconHeight(), 0.0625F);
 
-        if (stack.hasEffect(0)/* && par3 == 0*/) {
+        if (stack.hasEffect(pass)) {
             GL11.glDepthFunc(GL11.GL_EQUAL);
             GL11.glDisable(GL11.GL_LIGHTING);
             texturemanager.bindTexture(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
@@ -121,7 +137,7 @@ public class HolderRenderer implements IItemRenderer {
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glDepthFunc(GL11.GL_LEQUAL);
         }
-
+        GL11.glPopMatrix();
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     }
 

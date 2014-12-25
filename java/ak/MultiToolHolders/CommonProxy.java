@@ -2,7 +2,7 @@ package ak.MultiToolHolders;
 
 import ak.MultiToolHolders.Client.GuiToolHolder;
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
-import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -21,7 +21,7 @@ public class CommonProxy implements IGuiHandler
             ItemStack stack = player.getCurrentEquippedItem();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder)stack.getItem();
 //            InventoryToolHolder inventoryToolHolder = itemMultiToolHolder.getInventoryFromItemStack(stack);
-            return new ContainerToolHolder(player.inventory, stack, itemMultiToolHolder.inventorySize);
+            return new ContainerToolHolder(player, stack, itemMultiToolHolder.inventorySize);
         }
         return null;
 	}
@@ -33,7 +33,7 @@ public class CommonProxy implements IGuiHandler
             ItemStack stack = player.getCurrentEquippedItem();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder)stack.getItem();
 //            InventoryToolHolder inventoryToolHolder = itemMultiToolHolder.getInventoryFromItemStack(stack);
-            return new GuiToolHolder(player.inventory, stack, itemMultiToolHolder.inventorySize);
+            return new GuiToolHolder(player, stack, itemMultiToolHolder.inventorySize);
         }
         return null;
 	}

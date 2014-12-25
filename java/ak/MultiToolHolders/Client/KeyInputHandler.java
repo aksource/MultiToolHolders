@@ -4,12 +4,12 @@ import ak.MultiToolHolders.IKeyEvent;
 import ak.MultiToolHolders.ItemMultiToolHolder;
 import ak.MultiToolHolders.network.MessageKeyPressed;
 import ak.MultiToolHolders.network.PacketHandler;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by A.K. on 14/05/28.

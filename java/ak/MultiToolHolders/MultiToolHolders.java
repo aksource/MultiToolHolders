@@ -1,12 +1,6 @@
 package ak.MultiToolHolders;
 
 import ak.MultiToolHolders.network.PacketHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -14,11 +8,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.logging.Logger;
 
-@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="@VERSION@",dependencies="required-after:Forge@[10.12.1.1090,)", useMetadata = true)
+@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="@VERSION@",dependencies="required-after:Forge@[1.8-11.14.0.1267-1.8,)", useMetadata = true)
 public class MultiToolHolders
 {
     public static final String MOD_ID = "MultiToolHolders";
@@ -63,13 +64,13 @@ public class MultiToolHolders
 
 		config.save();
 
-		ItemMultiToolHolder3 = (new ItemMultiToolHolder(3, guiIdHolder3)).setUnlocalizedName(TextureDomain + "Holder3").setTextureName(TextureDomain + "Holder3");
+		ItemMultiToolHolder3 = (new ItemMultiToolHolder(3, guiIdHolder3)).setUnlocalizedName(TextureDomain + "Holder3")/*.setTextureName(TextureDomain + "Holder3")*/;
 		GameRegistry.registerItem(ItemMultiToolHolder3, "itemmultitoolholder3");
-		ItemMultiToolHolder5 = (new ItemMultiToolHolder(5, guiIdHolder5)).setUnlocalizedName(TextureDomain + "Holder5").setTextureName(TextureDomain + "Holder5");
+		ItemMultiToolHolder5 = (new ItemMultiToolHolder(5, guiIdHolder5)).setUnlocalizedName(TextureDomain + "Holder5")/*.setTextureName(TextureDomain + "Holder5")*/;
 		GameRegistry.registerItem(ItemMultiToolHolder5, "itemmultitoolholder5");
-		ItemMultiToolHolder9 = (new ItemMultiToolHolder(9, guiIdHolder9)).setUnlocalizedName(TextureDomain + "Holder9").setTextureName(TextureDomain + "Holder9");
+		ItemMultiToolHolder9 = (new ItemMultiToolHolder(9, guiIdHolder9)).setUnlocalizedName(TextureDomain + "Holder9")/*.setTextureName(TextureDomain + "Holder9")*/;
 		GameRegistry.registerItem(ItemMultiToolHolder9, "itemmultitoolholder9");
-		ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, guiIdHolder7)).setUnlocalizedName(TextureDomain + "Holder7").setTextureName(TextureDomain + "Holder7");
+		ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, guiIdHolder7)).setUnlocalizedName(TextureDomain + "Holder7")/*.setTextureName(TextureDomain + "Holder7")*/;
 		GameRegistry.registerItem(ItemMultiToolHolder7, "itemmultitoolholder7");
 
         PacketHandler.init();
@@ -78,7 +79,7 @@ public class MultiToolHolders
 	public void load(FMLInitializationEvent event)
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
-
+        MinecraftForge.EVENT_BUS.register(proxy);
         ItemStack[] toolHolders = new ItemStack[]{new ItemStack(ItemMultiToolHolder3), new ItemStack(ItemMultiToolHolder5), new ItemStack(ItemMultiToolHolder7), new ItemStack(ItemMultiToolHolder9)};
         ItemStack[] holderMaterials = new ItemStack[]{new ItemStack(Items.iron_ingot), new ItemStack(Items.dye,1,4), new ItemStack(Items.gold_ingot), new ItemStack(Items.diamond)};
         for (int i = 0; i < toolHolders.length;i++) {
@@ -124,15 +125,15 @@ public class MultiToolHolders
         if (item == null || enchantment == null || Lv < 0) {
             return;
         }
-        if (item.stackTagCompound == null) {
+        if (item.hasTagCompound()) {
             item.setTagCompound(new NBTTagCompound());
         }
 
-        if (!item.stackTagCompound.hasKey("ench", 9)) {
-            item.stackTagCompound.setTag("ench", new NBTTagList());
+        if (!item.getTagCompound().hasKey("ench", 9)) {
+            item.getTagCompound().setTag("ench", new NBTTagList());
         }
 
-        NBTTagList var3 =item.stackTagCompound.getTagList("ench", 10);
+        NBTTagList var3 =item.getTagCompound().getTagList("ench", 10);
         NBTTagCompound var4 = new NBTTagCompound();
         var4.setShort("id", (short) enchantment.effectId);
         var4.setShort("lvl", (short) (Lv));

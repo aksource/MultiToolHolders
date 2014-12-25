@@ -2,7 +2,7 @@ package ak.MultiToolHolders.Client;
 
 import ak.MultiToolHolders.ItemMultiToolHolder;
 import ak.MultiToolHolders.MultiToolHolders;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -16,7 +16,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
  */
 public class RenderingHolderInventoryHUD {
     private final Minecraft mc = Minecraft.getMinecraft();
-    private final RenderItem itemRenderer = new RenderItem();
+    private final RenderItem itemRenderer = mc.getRenderItem();
 
     @SubscribeEvent
     public void renderingOverlay(RenderGameOverlayEvent.Text event) {
@@ -43,8 +43,8 @@ public class RenderingHolderInventoryHUD {
     private void renderInventorySlot(ItemStack itemstack, int par2, int par3) {
         if (itemstack != null){
             RenderHelper.enableGUIStandardItemLighting();
-            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.getTextureManager(), itemstack, par2, par3);
-            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRenderer, this.mc.getTextureManager(), itemstack, par2, par3);
+            itemRenderer.func_175030_a/*renderItemAndEffectIntoGUI*/(this.mc.fontRendererObj, itemstack, par2, par3);
+//            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRenderer, this.mc.getTextureManager(), itemstack, par2, par3);
             RenderHelper.disableStandardItemLighting();
 //            String s = itemstack.getDisplayName();
 //            this.mc.fontRenderer.drawStringWithShadow(s, par2 + 16, par3 + 4, 0xFFFFFF);

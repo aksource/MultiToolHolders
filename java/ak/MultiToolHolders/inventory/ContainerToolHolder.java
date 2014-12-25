@@ -14,16 +14,16 @@ public class ContainerToolHolder extends Container
 	private int HolderNum;
     private ItemStack holderStack;
 
-	public ContainerToolHolder(InventoryPlayer inventoryPlayer, ItemStack holderStack, int num)
+	public ContainerToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num)
 	{
 		this.holderInventory = ((ItemMultiToolHolder)holderStack.getItem()).getInventoryFromItemStack(holderStack);
 		this.HolderNum = num;
         this.holderStack = holderStack;
-        holderInventory.openInventory();
+        holderInventory.openInventory(entityPlayer);
 		for (int k = 0; k < HolderNum; ++k) {
 			this.addSlotToContainer(new SlotToolHolder(holderInventory, k, 8 + k * 18, 18));
 		}
-        bindPlayerInventory(inventoryPlayer);
+        bindPlayerInventory(entityPlayer.inventory);
 	}
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
@@ -78,7 +78,7 @@ public class ContainerToolHolder extends Container
 	  */
 	 public void onContainerClosed(EntityPlayer player) {
 		 super.onContainerClosed(player);
-		 this.holderInventory.closeInventory();
+		 this.holderInventory.closeInventory(player);
          player.inventory.setInventorySlotContents(player.inventory.currentItem, this.holderStack.copy());
 	 }
 }

@@ -2,14 +2,14 @@ package ak.MultiToolHolders.Client;
 
 import ak.MultiToolHolders.MultiToolHolders;
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
@@ -20,9 +20,9 @@ public class GuiToolHolder extends GuiContainer
 	private static final ResourceLocation gui5 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder5);
 	private static final ResourceLocation gui7 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder7);
 	private static final ResourceLocation gui9 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder9);
-	public GuiToolHolder(InventoryPlayer inventoryPlayer, ItemStack holderStack, int num)
+	public GuiToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num)
 	{
-		super(new ContainerToolHolder(inventoryPlayer, holderStack, num));
+		super(new ContainerToolHolder(entityPlayer, holderStack, num));
 		this.Num = num;
 	}
 

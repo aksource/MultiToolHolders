@@ -5,7 +5,6 @@ import ak.MultiToolHolders.MultiToolHolders;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,8 +50,8 @@ public class ClientProxy extends CommonProxy
 	}
 
     private void registerItemClient(Item item, String name) {
-        ModelBakery.addVariantName(item, MultiToolHolders.MOD_ID + ":" + name);
-        MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(name, "inventory"));
+//        ModelBakery.addVariantName(item, MultiToolHolders.MOD_ID + ":" + name);
+        MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(MultiToolHolders.MOD_ID + ":" + name, "inventory"));
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, MODEL_RESOURCE_LOCATION_MAP.get(name));
     }
     @Override

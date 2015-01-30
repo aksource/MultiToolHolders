@@ -2,7 +2,6 @@ package ak.MultiToolHolders.Client;
 
 import ak.MultiToolHolders.ItemMultiToolHolder;
 import ak.MultiToolHolders.MultiToolHolders;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -10,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Created by A.K. on 14/10/25.
@@ -43,7 +43,8 @@ public class RenderingHolderInventoryHUD {
     private void renderInventorySlot(ItemStack itemstack, int par2, int par3) {
         if (itemstack != null){
             RenderHelper.enableGUIStandardItemLighting();
-            itemRenderer.func_175030_a/*renderItemAndEffectIntoGUI*/(this.mc.fontRendererObj, itemstack, par2, par3);
+            itemRenderer.func_180450_b(itemstack, par2, par3);//Itemの描画
+            itemRenderer.func_175030_a(this.mc.fontRendererObj, itemstack, par2, par3);//耐久値の描画
 //            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRenderer, this.mc.getTextureManager(), itemstack, par2, par3);
             RenderHelper.disableStandardItemLighting();
 //            String s = itemstack.getDisplayName();

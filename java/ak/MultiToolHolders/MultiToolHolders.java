@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.logging.Logger;
 
-@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="@VERSION@",dependencies="required-after:Forge@[1.8-11.14.0.1267-1.8,)", useMetadata = true)
+@Mod(modid="MultiToolHolders", name="MultiToolHolders", version="@VERSION@",dependencies="required-after:Forge@[1.8-11.14.0.1292-1.8,)", useMetadata = true)
 public class MultiToolHolders
 {
     public static final String MOD_ID = "MultiToolHolders";

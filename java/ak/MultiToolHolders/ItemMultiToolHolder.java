@@ -2,8 +2,6 @@ package ak.MultiToolHolders;
 
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
 import ak.MultiToolHolders.inventory.InventoryToolHolder;
-import buildcraft.api.tools.IToolWrench;
-import cofh.api.item.IToolHammer;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -42,7 +40,7 @@ import java.util.Set;
         {@Optional.Interface(iface = "cofh.api.item.IToolHammer", modid = "CoFHCore"),
                 @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraftAPI|core")}
 )
-public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer, IToolWrench {
+public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHammer, IToolWrench*/ {
 
 	public int inventorySize;
     private int guiId;
@@ -478,28 +476,28 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer,
     }
 
     @Optional.Method(modid = "CoFHCore")
-    @Override
+//    @Override
     public boolean isUsable(ItemStack itemStack, EntityLivingBase entityLivingBase, int x, int y, int z) {
         ItemStack nowItem = getInventoryFromItemStack(itemStack).getStackInSlot(getSlotNumFromItemStack(itemStack));
         return CoopTE.isUsable(nowItem, entityLivingBase, x, y, z);
     }
 
     @Optional.Method(modid = "CoFHCore")
-    @Override
+//    @Override
     public void toolUsed(ItemStack itemStack, EntityLivingBase entityLivingBase, int x, int y, int z) {
         ItemStack nowItem = getInventoryFromItemStack(itemStack).getStackInSlot(getSlotNumFromItemStack(itemStack));
         CoopTE.toolUsed(nowItem, entityLivingBase, x, y, z);
     }
 
     @Optional.Method(modid = "BuildCraftAPI|core")
-    @Override
+//    @Override
     public boolean canWrench(EntityPlayer player, int x, int y, int z) {
         ItemStack nowItem = getInventoryFromItemStack(player.getCurrentEquippedItem()).getStackInSlot(getSlotNumFromItemStack(player.getCurrentEquippedItem()));
         return CoopBC.canWrench(nowItem, player, x, y, z);
     }
 
     @Optional.Method(modid = "BuildCraftAPI|core")
-    @Override
+//    @Override
     public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
         ItemStack nowItem = getInventoryFromItemStack(player.getCurrentEquippedItem()).getStackInSlot(getSlotNumFromItemStack(player.getCurrentEquippedItem()));
         CoopBC.wrenchUsed(nowItem, player, x, y, z);

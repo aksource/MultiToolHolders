@@ -286,7 +286,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
 				if (par1Entity instanceof EntityLivingBase) {
 					var4 = this.getEnchantmentModifierLiving(stack, player, (EntityLivingBase) par1Entity);
-					var3 += EnchantmentHelper.getEnchantmentLevel(Enchantment.field_180313_o/*knockback*/.effectId, stack);
+					var3 += EnchantmentHelper.getEnchantmentLevel(Enchantment.knockback.effectId, stack);
 				}
 
 				if (player.isSprinting()) {
@@ -407,8 +407,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 					short short1 = nbttaglist.getCompoundTagAt(i).getShort("id");
 					short short2 = nbttaglist.getCompoundTagAt(i).getShort("lvl");
 
-					if (Enchantment.enchantmentsList[short1] != null) {
-						calc += Enchantment.enchantmentsList[short1].func_152376_a(short2, enemy.getCreatureAttribute());
+					if (Enchantment.getEnchantmentById(short1) != null) {
+						calc += Enchantment.getEnchantmentById(short1).calcDamageByCreature(short2, enemy.getCreatureAttribute());
 					}
 				}
 			}
@@ -426,7 +426,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 				if (list.getCompoundTagAt(i).getShort("lvl") > 0) {
 					EnchNum = list.getCompoundTagAt(i).getShort("id");
 					EnchLv = list.getCompoundTagAt(i).getShort("lvl");
-                    MultiToolHolders.addEnchantmentToItem(ToEnchant, Enchantment.enchantmentsList[EnchNum], EnchLv);
+                    MultiToolHolders.addEnchantmentToItem(ToEnchant, Enchantment.getEnchantmentById(EnchNum), EnchLv);
 				}
 			}
 		}

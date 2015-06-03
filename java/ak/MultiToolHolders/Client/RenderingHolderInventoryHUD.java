@@ -43,8 +43,8 @@ public class RenderingHolderInventoryHUD {
     private void renderInventorySlot(ItemStack itemstack, int par2, int par3) {
         if (itemstack != null){
             RenderHelper.enableGUIStandardItemLighting();
-            itemRenderer.func_180450_b(itemstack, par2, par3);//Itemの描画
-            itemRenderer.func_175030_a(this.mc.fontRendererObj, itemstack, par2, par3);//耐久値の描画
+            itemRenderer.renderItemIntoGUI(itemstack, par2, par3);//Itemの描画
+            itemRenderer.renderItemOverlays(this.mc.fontRendererObj, itemstack, par2, par3);//耐久値の描画
 //            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRenderer, this.mc.getTextureManager(), itemstack, par2, par3);
             RenderHelper.disableStandardItemLighting();
 //            String s = itemstack.getDisplayName();

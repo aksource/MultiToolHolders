@@ -43,13 +43,13 @@ public class HolderRenderer implements ISmartItemModel {
     }
 
     @Override
-    public List func_177551_a(EnumFacing p_177551_1_) {
-        return defaultModel.func_177551_a(p_177551_1_);
+    public List getFaceQuads(EnumFacing p_177551_1_) {
+        return defaultModel.getFaceQuads(p_177551_1_);
     }
 
     @Override
-    public List func_177550_a() {
-        return defaultModel.func_177550_a();
+    public List getGeneralQuads() {
+        return defaultModel.getGeneralQuads();
     }
 
     @Override
@@ -58,8 +58,8 @@ public class HolderRenderer implements ISmartItemModel {
     }
 
     @Override
-    public boolean isAmbientOcclusionEnabled() {
-        return defaultModel.isAmbientOcclusionEnabled();
+    public boolean isAmbientOcclusion() {
+        return defaultModel.isAmbientOcclusion();
     }
 
     @Override

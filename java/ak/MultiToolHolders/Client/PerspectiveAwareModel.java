@@ -28,32 +28,32 @@ public class PerspectiveAwareModel implements IPerspectiveAwareModel{
     public Pair<IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
         if (cameraTransformType == ItemCameraTransforms.TransformType.GUI) {
             //GL返還命令がバイパスされるので、適用。
-            RenderItem.applyVanillaTransform(this.guiModel.getItemCameraTransforms().field_178354_e);
+            RenderItem.applyVanillaTransform(this.guiModel.getItemCameraTransforms().gui);
             return Pair.of(this.guiModel, null);
         }
         //同上
         switch (cameraTransformType) {
             case FIRST_PERSON:
-                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().field_178356_c);
+                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().firstPerson);
                 break;
             case HEAD:
-                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().field_178353_d);
+                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().head);
                 break;
             case THIRD_PERSON:
-                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().field_178355_b);
+                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().thirdPerson);
                 break;
         }
         return Pair.of(this.handHeldModel, null);
     }
 
     @Override
-    public List func_177551_a(EnumFacing facing) {
-        return this.guiModel.func_177551_a(facing);
+    public List getFaceQuads(EnumFacing facing) {
+        return this.guiModel.getFaceQuads(facing);
     }
 
     @Override
-    public List func_177550_a() {
-        return this.guiModel.func_177550_a();
+    public List getGeneralQuads() {
+        return this.guiModel.getGeneralQuads();
     }
 
     @Override
@@ -62,8 +62,8 @@ public class PerspectiveAwareModel implements IPerspectiveAwareModel{
     }
 
     @Override
-    public boolean isAmbientOcclusionEnabled() {
-        return this.guiModel.isAmbientOcclusionEnabled();
+    public boolean isAmbientOcclusion() {
+        return this.guiModel.isAmbientOcclusion();
     }
 
     @Override

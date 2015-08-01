@@ -27,7 +27,7 @@ public class PerspectiveAwareModel implements IPerspectiveAwareModel{
     @Override
     public Pair<IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
         if (cameraTransformType == ItemCameraTransforms.TransformType.GUI) {
-            //GL返還命令がバイパスされるので、適用。
+            //GL変換命令がバイパスされるので、適用。
             RenderItem.applyVanillaTransform(this.guiModel.getItemCameraTransforms().gui);
             return Pair.of(this.guiModel, null);
         }

@@ -384,6 +384,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer,
 						if (par1Entity instanceof EntityLivingBase) {
 							EnchantmentHelper.func_151384_a((EntityLivingBase) par1Entity, player);
 						}
+						EnchantmentHelper.func_151385_b(player, par1Entity);
 					}
 
 					if (stack != null && par1Entity instanceof EntityLivingBase) {

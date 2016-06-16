@@ -11,16 +11,18 @@ import net.minecraft.item.ItemStack;
 public class ContainerToolHolder extends Container
 {
 	private IInventory holderInventory;
-	private int HolderNum;
+	private int holderNum;
     private ItemStack holderStack;
+    private int currentSlot;
 
-	public ContainerToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num)
+	public ContainerToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num, int currentSlot)
 	{
 		this.holderInventory = ((ItemMultiToolHolder)holderStack.getItem()).getInventoryFromItemStack(holderStack);
-		this.HolderNum = num;
+		this.holderNum = num;
         this.holderStack = holderStack;
         holderInventory.openInventory(entityPlayer);
-		for (int k = 0; k < HolderNum; ++k) {
+        this.currentSlot = currentSlot;
+		for (int k = 0; k < holderNum; ++k) {
 			this.addSlotToContainer(new SlotToolHolder(holderInventory, k, 8 + k * 18, 18));
 		}
         bindPlayerInventory(entityPlayer.inventory);
@@ -53,13 +55,13 @@ public class ContainerToolHolder extends Container
 			 ItemStack itemstack1 = slot.getStack();
 			 itemstack = itemstack1.copy();
 
-			 if (par2 < this.HolderNum) {
-				 if (!this.mergeItemStack(itemstack1, this.HolderNum, this.inventorySlots.size(), true)) {
+			 if (par2 < this.holderNum) {
+				 if (!this.mergeItemStack(itemstack1, this.holderNum, this.inventorySlots.size(), true)) {
 					 return null;
 				 }
 			 }  else if(itemstack1.getItem() instanceof ItemMultiToolHolder || itemstack1.isStackable())
 				 return null;
-			 else if (!this.mergeItemStack(itemstack1, 0, this.HolderNum, false)) {
+			 else if (!this.mergeItemStack(itemstack1, 0, this.holderNum, false)) {
 				 return null;
 			 }
 
@@ -73,7 +75,15 @@ public class ContainerToolHolder extends Container
 		 return itemstack;
 	 }
 
-	 /**
+	@Override
+	public ItemStack slotClick(int slotId, int clickedButton, int mode, EntityPlayer playerIn) {
+		if (currentSlot == slotId - 27 - this.holderNum) {
+			return null;
+		}
+		return super.slotClick(slotId, clickedButton, mode, playerIn);
+	}
+
+	/**
 	  * Callback for when the crafting gui is closed.
 	  */
 	 public void onContainerClosed(EntityPlayer player) {

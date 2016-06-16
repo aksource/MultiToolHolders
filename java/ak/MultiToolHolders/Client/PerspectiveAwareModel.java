@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -26,24 +27,27 @@ public class PerspectiveAwareModel implements IPerspectiveAwareModel{
 
     @Override
     public Pair<IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-        if (cameraTransformType == ItemCameraTransforms.TransformType.GUI) {
-            //GL変換命令がバイパスされるので、適用。
-            RenderItem.applyVanillaTransform(this.guiModel.getItemCameraTransforms().gui);
-            return Pair.of(this.guiModel, null);
+        IBakedModel model = (cameraTransformType == ItemCameraTransforms.TransformType.GUI) ? this.guiModel: this.handHeldModel;
+        if (model instanceof IPerspectiveAwareModel) {
+            return ((IPerspectiveAwareModel) model).handlePerspective(cameraTransformType);
+        } else {
+            switch (cameraTransformType) {
+                case GUI:
+                    RenderItem.applyVanillaTransform(model.getItemCameraTransforms().gui);
+                    return Pair.of(model, ForgeHooksClient.getMatrix(model.getItemCameraTransforms().gui));
+                case FIRST_PERSON:
+                    RenderItem.applyVanillaTransform(model.getItemCameraTransforms().firstPerson);
+                    return Pair.of(model, ForgeHooksClient.getMatrix(model.getItemCameraTransforms().firstPerson));
+                case HEAD:
+                    RenderItem.applyVanillaTransform(model.getItemCameraTransforms().head);
+                    return Pair.of(model, ForgeHooksClient.getMatrix(model.getItemCameraTransforms().head));
+                case THIRD_PERSON:
+                    RenderItem.applyVanillaTransform(model.getItemCameraTransforms().thirdPerson);
+                    return Pair.of(model, ForgeHooksClient.getMatrix(model.getItemCameraTransforms().thirdPerson));
+            }
         }
-        //同上
-        switch (cameraTransformType) {
-            case FIRST_PERSON:
-                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().firstPerson);
-                break;
-            case HEAD:
-                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().head);
-                break;
-            case THIRD_PERSON:
-                RenderItem.applyVanillaTransform(this.handHeldModel.getItemCameraTransforms().thirdPerson);
-                break;
-        }
-        return Pair.of(this.handHeldModel, null);
+
+        return Pair.of(model, null);
     }
 
     @Override

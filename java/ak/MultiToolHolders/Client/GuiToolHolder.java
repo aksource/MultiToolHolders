@@ -20,9 +20,9 @@ public class GuiToolHolder extends GuiContainer
 	private static final ResourceLocation gui5 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder5);
 	private static final ResourceLocation gui7 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder7);
 	private static final ResourceLocation gui9 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder9);
-	public GuiToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num)
+	public GuiToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num, int currentSlot)
 	{
-		super(new ContainerToolHolder(entityPlayer, holderStack, num));
+		super(new ContainerToolHolder(entityPlayer, holderStack, num, currentSlot));
 		this.Num = num;
 	}
 

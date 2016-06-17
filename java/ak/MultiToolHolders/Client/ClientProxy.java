@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.IRegistry;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -67,7 +68,9 @@ public class ClientProxy extends CommonProxy
         changeModel(event.modelRegistry, "itemmultitoolholder9");
     }
     private void changeModel(IRegistry modelRegistry, String name) {
-        IBakedModel holderModel = (IBakedModel)modelRegistry.getObject(MODEL_RESOURCE_LOCATION_MAP.get(name));
-        modelRegistry.putObject(MODEL_RESOURCE_LOCATION_MAP.get(name), new HolderRenderer(holderModel));
+        IBakedModel holderOrgModel = (IBakedModel)modelRegistry.getObject(MODEL_RESOURCE_LOCATION_MAP.get(name));
+        IFlexibleBakedModel holderFlexModel = (holderOrgModel instanceof IFlexibleBakedModel) ?
+                (IFlexibleBakedModel) holderOrgModel: new IFlexibleBakedModel.Wrapper(holderOrgModel, null);
+        modelRegistry.putObject(MODEL_RESOURCE_LOCATION_MAP.get(name), new HolderRenderer(holderFlexModel));
     }
 }

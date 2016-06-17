@@ -29,8 +29,8 @@ public class MultiToolHolders {
     public static final String MOD_ID = "MultiToolHolders";
     public static final String MOD_NAME = "MultiToolHolders";
     public static final String MOD_VERSION = "@VERSION@";
-    public static final String MOD_DEPENDENCIES = "required-after:Forge@[11.14.0.1237,)";
-    public static final String MOD_MC_VERSION = "[1.8,1.8.9]";
+    public static final String MOD_DEPENDENCIES = "required-after:Forge@[11.15.0,)";
+    public static final String MOD_MC_VERSION = "[1.8.8,1.8.9]";
     public static Item ItemMultiToolHolder3;
     public static Item ItemMultiToolHolder5;
     public static Item ItemMultiToolHolder7;

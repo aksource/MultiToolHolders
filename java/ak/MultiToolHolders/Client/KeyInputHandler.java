@@ -4,14 +4,15 @@ import ak.MultiToolHolders.IKeyEvent;
 import ak.MultiToolHolders.ItemMultiToolHolder;
 import ak.MultiToolHolders.network.MessageKeyPressed;
 import ak.MultiToolHolders.network.PacketHandler;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
+ * キー入力を検知するクラス
  * Created by A.K. on 14/05/28.
  */
 @SideOnly(Side.CLIENT)
@@ -34,11 +35,11 @@ public class KeyInputHandler {
         if (FMLClientHandler.instance().getClient().inGameHasFocus && FMLClientHandler.instance().getClientPlayerEntity() != null) {
             EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
             byte keyIndex = getKeyIndex();
-            if (keyIndex != -1 && entityPlayer.getCurrentEquippedItem() != null && entityPlayer.getCurrentEquippedItem().getItem() instanceof IKeyEvent) {
+            if (keyIndex != -1 && entityPlayer.getHeldItemMainhand() != null && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
                 if (entityPlayer.worldObj.isRemote) {
                     PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(keyIndex));
                 } else {
-                    ((IKeyEvent)entityPlayer.getCurrentEquippedItem().getItem()).doKeyAction(entityPlayer.getCurrentEquippedItem(), entityPlayer, keyIndex);
+                    ((IKeyEvent)entityPlayer.getHeldItemMainhand().getItem()).doKeyAction(entityPlayer.getHeldItemMainhand(), entityPlayer, keyIndex);
                 }
             }
         }

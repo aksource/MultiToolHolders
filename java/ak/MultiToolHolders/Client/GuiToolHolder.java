@@ -2,15 +2,15 @@ package ak.MultiToolHolders.Client;
 
 import ak.MultiToolHolders.MultiToolHolders;
 import ak.MultiToolHolders.inventory.ContainerToolHolder;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiToolHolder extends GuiContainer
@@ -20,9 +20,9 @@ public class GuiToolHolder extends GuiContainer
 	private static final ResourceLocation gui5 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder5);
 	private static final ResourceLocation gui7 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder7);
 	private static final ResourceLocation gui9 = new ResourceLocation(MultiToolHolders.Assets, MultiToolHolders.GuiToolHolder9);
-	public GuiToolHolder(InventoryPlayer inventoryPlayer, ItemStack holderStack, int num)
+	public GuiToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num, int currentSlot)
 	{
-		super(new ContainerToolHolder(inventoryPlayer, holderStack, num));
+		super(new ContainerToolHolder(entityPlayer, holderStack, num, currentSlot));
 		this.Num = num;
 	}
 
@@ -34,9 +34,9 @@ public class GuiToolHolder extends GuiContainer
 	{
 		//draw text and stuff here
 		//the parameters for drawString are: string, x, y, color
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.toolholder"), 8, 6, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("container.toolholder"), 8, 6, 4210752);
 		//draws "Inventory" or your regional equivalent
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, 40, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), 8, 40, 4210752);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class GuiToolHolder extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
 		ResourceLocation res;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		if(this.Num == 3)
 			res = gui3;
 		else if(this.Num == 5)

@@ -1,5 +1,6 @@
 package ak.MultiToolHolders.inventory;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,8 +33,8 @@ public class InventoryToolHolder extends InventoryBasic{
 	}
 
     @Override
-    public void openInventory() {
-        super.openInventory();
+    public void openInventory(EntityPlayer player) {
+        super.openInventory(player);
         if (!holder.hasTagCompound()) {
             holder.setTagCompound(new NBTTagCompound());
         }
@@ -41,8 +42,8 @@ public class InventoryToolHolder extends InventoryBasic{
     }
 
     @Override
-    public void closeInventory() {
-        super.closeInventory();
+    public void closeInventory(EntityPlayer player) {
+        super.closeInventory(player);
         writeToNBT(holder.getTagCompound());
     }
 

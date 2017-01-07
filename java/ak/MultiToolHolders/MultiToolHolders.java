@@ -26,11 +26,11 @@ import java.util.logging.Logger;
         useMetadata = true,
         acceptedMinecraftVersions = MultiToolHolders.MOD_MC_VERSION)
 public class MultiToolHolders {
-    public static final String MOD_ID = "MultiToolHolders";
+    public static final String MOD_ID = "multitoolholders";
     public static final String MOD_NAME = "MultiToolHolders";
     public static final String MOD_VERSION = "@VERSION@";
-    public static final String MOD_DEPENDENCIES = "required-after:Forge@[12.17.0,)";
-    public static final String MOD_MC_VERSION = "[1.9,1.10.99]";
+    public static final String MOD_DEPENDENCIES = "required-after:forge@[13.19.1,)";
+    public static final String MOD_MC_VERSION = "[1.11,1.19.99]";
     public static Item ItemMultiToolHolder3;
     public static Item ItemMultiToolHolder5;
     public static Item ItemMultiToolHolder7;
@@ -40,18 +40,18 @@ public class MultiToolHolders {
     public static int toolHolderInvY = 0;
     public static boolean enableDisplayToolHolderInventory = true;
 
-    public static final String GuiToolHolder3 = "textures/gui/ToolHolder3.png";
-    public static final String GuiToolHolder5 = "textures/gui/ToolHolder5.png";
-    public static final String GuiToolHolder7 = "textures/gui/ToolHolder7.png";
-    public static final String GuiToolHolder9 = "textures/gui/ToolHolder9.png";
+    public static final String GuiToolHolder3 = "textures/gui/toolholder3.png";
+    public static final String GuiToolHolder5 = "textures/gui/toolholder5.png";
+    public static final String GuiToolHolder7 = "textures/gui/toolholder7.png";
+    public static final String GuiToolHolder9 = "textures/gui/toolholder9.png";
     public static final String TextureDomain = "multitoolholders:";
-    public static final String Assets = "multitoolholders";
+    public static final String Assets = MOD_ID;
 
-    public static final String NBT_KEY_MTH = "multitoolholders";
+    public static final String NBT_KEY_MTH = MOD_ID;
     public static final String NBT_KEY_SLOT = "slot";
 
 
-    @Mod.Instance("MultiToolHolders")
+    @Mod.Instance(MOD_ID)
     public static MultiToolHolders instance;
     @SidedProxy(clientSide = "ak.MultiToolHolders.Client.ClientProxy", serverSide = "ak.MultiToolHolders.CommonProxy")
     public static CommonProxy proxy;
@@ -74,14 +74,14 @@ public class MultiToolHolders {
 
         config.save();
 
-        ItemMultiToolHolder3 = (new ItemMultiToolHolder(3, guiIdHolder3)).setUnlocalizedName(TextureDomain + "Holder3")/*.setTextureName(TextureDomain + "Holder3")*/;
-        GameRegistry.registerItem(ItemMultiToolHolder3, "itemmultitoolholder3");
-        ItemMultiToolHolder5 = (new ItemMultiToolHolder(5, guiIdHolder5)).setUnlocalizedName(TextureDomain + "Holder5")/*.setTextureName(TextureDomain + "Holder5")*/;
-        GameRegistry.registerItem(ItemMultiToolHolder5, "itemmultitoolholder5");
-        ItemMultiToolHolder9 = (new ItemMultiToolHolder(9, guiIdHolder9)).setUnlocalizedName(TextureDomain + "Holder9")/*.setTextureName(TextureDomain + "Holder9")*/;
-        GameRegistry.registerItem(ItemMultiToolHolder9, "itemmultitoolholder9");
-        ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, guiIdHolder7)).setUnlocalizedName(TextureDomain + "Holder7")/*.setTextureName(TextureDomain + "Holder7")*/;
-        GameRegistry.registerItem(ItemMultiToolHolder7, "itemmultitoolholder7");
+        ItemMultiToolHolder3 = (new ItemMultiToolHolder(3, guiIdHolder3));
+        GameRegistry.register(ItemMultiToolHolder3);
+        ItemMultiToolHolder5 = (new ItemMultiToolHolder(5, guiIdHolder5));
+        GameRegistry.register(ItemMultiToolHolder5);
+        ItemMultiToolHolder9 = (new ItemMultiToolHolder(9, guiIdHolder9));
+        GameRegistry.register(ItemMultiToolHolder9);
+        ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, guiIdHolder7));
+        GameRegistry.register(ItemMultiToolHolder7);
 
         PacketHandler.init();
     }

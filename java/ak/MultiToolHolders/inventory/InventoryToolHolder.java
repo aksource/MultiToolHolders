@@ -59,7 +59,7 @@ public class InventoryToolHolder extends InventoryBasic{
             int var5 = var4.getByte("Slot") & 255;
 
             if (var5 >= 0 && var5 < this.getSizeInventory()) {
-                this.setInventorySlotContents(var5, ItemStack.loadItemStackFromNBT(var4));
+                this.setInventorySlotContents(var5, new ItemStack(var4));
             }
         }
     }
@@ -68,7 +68,7 @@ public class InventoryToolHolder extends InventoryBasic{
         NBTTagList tagList = new NBTTagList();
 
         for (int var3 = 0; var3 < this.getSizeInventory(); ++var3) {
-            if (this.getStackInSlot(var3) != null) {
+            if (this.getStackInSlot(var3) != ItemStack.EMPTY) {
                 NBTTagCompound var4 = new NBTTagCompound();
                 var4.setByte("Slot", (byte)var3);
                 this.getStackInSlot(var3).writeToNBT(var4);

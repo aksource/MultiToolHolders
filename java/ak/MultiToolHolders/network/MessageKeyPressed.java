@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 
 /**
+ * キー判定Message
  * Created by A.K. on 14/05/28.
  */
 public class MessageKeyPressed implements IMessage {

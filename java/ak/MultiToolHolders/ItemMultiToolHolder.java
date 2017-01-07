@@ -61,6 +61,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         this.setCreativeTab(CreativeTabs.TOOLS);
         this.inventorySize = slot;
         this.guiId = guiId;
+        this.setRegistryName("itemmultitoolholder" + slot);
+        this.setUnlocalizedName(MultiToolHolders.TextureDomain + "Holder" + slot);
     }
 
     public static int getSlotNumFromItemStack(ItemStack itemStack) {
@@ -125,9 +127,10 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         ItemStack nowItem = getActiveItemStack(stack);
         if (nowItem != null) {
             Set<String> toolClasses = nowItem.getItem().getToolClasses(nowItem);
+            IBlockState blockState = player.getEntityWorld().getBlockState(blockPos);
             int harvestLevel;
             for (String toolClass : toolClasses) {
-                harvestLevel = nowItem.getItem().getHarvestLevel(nowItem, toolClass);
+                harvestLevel = nowItem.getItem().getHarvestLevel(nowItem, toolClass, player, blockState);
                 this.setHarvestLevel(toolClass, harvestLevel);
             }
             return nowItem.getItem().onBlockStartBreak(stack, blockPos, player);
@@ -147,22 +150,22 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        ItemStack itemStack = getActiveItemStack(stack);
+    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        ItemStack itemStack = getActiveItemStack(player.getHeldItem(hand));
         if (itemStack != null) {
-            return itemStack.getItem().onItemUseFirst(itemStack, player, world, pos, side, hitX, hitY, hitZ, hand);
+            return itemStack.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
         }
-        return super.onItemUseFirst(stack, player, world, pos, side, hitX, hitY, hitZ, hand);
+        return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
     }
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack itemStack = getActiveItemStack(stack);
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack itemStack = getActiveItemStack(playerIn.getHeldItem(hand));
         if (itemStack != null && !worldIn.isRemote) {
-            return itemStack.getItem().onItemUse(itemStack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+            return itemStack.getItem().onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
         }
-        return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+        return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
 
     @Override
@@ -170,7 +173,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != null) {
             itemStack.getItem().onPlayerStoppedUsing(itemStack, worldIn, entityLiving, timeLeft);
-            if (itemStack.stackSize <= 0) {
+            if (itemStack.getCount() <= 0) {
                 this.destroyTheItem(entityLiving, itemStack, EnumHand.MAIN_HAND);
             }
         }
@@ -188,18 +191,19 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
     @Override
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        ItemStack itemStackIn = playerIn.getHeldItem(hand);
         InventoryToolHolder tools = this.getInventoryFromItemStack(itemStackIn);
         int SlotNum = getSlotNumFromItemStack(itemStackIn);
         ItemStack itemStack = getActiveItemStack(itemStackIn);
         if (itemStack != null) {
             ActionResult<ItemStack> actionResult = itemStack.getItem()
-                    .onItemRightClick(itemStack, worldIn, playerIn, hand);
+                    .onItemRightClick(worldIn, playerIn, hand);
             tools.setInventorySlotContents(
                     SlotNum, actionResult
                             .getResult());
         }
-        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+        return super.onItemRightClick(worldIn, playerIn, hand);
     }
 
     @Override
@@ -255,7 +259,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
             boolean ret = nowItem.getItem()
                     .onBlockDestroyed(nowItem, worldIn, state, pos,
                             entityLiving);
-            if (nowItem.stackSize <= 0) {
+            if (nowItem.getCount() <= 0) {
                 this.destroyTheItem(entityLiving, nowItem, EnumHand.MAIN_HAND);
             }
             tools.writeToNBT(stack.getTagCompound());
@@ -301,7 +305,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                     i = i + EnchantmentHelper.getKnockbackModifier(player);
 
                     if (player.isSprinting() && flag) {
-                        player.worldObj.playSound(null,
+                        player.getEntityWorld().playSound(null,
                                 player.posX, player.posY, player.posZ,
                                 SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, player.getSoundCategory(), 1.0F, 1.0F);
                         ++i;
@@ -366,7 +370,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                         }
 
                         if (flag3) {
-                            for (EntityLivingBase entitylivingbase : player.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, entityIn.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
+                            for (EntityLivingBase entitylivingbase : player.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, entityIn.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
                                 if (entitylivingbase != player
                                         && entitylivingbase != entityIn
                                         && !player.isOnSameTeam(entitylivingbase)
@@ -380,7 +384,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                                 }
                             }
 
-                            player.worldObj.playSound(null,
+                            player.getEntityWorld().playSound(null,
                                     player.posX, player.posY, player.posZ,
                                     SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0F, 1.0F);
                             player.spawnSweepParticles();
@@ -395,7 +399,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                         }
 
                         if (flag2) {
-                            player.worldObj.playSound(null,
+                            player.getEntityWorld().playSound(null,
                                     player.posX, player.posY, player.posZ,
                                     SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
                             player.onCriticalHit(entityIn);
@@ -403,11 +407,11 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
                         if (!flag2 && !flag3) {
                             if (flag) {
-                                player.worldObj.playSound(null,
+                                player.getEntityWorld().playSound(null,
                                         player.posX, player.posY, player.posZ,
                                         SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, player.getSoundCategory(), 1.0F, 1.0F);
                             } else {
-                                player.worldObj.playSound(null,
+                                player.getEntityWorld().playSound(null,
                                         player.posX, player.posY, player.posZ,
                                         SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, player.getSoundCategory(), 1.0F, 1.0F);
                             }
@@ -417,7 +421,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                             player.onEnchantmentCritical(entityIn);
                         }
 
-                        if (!player.worldObj.isRemote && entityIn instanceof EntityPlayer) {
+                        if (!player.getEntityWorld().isRemote && entityIn instanceof EntityPlayer) {
                             EntityPlayer entityplayer = (EntityPlayer) entityIn;
                             ItemStack itemstack3 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : null;
 
@@ -433,7 +437,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
                                 if (player.getRNG().nextFloat() < f3) {
                                     entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-                                    player.worldObj.setEntityState(entityplayer, (byte) 30);
+                                    player.getEntityWorld().setEntityState(entityplayer, (byte) 30);
                                 }
                             }
                         }
@@ -462,7 +466,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                         if (stack != null && entity instanceof EntityLivingBase) {
                             stack.hitEntity((EntityLivingBase) entity, player);
 
-                            if (stack.stackSize <= 0) {
+                            if (stack.getCount() <= 0) {
 //                                player.setHeldItem(EnumHand.MAIN_HAND, null);
                                 destroyTheItem(player, stack, EnumHand.MAIN_HAND);
                             }
@@ -476,9 +480,9 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                                 entityIn.setFire(j * 4);
                             }
 
-                            if (player.worldObj instanceof WorldServer && f5 > 2.0F) {
+                            if (player.getEntityWorld() instanceof WorldServer && f5 > 2.0F) {
                                 int k = (int) ((double) f5 * 0.5D);
-                                ((WorldServer) player.worldObj).spawnParticle(
+                                ((WorldServer) player.getEntityWorld()).spawnParticle(
                                         EnumParticleTypes.DAMAGE_INDICATOR,
                                         entityIn.posX, entityIn.posY + (double) (entityIn.height * 0.5F), entityIn.posZ,
                                         k, 0.1D, 0.0D, 0.1D, 0.2D, new int[0]);
@@ -487,7 +491,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
                         player.addExhaustion(0.3F);
                     } else {
-                        player.worldObj.playSound(null,
+                        player.getEntityWorld().playSound(null,
                                 player.posX, player.posY, player.posZ,
                                 SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, player.getSoundCategory(), 1.0F, 1.0F);
 
@@ -502,9 +506,10 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
     /**
      * 破壊処理メソッド
+     *
      * @param entityLivingBase 破壊者
-     * @param orig ツールホルダー
-     * @param hand 持ち手
+     * @param orig             ツールホルダー
+     * @param hand             持ち手
      */
     private void destroyTheItem(EntityLivingBase entityLivingBase, ItemStack orig, EnumHand hand) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(orig);
@@ -553,7 +558,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     public void doKeyAction(ItemStack itemStack, EntityPlayer player, byte key) {
         if (key == OPEN_KEY) {
             if (player.openContainer == null || !(player.openContainer instanceof ContainerToolHolder)) {
-                player.openGui(MultiToolHolders.instance, this.guiId, player.worldObj, 0, 0, 0);
+                player.openGui(MultiToolHolders.instance, this.guiId, player.getEntityWorld(), 0, 0, 0);
             }
         } else if (key == NEXT_KEY) {
             int slot = getSlotNumFromItemStack(itemStack);

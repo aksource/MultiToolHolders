@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
 /**
+ * TEとの連携用
  * Created by A.K. on 14/11/02.
  */
 public class CoopTE {

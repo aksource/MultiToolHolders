@@ -21,7 +21,7 @@ public class RenderingHolderInventoryHUD {
 
     @SubscribeEvent
     public void renderingOverlay(RenderGameOverlayEvent.Text event) {
-        EntityPlayer player = mc.thePlayer;
+        EntityPlayer player = mc.player;
         ItemStack holdItem = player.getHeldItemMainhand();
         if (holdItem != null && holdItem.getItem() instanceof ItemMultiToolHolder) {
             renderHolderInventory(holdItem, event.getPartialTicks());

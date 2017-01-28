@@ -245,7 +245,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, BlockPos blockPos,
                                     EntityLivingBase par7EntityLiving) {
         InventoryToolHolder tools = getInventoryFromItemStack(itemStack);
-        ItemStack nowItem = getActiveItemStack(itemStack);
+        int activeSlot = getSlotNumFromItemStack(itemStack);
+        ItemStack nowItem = tools.getStackInSlot(activeSlot);
         if (nowItem != null && !world.isRemote) {
             boolean ret = nowItem.getItem()
                     .onBlockDestroyed(nowItem, world, block, blockPos,

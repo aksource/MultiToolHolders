@@ -51,7 +51,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     public static final byte OPEN_KEY = 0;
     public static final byte NEXT_KEY = 1;
     public static final byte PREV_KEY = 2;
-    private final int inventorySize;
+    public final int inventorySize;
     private final int guiId;
 
     public ItemMultiToolHolder(int slot, int guiId) {

@@ -209,7 +209,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         ItemStack itemStackIn = playerIn.getHeldItem(hand);
         InventoryToolHolder tools = this.getInventoryFromItemStack(itemStackIn);
         int activeSlot = getSlotNumFromItemStack(itemStackIn);
-        ItemStack itemStack = getActiveItemStack(itemStackIn);
+        ItemStack itemStack = tools.getStackInSlot(activeSlot);
         if (itemStack != ItemStack.EMPTY) {
             playerIn.setHeldItem(hand, itemStack);
             ActionResult<ItemStack> actionResult = itemStack.getItem()

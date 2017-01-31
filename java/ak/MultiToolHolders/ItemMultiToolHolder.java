@@ -151,9 +151,16 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     @Nonnull
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        ItemStack itemStack = getActiveItemStack(player.getHeldItem(hand));
+        ItemStack heldItem = player.getHeldItem(hand);
+        InventoryToolHolder toolHolder = getInventoryFromItemStack(heldItem);
+        int activeSlot = getSlotNumFromItemStack(heldItem);
+        ItemStack itemStack = toolHolder.getStackInSlot(activeSlot);
         if (itemStack != ItemStack.EMPTY) {
-            return itemStack.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
+            player.setHeldItem(hand, itemStack);
+            EnumActionResult ret = itemStack.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
+            player.setHeldItem(hand, heldItem);
+            toolHolder.writeToNBT(heldItem.getTagCompound());
+            return ret;
         }
         return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
     }
@@ -161,9 +168,16 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     @Nonnull
     public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack itemStack = getActiveItemStack(playerIn.getHeldItem(hand));
-        if (itemStack != ItemStack.EMPTY && !worldIn.isRemote) {
-            return itemStack.getItem().onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+        ItemStack heldItem = playerIn.getHeldItem(hand);
+        InventoryToolHolder toolHolder = getInventoryFromItemStack(heldItem);
+        int activeSlot = getSlotNumFromItemStack(heldItem);
+        ItemStack itemStack = toolHolder.getStackInSlot(activeSlot);
+        if (itemStack != ItemStack.EMPTY) {
+            playerIn.setHeldItem(hand, itemStack);
+            EnumActionResult ret = itemStack.getItem().onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+            playerIn.setHeldItem(hand, heldItem);
+            toolHolder.writeToNBT(heldItem.getTagCompound());
+            return ret;
         }
         return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
@@ -194,14 +208,17 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand hand) {
         ItemStack itemStackIn = playerIn.getHeldItem(hand);
         InventoryToolHolder tools = this.getInventoryFromItemStack(itemStackIn);
-        int SlotNum = getSlotNumFromItemStack(itemStackIn);
+        int activeSlot = getSlotNumFromItemStack(itemStackIn);
         ItemStack itemStack = getActiveItemStack(itemStackIn);
         if (itemStack != ItemStack.EMPTY) {
+            playerIn.setHeldItem(hand, itemStack);
             ActionResult<ItemStack> actionResult = itemStack.getItem()
                     .onItemRightClick(worldIn, playerIn, hand);
             tools.setInventorySlotContents(
-                    SlotNum, actionResult
+                    activeSlot, actionResult
                             .getResult());
+            playerIn.setHeldItem(hand, itemStackIn);
+            return new ActionResult<>(actionResult.getType(), itemStackIn);
         }
         return super.onItemRightClick(worldIn, playerIn, hand);
     }
@@ -220,8 +237,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != ItemStack.EMPTY) {
             return itemStack.getItemUseAction();
-        } else
-            return super.getItemUseAction(stack);
+        }
+        return super.getItemUseAction(stack);
     }
 
     @Override
@@ -229,8 +246,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != ItemStack.EMPTY) {
             return itemStack.getMaxItemUseDuration();
-        } else
-            return super.getMaxItemUseDuration(stack);
+        }
+        return super.getMaxItemUseDuration(stack);
     }
 
     @Override
@@ -238,8 +255,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != ItemStack.EMPTY) {
             return itemStack.getItem().getStrVsBlock(itemStack, state);
-        } else
-            return super.getStrVsBlock(stack, state);
+        }
+        return super.getStrVsBlock(stack, state);
     }
 
     @Override
@@ -247,8 +264,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != ItemStack.EMPTY) {
             return itemStack.getItem().canHarvestBlock(state, itemStack);
-        } else
-            return super.canHarvestBlock(state, stack);
+        }
+        return super.canHarvestBlock(state, stack);
     }
 
     @Override
@@ -265,8 +282,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
             }
             tools.writeToNBT(stack.getTagCompound());
             return ret;
-        } else
-            return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
+        }
+        return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
     }
 
     @Override
@@ -279,88 +296,99 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         return super.getAttributeModifiers(slot, stack);
     }
 
+    /**
+     * 攻撃処理の丸コピ
+     *
+     * @param entityIn 攻撃対象者
+     * @param player   攻撃者
+     * @param stack    ツールホルダー内のActiveItemStack
+     */
     private void attackTargetEntityWithTheItem(Entity entityIn, EntityPlayer player, ItemStack stack) {
         if (entityIn.canBeAttackedWithItem()) {
             if (!entityIn.hitByEntity(player)) {
-                float f = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
-                float f1;
+                float playerATKValue = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+                float targetDEFValue;
 
                 if (entityIn instanceof EntityLivingBase) {
-                    f1 = EnchantmentHelper.getModifierForCreature(stack, ((EntityLivingBase) entityIn).getCreatureAttribute());
+                    targetDEFValue = EnchantmentHelper.getModifierForCreature(stack, ((EntityLivingBase) entityIn).getCreatureAttribute());
                 } else {
-                    f1 = EnchantmentHelper.getModifierForCreature(stack, EnumCreatureAttribute.UNDEFINED);
+                    targetDEFValue = EnchantmentHelper.getModifierForCreature(stack, EnumCreatureAttribute.UNDEFINED);
                 }
 
-                float f2 = player.getCooledAttackStrength(0.5F);
-                f = f * (0.2F + f2 * f2 * 0.8F);
-                f1 = f1 * f2;
+                float playerCooledATKValue = player.getCooledAttackStrength(0.5F);
+                playerATKValue = playerATKValue * (0.2F + playerCooledATKValue * playerCooledATKValue * 0.8F);
+                targetDEFValue = targetDEFValue * playerCooledATKValue;
                 player.resetCooldown();
 
-                if (f > 0.0F || f1 > 0.0F) {
-                    boolean flag = f2 > 0.9F;
-                    boolean flag1 = false;
-                    boolean flag3 = false;
-                    int i = 0;
-                    i = i + EnchantmentHelper.getKnockbackModifier(player);
+                if (playerATKValue > 0.0F || targetDEFValue > 0.0F) {
+                    boolean isCooledATKOver = playerCooledATKValue > 0.9F;
+                    boolean isSprintingCritical = false;
+                    boolean isSword = false;
+                    int knockBackModifier = EnchantmentHelper.getKnockbackModifier(player);
 
-                    if (player.isSprinting() && flag) {
+                    if (player.isSprinting() && isCooledATKOver) {
                         player.getEntityWorld().playSound(null,
                                 player.posX, player.posY, player.posZ,
-                                SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, player.getSoundCategory(), 1.0F, 1.0F);
-                        ++i;
-                        flag1 = true;
+                                SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK,
+                                player.getSoundCategory(), 1.0F, 1.0F);
+                        ++knockBackModifier;
+                        isSprintingCritical = true;
                     }
 
-                    boolean flag2 = flag && player.fallDistance > 0.0F
+                    boolean isJumpingCritical = isCooledATKOver && player.fallDistance > 0.0F
                             && !player.onGround
                             && !player.isOnLadder()
                             && !player.isInWater()
                             && !player.isPotionActive(MobEffects.BLINDNESS)
                             && !player.isRiding()
-                            && entityIn instanceof EntityLivingBase;
-                    flag2 = flag2 && !player.isSprinting();
+                            && entityIn instanceof EntityLivingBase
+                            && !player.isSprinting();
 
-                    if (flag2) {
-                        f *= 1.5F;
+                    if (isJumpingCritical) {
+                        playerATKValue *= 1.5F;
                     }
 
-                    f = f + f1;
-                    double d0 = (double) (player.distanceWalkedModified - player.prevDistanceWalkedModified);
+                    playerATKValue = playerATKValue + targetDEFValue;
+                    double walkedModified = (double) (player.distanceWalkedModified - player.prevDistanceWalkedModified);
 
-                    if (flag && !flag2 && !flag1 && player.onGround && d0 < (double) player.getAIMoveSpeed()) {
+                    if (isCooledATKOver && !isJumpingCritical && !isSprintingCritical
+                            && player.onGround && walkedModified < (double) player.getAIMoveSpeed()) {
                         if (stack != ItemStack.EMPTY && stack.getItem() instanceof ItemSword) {
-                            flag3 = true;
+                            isSword = true;
                         }
                     }
 
-                    float f4 = 0.0F;
-                    boolean flag4 = false;
-                    int j = EnchantmentHelper.getFireAspectModifier(player);
+                    float targetHealth = 0.0F;
+                    boolean targetNotBurn = false;
+                    int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(player);
 
                     if (entityIn instanceof EntityLivingBase) {
-                        f4 = ((EntityLivingBase) entityIn).getHealth();
+                        targetHealth = ((EntityLivingBase) entityIn).getHealth();
 
-                        if (j > 0 && !entityIn.isBurning()) {
-                            flag4 = true;
+                        if (fireAspectModifier > 0 && !entityIn.isBurning()) {
+                            targetNotBurn = true;
                             entityIn.setFire(1);
                         }
                     }
 
-                    double d1 = entityIn.motionX;
-                    double d2 = entityIn.motionY;
-                    double d3 = entityIn.motionZ;
-                    boolean flag5 = entityIn.attackEntityFrom(DamageSource.causePlayerDamage(player), f);
+                    double motionX = entityIn.motionX;
+                    double motionY = entityIn.motionY;
+                    double motionZ = entityIn.motionZ;
+                    boolean retAttackEntityFrom = entityIn.attackEntityFrom(DamageSource.causePlayerDamage(player), playerATKValue);
 
-                    if (flag5) {
-                        if (i > 0) {
+                    if (retAttackEntityFrom) {
+                        if (knockBackModifier > 0) {
                             if (entityIn instanceof EntityLivingBase) {
                                 ((EntityLivingBase) entityIn).knockBack(
                                         player,
-                                        (float) i * 0.5F,
+                                        (float) knockBackModifier * 0.5F,
                                         (double) MathHelper.sin(player.rotationYaw * 0.017453292F),
                                         (double) (-MathHelper.cos(player.rotationYaw * 0.017453292F)));
                             } else {
-                                entityIn.addVelocity((double) (-MathHelper.sin(player.rotationYaw * 0.017453292F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(player.rotationYaw * 0.017453292F) * (float) i * 0.5F));
+                                entityIn.addVelocity(
+                                        (double) (-MathHelper.sin(player.rotationYaw * 0.017453292F) * (float) knockBackModifier * 0.5F),
+                                        0.1D,
+                                        (double) (MathHelper.cos(player.rotationYaw * 0.017453292F) * (float) knockBackModifier * 0.5F));
                             }
 
                             player.motionX *= 0.6D;
@@ -368,7 +396,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                             player.setSprinting(false);
                         }
 
-                        if (flag3) {
+                        if (isSword) {
                             for (EntityLivingBase entitylivingbase : player.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, entityIn.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
                                 if (entitylivingbase != player
                                         && entitylivingbase != entityIn
@@ -392,20 +420,20 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                         if (entityIn instanceof EntityPlayerMP && entityIn.velocityChanged) {
                             ((EntityPlayerMP) entityIn).connection.sendPacket(new SPacketEntityVelocity(entityIn));
                             entityIn.velocityChanged = false;
-                            entityIn.motionX = d1;
-                            entityIn.motionY = d2;
-                            entityIn.motionZ = d3;
+                            entityIn.motionX = motionX;
+                            entityIn.motionY = motionY;
+                            entityIn.motionZ = motionZ;
                         }
 
-                        if (flag2) {
+                        if (isJumpingCritical) {
                             player.getEntityWorld().playSound(null,
                                     player.posX, player.posY, player.posZ,
                                     SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
                             player.onCriticalHit(entityIn);
                         }
 
-                        if (!flag2 && !flag3) {
-                            if (flag) {
+                        if (!isJumpingCritical && !isSword) {
+                            if (isCooledATKOver) {
                                 player.getEntityWorld().playSound(null,
                                         player.posX, player.posY, player.posZ,
                                         SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, player.getSoundCategory(), 1.0F, 1.0F);
@@ -416,32 +444,32 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                             }
                         }
 
-                        if (f1 > 0.0F) {
+                        if (targetDEFValue > 0.0F) {
                             player.onEnchantmentCritical(entityIn);
                         }
 
                         if (!player.getEntityWorld().isRemote && entityIn instanceof EntityPlayer) {
                             EntityPlayer entityplayer = (EntityPlayer) entityIn;
-                            ItemStack itemstack3 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : null;
+                            ItemStack targetHandHeldItem = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : ItemStack.EMPTY;
 
                             if (stack != ItemStack.EMPTY
-                                    && itemstack3 != null
+                                    && targetHandHeldItem != ItemStack.EMPTY
                                     && stack.getItem() instanceof ItemAxe
-                                    && itemstack3.getItem() == Items.SHIELD) {
-                                float f3 = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(player) * 0.05F;
+                                    && targetHandHeldItem.getItem() == Items.SHIELD) {
+                                float efficiency = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(player) * 0.05F;
 
-                                if (flag1) {
-                                    f3 += 0.75F;
+                                if (isSprintingCritical) {
+                                    efficiency += 0.75F;
                                 }
 
-                                if (player.getRNG().nextFloat() < f3) {
+                                if (player.getRNG().nextFloat() < efficiency) {
                                     entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
                                     player.getEntityWorld().setEntityState(entityplayer, (byte) 30);
                                 }
                             }
                         }
 
-                        if (f >= 18.0F) {
+                        if (playerATKValue >= 18.0F) {
                             player.addStat(AchievementList.OVERKILL);
                         }
 
@@ -466,21 +494,20 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                             stack.hitEntity((EntityLivingBase) entity, player);
 
                             if (stack.getCount() <= 0) {
-//                                player.setHeldItem(EnumHand.MAIN_HAND, null);
                                 destroyTheItem(player, stack, EnumHand.MAIN_HAND);
                             }
                         }
 
                         if (entityIn instanceof EntityLivingBase) {
-                            float f5 = f4 - ((EntityLivingBase) entityIn).getHealth();
-                            player.addStat(StatList.DAMAGE_DEALT, Math.round(f5 * 10.0F));
+                            float realDamage = targetHealth - ((EntityLivingBase) entityIn).getHealth();
+                            player.addStat(StatList.DAMAGE_DEALT, Math.round(realDamage * 10.0F));
 
-                            if (j > 0) {
-                                entityIn.setFire(j * 4);
+                            if (fireAspectModifier > 0) {
+                                entityIn.setFire(fireAspectModifier * 4);
                             }
 
-                            if (player.getEntityWorld() instanceof WorldServer && f5 > 2.0F) {
-                                int k = (int) ((double) f5 * 0.5D);
+                            if (player.getEntityWorld() instanceof WorldServer && realDamage > 2.0F) {
+                                int k = (int) ((double) realDamage * 0.5D);
                                 ((WorldServer) player.getEntityWorld()).spawnParticle(
                                         EnumParticleTypes.DAMAGE_INDICATOR,
                                         entityIn.posX, entityIn.posY + (double) (entityIn.height * 0.5F), entityIn.posZ,
@@ -492,9 +519,10 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                     } else {
                         player.getEntityWorld().playSound(null,
                                 player.posX, player.posY, player.posZ,
-                                SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, player.getSoundCategory(), 1.0F, 1.0F);
+                                SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE,
+                                player.getSoundCategory(), 1.0F, 1.0F);
 
-                        if (flag4) {
+                        if (targetNotBurn) {
                             entityIn.extinguish();
                         }
                     }
@@ -512,12 +540,18 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
      */
     private void destroyTheItem(EntityLivingBase entityLivingBase, ItemStack orig, EnumHand hand) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(orig);
-        int SlotNum = getSlotNumFromItemStack(orig);
-        tools.setInventorySlotContents(SlotNum, ItemStack.EMPTY);
+        int slotNum = getSlotNumFromItemStack(orig);
+        tools.setInventorySlotContents(slotNum, ItemStack.EMPTY);
         if (entityLivingBase instanceof EntityPlayer)
             MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent((EntityPlayer) entityLivingBase, orig, hand));
     }
 
+    /**
+     * エンチャント付与処理
+     *
+     * @param itemToEnchant エンチャントされるアイテム
+     * @param itemEnchanted エンチャントされているアイテム
+     */
     private void setEnchantments(ItemStack itemToEnchant, ItemStack itemEnchanted) {
         int id;
         int lv;
@@ -534,6 +568,12 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         }
     }
 
+    /**
+     * ツールホルダーのNBTにスロット番号を設定する処理
+     *
+     * @param itemStack ツールホルダーアイテム
+     * @param slotNum   新しいスロット番号
+     */
     private void setSlotNumToItemStack(ItemStack itemStack, int slotNum) {
         if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
         if (!itemStack.getTagCompound().hasKey(NBT_KEY_MTH, Constants.NBT.TAG_COMPOUND)) {
@@ -544,11 +584,23 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         nbt.setInteger(NBT_KEY_SLOT, slotNum);
     }
 
+    /**
+     * ツールホルダーのインベントリを取得
+     *
+     * @param itemStack ツールホルダーアイテム
+     * @return インベントリツールホルダー
+     */
     @Nonnull
     public InventoryToolHolder getInventoryFromItemStack(@Nonnull ItemStack itemStack) {
         return new InventoryToolHolder(itemStack);
     }
 
+    /**
+     * ツールホルダーのActiveItemStackを取得
+     *
+     * @param itemStack ツールホルダーアイテム
+     * @return ActiveItemStack
+     */
     @Nonnull
     public ItemStack getActiveItemStack(@Nonnull ItemStack itemStack) {
         int slot = getSlotNumFromItemStack(itemStack);

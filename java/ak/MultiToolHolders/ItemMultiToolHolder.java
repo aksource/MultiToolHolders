@@ -41,48 +41,57 @@ import java.util.Set;
 )
 public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer, IToolWrench {
 
-	public int inventorySize;
-    private int guiId;
     public static final byte OPEN_KEY = 0;
     public static final byte NEXT_KEY = 1;
     public static final byte PREV_KEY = 2;
+    public int inventorySize;
+    private int guiId;
 
-	public ItemMultiToolHolder(int slot, int guiId) {
-		super();
-		this.setHasSubtypes(true);
-		this.setMaxStackSize(1);
+    public ItemMultiToolHolder(int slot, int guiId) {
+        super();
+        this.setHasSubtypes(true);
+        this.setMaxStackSize(1);
         this.setMaxDamage(0);
         this.setCreativeTab(CreativeTabs.tabTools);
-		this.inventorySize = slot;
+        this.inventorySize = slot;
         this.guiId = guiId;
-	}
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		String ToolName;
-        InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-		for (int i = 0; i < inventorySize; i++) {
-			if (tools != null && tools.getStackInSlot(i) != null) {
-				ToolName = tools.getStackInSlot(i).getDisplayName();
-				par3List.add(ToolName);
-			}
-		}
-	}
+    public static int getSlotNumFromItemStack(ItemStack itemStack) {
+        if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
+        if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
+            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            itemStack.getTagCompound().setTag("multitoolholders", nbtTagCompound);
+        }
+        NBTTagCompound nbt = (NBTTagCompound) itemStack.getTagCompound().getTag("multitoolholders");
+        return nbt.getInteger("slot");
+    }
 
-	@SideOnly(Side.CLIENT)
     @Override
-	public boolean isFull3D() {
+    @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List tooltip, boolean advanced) {
+        String ToolName;
+        InventoryToolHolder tools = this.getInventoryFromItemStack(itemStack);
+        for (int i = 0; i < inventorySize; i++) {
+            if (tools != null && tools.getStackInSlot(i) != null) {
+                ToolName = tools.getStackInSlot(i).getDisplayName();
+                tooltip.add(ToolName);
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean isFull3D() {
         //Toolか剣しか普通は使わないので、falseの時はないと判断。
         return true;
-	}
+    }
 
-
-	@Override
-	public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHeld) {
-		if (entity instanceof EntityPlayer && isHeld && !world.isRemote) {
-			EntityPlayer entityPlayer = (EntityPlayer) entity;
+    @Override
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHeld) {
+        if (entity instanceof EntityPlayer && isHeld && !world.isRemote) {
+            EntityPlayer entityPlayer = (EntityPlayer) entity;
 
             if (itemStack.hasTagCompound()) {
                 itemStack.getTagCompound().removeTag("ench");
@@ -91,20 +100,20 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer,
             InventoryToolHolder tools = this.getInventoryFromItemStack(itemStack);
             int SlotNum = getSlotNumFromItemStack(itemStack);
 
-			if (tools != null &&  tools.getStackInSlot(SlotNum) != null) {
-				tools.getStackInSlot(SlotNum).getItem()
-						.onUpdate(tools.getStackInSlot(SlotNum), world, entity, slot, true);
-				this.setEnchantments(itemStack, tools.getStackInSlot(SlotNum));
-			}
-		}
-	}
+            if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+                tools.getStackInSlot(SlotNum).getItem()
+                        .onUpdate(tools.getStackInSlot(SlotNum), world, entity, slot, true);
+                this.setEnchantments(itemStack, tools.getStackInSlot(SlotNum));
+            }
+        }
+    }
 
-	@Override
-	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if (par1ItemStack.getItem() instanceof ItemMultiToolHolder) {
-            par1ItemStack.setTagCompound(new NBTTagCompound());
-		}
-	}
+    @Override
+    public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
+        if (itemStack.getItem() instanceof ItemMultiToolHolder) {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+    }
 
     @Override
     public boolean onBlockStartBreak(ItemStack stack, int X, int Y, int Z, EntityPlayer player) {
@@ -127,107 +136,94 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer,
     }
 
     @Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-	{
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
         int SlotNum = getSlotNumFromItemStack(stack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null)
-		{
-			this.attackTargetEntityWithTheItem(entity, player, tools.getStackInSlot(SlotNum));
-			return true;
-		} else return false;
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            this.attackTargetEntityWithTheItem(entity, player, tools.getStackInSlot(SlotNum));
+            return true;
+        } else return false;
+    }
 
-	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
-			float hitX, float hitY, float hitZ)
-	{
+    @Override
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+                                  float hitX, float hitY, float hitZ) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
         int SlotNum = getSlotNumFromItemStack(stack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null)
-		{
-			boolean ret = tools.getStackInSlot(SlotNum).getItem()
-					.onItemUseFirst(tools.getStackInSlot(SlotNum), player, world, x, y, z, side, hitX, hitY, hitZ);
-			if (tools.getStackInSlot(SlotNum).stackSize <= 0)
-			{
-				this.destroyTheItem(player, tools.getStackInSlot(SlotNum));
-			}
-			return ret;
-		}
-		else
-			return false;
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            boolean ret = tools.getStackInSlot(SlotNum).getItem()
+                    .onItemUseFirst(tools.getStackInSlot(SlotNum), player, world, x, y, z, side, hitX, hitY, hitZ);
+            if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
+                this.destroyTheItem(player, tools.getStackInSlot(SlotNum));
+            }
+            tools.writeToNBT(stack.getTagCompound());
+            return ret;
+        } else
+            return false;
+    }
 
-	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4,
-			int par5, int par6, int par7, float par8, float par9, float par10)
-	{
-        InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null && !par3World.isRemote)
-		{
-			boolean ret = tools
-					.getStackInSlot(SlotNum)
-					.getItem()
-					.onItemUse(tools.getStackInSlot(SlotNum), par2EntityPlayer, par3World, par4, par5, par6, par7,
+    @Override
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int par4,
+                             int par5, int par6, int par7, float par8, float par9, float par10) {
+        InventoryToolHolder tools = this.getInventoryFromItemStack(itemStack);
+        int SlotNum = getSlotNumFromItemStack(itemStack);
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            boolean ret = tools
+                    .getStackInSlot(SlotNum)
+                    .getItem()
+                    .onItemUse(tools.getStackInSlot(SlotNum), player, world, par4, par5, par6, par7,
                             par8, par9, par10);
-			if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
-				this.destroyTheItem(par2EntityPlayer, tools.getStackInSlot(SlotNum));
-			}
-			return ret;
-		} else
-			return false;
-	}
+            if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
+                this.destroyTheItem(player, tools.getStackInSlot(SlotNum));
+            }
+            tools.writeToNBT(itemStack.getTagCompound());
+            return ret;
+        } else
+            return false;
+    }
 
-	@Override
-	public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, int par4) {
+    @Override
+    public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, int par4) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
         int SlotNum = getSlotNumFromItemStack(par1ItemStack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null)
-		{
-			tools.getStackInSlot(SlotNum).getItem()
-					.onPlayerStoppedUsing(tools.getStackInSlot(SlotNum), par2World, par3EntityPlayer, par4);
-			if (tools.getStackInSlot(SlotNum).stackSize <= 0)
-			{
-				this.destroyTheItem(par3EntityPlayer, tools.getStackInSlot(SlotNum));
-			}
-		}
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            tools.getStackInSlot(SlotNum).getItem()
+                    .onPlayerStoppedUsing(tools.getStackInSlot(SlotNum), par2World, par3EntityPlayer, par4);
+            if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
+                this.destroyTheItem(par3EntityPlayer, tools.getStackInSlot(SlotNum));
+            }
+        }
+    }
 
-	@Override
-	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
+    @Override
+    public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
         int SlotNum = getSlotNumFromItemStack(par1ItemStack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null)
-		{
-			tools.getStackInSlot(SlotNum).getItem()
-					.onEaten(tools.getStackInSlot(SlotNum), par2World, par3EntityPlayer);
-		}
-		return par1ItemStack;
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            tools.getStackInSlot(SlotNum).getItem()
+                    .onEaten(tools.getStackInSlot(SlotNum), par2World, par3EntityPlayer);
+        }
+        return par1ItemStack;
+    }
 
-	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
+    @Override
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
         int SlotNum = getSlotNumFromItemStack(par1ItemStack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null)
-		{
-			tools.setInventorySlotContents(
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            tools.setInventorySlotContents(
                     SlotNum,
                     tools.getStackInSlot(SlotNum).getItem()
                             .onItemRightClick(tools.getStackInSlot(SlotNum), par2World, par3EntityPlayer));
-		}
-		if (this.getItemUseAction(par1ItemStack) != EnumAction.none)
-			par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
-		return par1ItemStack;
-	}
+        }
+        if (this.getItemUseAction(par1ItemStack) != EnumAction.none)
+            par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+        return par1ItemStack;
+    }
 
-	@Override
-	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
-			EntityLivingBase par3EntityLivingBase)
-	{
+    @Override
+    public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
+                                            EntityLivingBase par3EntityLivingBase) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
         int SlotNum = getSlotNumFromItemStack(par1ItemStack);
         return tools != null && tools.getStackInSlot(SlotNum) != null && tools
@@ -235,189 +231,182 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer,
                 .getItem()
                 .itemInteractionForEntity(tools.getStackInSlot(SlotNum), par2EntityPlayer,
                         par3EntityLivingBase);
-	}
+    }
 
-	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack)
-	{
+    @Override
+    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
         int SlotNum = getSlotNumFromItemStack(par1ItemStack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
-			return tools.getStackInSlot(SlotNum).getItemUseAction();
-		} else
-			return super.getItemUseAction(par1ItemStack);
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            return tools.getStackInSlot(SlotNum).getItemUseAction();
+        } else
+            return super.getItemUseAction(par1ItemStack);
+    }
 
-	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack)
-	{
+    @Override
+    public int getMaxItemUseDuration(ItemStack par1ItemStack) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
         int SlotNum = getSlotNumFromItemStack(par1ItemStack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
-			return tools.getStackInSlot(SlotNum).getMaxItemUseDuration();
-		} else
-			return super.getMaxItemUseDuration(par1ItemStack);
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            return tools.getStackInSlot(SlotNum).getMaxItemUseDuration();
+        } else
+            return super.getMaxItemUseDuration(par1ItemStack);
+    }
 
-	@Override
-	public float getDigSpeed(ItemStack stack, Block block, int meta)
-	{
+    @Override
+    public float getDigSpeed(ItemStack stack, Block block, int meta) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
         int SlotNum = getSlotNumFromItemStack(stack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
-			return tools.getStackInSlot(SlotNum).getItem()
-					.getDigSpeed(tools.getStackInSlot(SlotNum), block, meta);
-		} else
-			return super.getDigSpeed(stack, block, meta);
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            return tools.getStackInSlot(SlotNum).getItem()
+                    .getDigSpeed(tools.getStackInSlot(SlotNum), block, meta);
+        } else
+            return super.getDigSpeed(stack, block, meta);
+    }
 
-	@Override
-	public boolean canHarvestBlock(Block par1Block, ItemStack item)
-	{
+    @Override
+    public boolean canHarvestBlock(Block par1Block, ItemStack item) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(item);
         int SlotNum = getSlotNumFromItemStack(item);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null) {
-			return tools.getStackInSlot(SlotNum).getItem().canHarvestBlock(par1Block, item);
-		} else
-			return super.canHarvestBlock(par1Block, item);
-	}
+        if (tools != null && tools.getStackInSlot(SlotNum) != null) {
+            return tools.getStackInSlot(SlotNum).getItem().canHarvestBlock(par1Block, item);
+        } else
+            return super.canHarvestBlock(par1Block, item);
+    }
 
-	@Override
-	public boolean onBlockDestroyed(ItemStack itemStack, World world, Block par3, int par4, int par5, int par6,
-			EntityLivingBase par7EntityLiving)
-	{
+    @Override
+    public boolean onBlockDestroyed(ItemStack itemStack, World world, Block par3, int par4, int par5, int par6,
+                                    EntityLivingBase par7EntityLiving) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(itemStack);
         int SlotNum = getSlotNumFromItemStack(itemStack);
-		if (tools != null && tools.getStackInSlot(SlotNum) != null && !world.isRemote) {
-			boolean ret = tools
-					.getStackInSlot(SlotNum)
-					.getItem()
-					.onBlockDestroyed(tools.getStackInSlot(SlotNum), world, par3, par4, par5, par6,
+        if (tools != null && tools.getStackInSlot(SlotNum) != null && !world.isRemote) {
+            boolean ret = tools
+                    .getStackInSlot(SlotNum)
+                    .getItem()
+                    .onBlockDestroyed(tools.getStackInSlot(SlotNum), world, par3, par4, par5, par6,
                             par7EntityLiving);
-			if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
-				this.destroyTheItem((EntityPlayer) par7EntityLiving, tools.getStackInSlot(SlotNum));
-			}
-			tools.writeToNBT(itemStack.getTagCompound());
-			return ret;
-		} else
-			return super.onBlockDestroyed(itemStack, world, par3, par4, par5, par6, par7EntityLiving);
-	}
+            if (tools.getStackInSlot(SlotNum).stackSize <= 0) {
+                this.destroyTheItem((EntityPlayer) par7EntityLiving, tools.getStackInSlot(SlotNum));
+            }
+            tools.writeToNBT(itemStack.getTagCompound());
+            return ret;
+        } else
+            return super.onBlockDestroyed(itemStack, world, par3, par4, par5, par6, par7EntityLiving);
+    }
 
-	private void attackTargetEntityWithTheItem(Entity par1Entity, EntityPlayer player, ItemStack stack)
-	{
-		if (MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, par1Entity))) {
-			return;
-		}
-		if (stack != null && stack.getItem().onLeftClickEntity(stack, player, par1Entity)) {
-			return;
-		}
-		if (par1Entity.canAttackWithItem()) {
-			if (!par1Entity.hitByEntity(player)) {
-				float var2 = (float) this.getItemStrength(stack);
+    private void attackTargetEntityWithTheItem(Entity par1Entity, EntityPlayer player, ItemStack stack) {
+        if (MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, par1Entity))) {
+            return;
+        }
+        if (stack != null && stack.getItem().onLeftClickEntity(stack, player, par1Entity)) {
+            return;
+        }
+        if (par1Entity.canAttackWithItem()) {
+            if (!par1Entity.hitByEntity(player)) {
+                float var2 = (float) this.getItemStrength(stack);
 
-				if (player.isPotionActive(Potion.damageBoost)) {
-					var2 += 3 << player.getActivePotionEffect(Potion.damageBoost).getAmplifier();
-				}
+                if (player.isPotionActive(Potion.damageBoost)) {
+                    var2 += 3 << player.getActivePotionEffect(Potion.damageBoost).getAmplifier();
+                }
 
-				if (player.isPotionActive(Potion.weakness)) {
-					var2 -= 2 << player.getActivePotionEffect(Potion.weakness).getAmplifier();
-				}
+                if (player.isPotionActive(Potion.weakness)) {
+                    var2 -= 2 << player.getActivePotionEffect(Potion.weakness).getAmplifier();
+                }
 
-				int var3 = 0;
-				int var4 = 0;
+                int var3 = 0;
+                int var4 = 0;
 
-				if (par1Entity instanceof EntityLivingBase) {
-					var4 = this.getEnchantmentModifierLiving(stack, player, (EntityLivingBase) par1Entity);
-					var3 += EnchantmentHelper.getEnchantmentLevel(Enchantment.knockback.effectId, stack);
-				}
+                if (par1Entity instanceof EntityLivingBase) {
+                    var4 = this.getEnchantmentModifierLiving(stack, player, (EntityLivingBase) par1Entity);
+                    var3 += EnchantmentHelper.getEnchantmentLevel(Enchantment.knockback.effectId, stack);
+                }
 
-				if (player.isSprinting()) {
-					++var3;
-				}
+                if (player.isSprinting()) {
+                    ++var3;
+                }
 
-				if (var2 > 0 || var4 > 0) {
-					boolean var5 = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder()
-							&& !player.isInWater() && !player.isPotionActive(Potion.blindness)
-							&& player.ridingEntity == null && par1Entity instanceof EntityLivingBase;
+                if (var2 > 0 || var4 > 0) {
+                    boolean var5 = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder()
+                            && !player.isInWater() && !player.isPotionActive(Potion.blindness)
+                            && player.ridingEntity == null && par1Entity instanceof EntityLivingBase;
 
-					if (var5 && var2 > 0) {
-						var2 *= 1.5F;
-					}
+                    if (var5 && var2 > 0) {
+                        var2 *= 1.5F;
+                    }
 
-					var2 += var4;
-					boolean var6 = false;
-					int var7 = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack);
+                    var2 += var4;
+                    boolean var6 = false;
+                    int var7 = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack);
 
-					if (par1Entity instanceof EntityLivingBase && var7 > 0 && !par1Entity.isBurning()) {
-						var6 = true;
-						par1Entity.setFire(1);
-					}
+                    if (par1Entity instanceof EntityLivingBase && var7 > 0 && !par1Entity.isBurning()) {
+                        var6 = true;
+                        par1Entity.setFire(1);
+                    }
 
-					boolean var8 = par1Entity.attackEntityFrom(DamageSource.causePlayerDamage(player), var2);
+                    boolean var8 = par1Entity.attackEntityFrom(DamageSource.causePlayerDamage(player), var2);
 
-					if (var8) {
-						if (var3 > 0) {
-							par1Entity.addVelocity(
-									(double) (-MathHelper.sin(player.rotationYaw * (float) Math.PI / 180.0F)
-											* (float) var3 * 0.5F), 0.1D,
-									(double) (MathHelper.cos(player.rotationYaw * (float) Math.PI / 180.0F)
-											* (float) var3 * 0.5F));
-							player.motionX *= 0.6D;
-							player.motionZ *= 0.6D;
-							player.setSprinting(false);
-						}
+                    if (var8) {
+                        if (var3 > 0) {
+                            par1Entity.addVelocity(
+                                    (double) (-MathHelper.sin(player.rotationYaw * (float) Math.PI / 180.0F)
+                                            * (float) var3 * 0.5F), 0.1D,
+                                    (double) (MathHelper.cos(player.rotationYaw * (float) Math.PI / 180.0F)
+                                            * (float) var3 * 0.5F));
+                            player.motionX *= 0.6D;
+                            player.motionZ *= 0.6D;
+                            player.setSprinting(false);
+                        }
 
-						if (var5) {
-							player.onCriticalHit(par1Entity);
-						}
+                        if (var5) {
+                            player.onCriticalHit(par1Entity);
+                        }
 
-						if (var4 > 0) {
-							player.onEnchantmentCritical(par1Entity);
-						}
+                        if (var4 > 0) {
+                            player.onEnchantmentCritical(par1Entity);
+                        }
 
-						if (var2 >= 18) {
-							player.triggerAchievement(AchievementList.overkill);
-						}
+                        if (var2 >= 18) {
+                            player.triggerAchievement(AchievementList.overkill);
+                        }
 
-						player.setLastAttacker(par1Entity);
+                        player.setLastAttacker(par1Entity);
 
-						if (par1Entity instanceof EntityLivingBase) {
-							EnchantmentHelper.func_151384_a((EntityLivingBase) par1Entity, player);
-						}
-						EnchantmentHelper.func_151385_b(player, par1Entity);
-					}
+                        if (par1Entity instanceof EntityLivingBase) {
+                            EnchantmentHelper.func_151384_a((EntityLivingBase) par1Entity, player);
+                        }
+                        EnchantmentHelper.func_151385_b(player, par1Entity);
+                    }
 
-					if (stack != null && par1Entity instanceof EntityLivingBase) {
-						stack.hitEntity((EntityLivingBase) par1Entity, player);
+                    if (stack != null && par1Entity instanceof EntityLivingBase) {
+                        stack.hitEntity((EntityLivingBase) par1Entity, player);
 
-						if (stack.stackSize <= 0) {
-							this.destroyTheItem(player, stack);
-						}
-					}
+                        if (stack.stackSize <= 0) {
+                            this.destroyTheItem(player, stack);
+                        }
+                    }
 
-					if (par1Entity instanceof EntityLivingBase) {
+                    if (par1Entity instanceof EntityLivingBase) {
 
-						player.addStat(StatList.damageDealtStat, Math.round(var2 * 10.0F));
+                        player.addStat(StatList.damageDealtStat, Math.round(var2 * 10.0F));
 
-						if (var7 > 0 && var8) {
-							par1Entity.setFire(var7 * 4);
-						} else if (var6) {
-							par1Entity.extinguish();
-						}
-					}
+                        if (var7 > 0 && var8) {
+                            par1Entity.setFire(var7 * 4);
+                        } else if (var6) {
+                            par1Entity.extinguish();
+                        }
+                    }
 
-					player.addExhaustion(0.3F);
-				}
-			}
-		}
-	}
+                    player.addExhaustion(0.3F);
+                }
+            }
+        }
+    }
 
-	private double getItemStrength(ItemStack item)
-	{
+    private double getItemStrength(ItemStack item) {
         @SuppressWarnings("unchecked")
-		Multimap<String, AttributeModifier> multimap = item.getAttributeModifiers();
-		double d1 = 0;
-		if (!multimap.isEmpty()) {
+        Multimap<String, AttributeModifier> multimap = item.getAttributeModifiers();
+        double d1 = 0;
+        if (!multimap.isEmpty()) {
             for (Entry<String, AttributeModifier> entry : multimap.entries()) {
                 AttributeModifier attributemodifier = entry.getValue();
 
@@ -427,62 +416,49 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer,
                     d1 = attributemodifier.getAmount() * 100.0D;
                 }
             }
-		}
-		return d1;
-	}
+        }
+        return d1;
+    }
 
-	private void destroyTheItem(EntityPlayer player, ItemStack orig)
-	{
+    private void destroyTheItem(EntityPlayer player, ItemStack orig) {
         InventoryToolHolder tools = this.getInventoryFromItemStack(orig);
         int SlotNum = getSlotNumFromItemStack(orig);
-		tools.setInventorySlotContents(SlotNum, null);
-		MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, orig));
-	}
+        tools.setInventorySlotContents(SlotNum, null);
+        MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, orig));
+    }
 
-	private int getEnchantmentModifierLiving(ItemStack stack, EntityLivingBase attacker, EntityLivingBase enemy)
-	{
-		int calc = 0;
-		if (stack != null) {
-			NBTTagList nbttaglist = stack.getEnchantmentTagList();
+    private int getEnchantmentModifierLiving(ItemStack stack, EntityLivingBase attacker, EntityLivingBase enemy) {
+        int calc = 0;
+        if (stack != null) {
+            NBTTagList nbttaglist = stack.getEnchantmentTagList();
 
-			if (nbttaglist != null) {
-				for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-					short short1 = nbttaglist.getCompoundTagAt(i).getShort("id");
-					short short2 = nbttaglist.getCompoundTagAt(i).getShort("lvl");
+            if (nbttaglist != null) {
+                for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+                    short short1 = nbttaglist.getCompoundTagAt(i).getShort("id");
+                    short short2 = nbttaglist.getCompoundTagAt(i).getShort("lvl");
 
-					if (Enchantment.enchantmentsList[short1] != null) {
-						calc += Enchantment.enchantmentsList[short1].func_152376_a(short2, enemy.getCreatureAttribute());
-					}
-				}
-			}
-		}
-		return calc > 0 ? 1 + attacker.worldObj.rand.nextInt(calc) : 0;
-	}
-
-	private void setEnchantments(ItemStack ToEnchant, ItemStack Enchanted)
-	{
-		int EnchNum;
-		int EnchLv;
-		NBTTagList list = Enchanted.getEnchantmentTagList();
-		if (list != null) {
-			for (int i = 0; i < list.tagCount(); ++i) {
-				if (list.getCompoundTagAt(i).getShort("lvl") > 0) {
-					EnchNum = list.getCompoundTagAt(i).getShort("id");
-					EnchLv = list.getCompoundTagAt(i).getShort("lvl");
-                    MultiToolHolders.addEnchantmentToItem(ToEnchant, Enchantment.enchantmentsList[EnchNum], EnchLv);
-				}
-			}
-		}
-	}
-
-    public static int getSlotNumFromItemStack(ItemStack itemStack) {
-        if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
-        if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
-            NBTTagCompound nbtTagCompound = new NBTTagCompound();
-            itemStack.getTagCompound().setTag("multitoolholders", nbtTagCompound);
+                    if (Enchantment.enchantmentsList[short1] != null) {
+                        calc += Enchantment.enchantmentsList[short1].func_152376_a(short2, enemy.getCreatureAttribute());
+                    }
+                }
+            }
         }
-        NBTTagCompound nbt = (NBTTagCompound)itemStack.getTagCompound().getTag("multitoolholders");
-        return nbt.getInteger("slot");
+        return calc > 0 ? 1 + attacker.worldObj.rand.nextInt(calc) : 0;
+    }
+
+    private void setEnchantments(ItemStack ToEnchant, ItemStack Enchanted) {
+        int EnchNum;
+        int EnchLv;
+        NBTTagList list = Enchanted.getEnchantmentTagList();
+        if (list != null) {
+            for (int i = 0; i < list.tagCount(); ++i) {
+                if (list.getCompoundTagAt(i).getShort("lvl") > 0) {
+                    EnchNum = list.getCompoundTagAt(i).getShort("id");
+                    EnchLv = list.getCompoundTagAt(i).getShort("lvl");
+                    MultiToolHolders.addEnchantmentToItem(ToEnchant, Enchantment.enchantmentsList[EnchNum], EnchLv);
+                }
+            }
+        }
     }
 
     public void setSlotNumToItemStack(ItemStack itemStack, int slotNum) {
@@ -491,13 +467,14 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent, IToolHammer,
             NBTTagCompound nbtTagCompound = new NBTTagCompound();
             itemStack.getTagCompound().setTag("multitoolholders", nbtTagCompound);
         }
-        NBTTagCompound nbt = (NBTTagCompound)itemStack.getTagCompound().getTag("multitoolholders");
+        NBTTagCompound nbt = (NBTTagCompound) itemStack.getTagCompound().getTag("multitoolholders");
         nbt.setInteger("slot", slotNum);
     }
 
     public InventoryToolHolder getInventoryFromItemStack(ItemStack itemStack) {
-        return  new InventoryToolHolder(itemStack);
+        return new InventoryToolHolder(itemStack);
     }
+
     @Override
     public void doKeyAction(ItemStack itemStack, EntityPlayer player, byte key) {
         if (key == OPEN_KEY) {

@@ -60,14 +60,13 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         String ToolName;
-        InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
+        InventoryToolHolder tools = this.getInventoryFromItemStack(itemStack);
         for (int i = 0; i < inventorySize; i++) {
             if (tools != null && tools.getStackInSlot(i) != null) {
                 ToolName = tools.getStackInSlot(i).getDisplayName();
-                par3List.add(ToolName);
+                tooltip.add(ToolName);
             }
         }
     }
@@ -97,9 +96,9 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     }
 
     @Override
-    public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        if (par1ItemStack.getItem() instanceof ItemMultiToolHolder) {
-            par1ItemStack.setTagCompound(new NBTTagCompound());
+    public void onCreated(ItemStack itemStack, World worldIn, EntityPlayer playerIn) {
+        if (itemStack.getItem() instanceof ItemMultiToolHolder) {
+            itemStack.setTagCompound(new NBTTagCompound());
         }
     }
 
@@ -134,93 +133,101 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos blockPos, EnumFacing side,
                                   float hitX, float hitY, float hitZ) {
-        ItemStack itemStack = getActiveItemStack(stack);
+        InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
+        int activeSlot = getSlotNumFromItemStack(stack);
+        ItemStack itemStack = tools.getStackInSlot(activeSlot);
         if (itemStack != null) {
             boolean ret = itemStack.getItem()
                     .onItemUseFirst(itemStack, player, world, blockPos, side, hitX, hitY, hitZ);
             if (itemStack.stackSize <= 0) {
                 this.destroyTheItem(player, itemStack);
             }
+            tools.writeToNBT(stack.getTagCompound());
             return ret;
         }
         return false;
     }
 
     @Override
-    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, BlockPos blockPos, EnumFacing par7, float par8, float par9, float par10) {
-        ItemStack itemStack = getActiveItemStack(par1ItemStack);
-        if (itemStack != null && !par3World.isRemote) {
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos blockPos, EnumFacing side, float hitX, float hitY, float hitZ) {
+        InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
+        int activeSlot = getSlotNumFromItemStack(stack);
+        ItemStack itemStack = tools.getStackInSlot(activeSlot);
+        if (itemStack != null && !worldIn.isRemote) {
             boolean ret = itemStack.getItem()
-                    .onItemUse(itemStack, par2EntityPlayer, par3World, blockPos, par7, par8, par9, par10);
+                    .onItemUse(itemStack, playerIn, worldIn, blockPos, side, hitX, hitY, hitZ);
+            tools.setInventorySlotContents(
+                    activeSlot, itemStack);
             if (itemStack.stackSize <= 0) {
-                this.destroyTheItem(par2EntityPlayer, itemStack);
+                this.destroyTheItem(playerIn, itemStack);
             }
+            tools.writeToNBT(stack.getTagCompound());
             return ret;
         }
         return false;
     }
 
     @Override
-    public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, int par4) {
-        ItemStack itemStack = getActiveItemStack(par1ItemStack);
+    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityPlayer playerIn, int timeLeft) {
+        ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != null) {
-            itemStack.getItem().onPlayerStoppedUsing(itemStack, par2World, par3EntityPlayer, par4);
+            itemStack.getItem().onPlayerStoppedUsing(itemStack, worldIn, playerIn, timeLeft);
             if (itemStack.stackSize <= 0) {
-                this.destroyTheItem(par3EntityPlayer, itemStack);
+                this.destroyTheItem(playerIn, itemStack);
             }
         }
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        ItemStack itemStack = getActiveItemStack(par1ItemStack);
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+        ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != null) {
-            itemStack.getItem().onItemUseFinish(itemStack, par2World, par3EntityPlayer);
+            itemStack.getItem().onItemUseFinish(itemStack, worldIn, playerIn);
         }
-        return par1ItemStack;
+        return stack;
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        InventoryToolHolder tools = this.getInventoryFromItemStack(par1ItemStack);
-        int SlotNum = getSlotNumFromItemStack(par1ItemStack);
-        ItemStack itemStack = getActiveItemStack(par1ItemStack);
+    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+        InventoryToolHolder tools = this.getInventoryFromItemStack(itemStackIn);
+        int SlotNum = getSlotNumFromItemStack(itemStackIn);
+        ItemStack itemStack = getActiveItemStack(itemStackIn);
         if (itemStack != null) {
             tools.setInventorySlotContents(
                     SlotNum,
                     itemStack.getItem()
-                            .onItemRightClick(itemStack, par2World, par3EntityPlayer));
+                            .onItemRightClick(itemStack, worldIn, playerIn));
         }
-        if (this.getItemUseAction(par1ItemStack) != EnumAction.NONE)
-            par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
-        return par1ItemStack;
+        if (this.getItemUseAction(itemStackIn) != EnumAction.NONE)
+            playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
+        return itemStackIn;
     }
 
     @Override
-    public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
-                                            EntityLivingBase par3EntityLivingBase) {
-        ItemStack itemStack = getActiveItemStack(par1ItemStack);
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn,
+                                            EntityLivingBase target) {
+        ItemStack itemStack = getActiveItemStack(stack);
         return itemStack != null && itemStack.getItem()
-                .itemInteractionForEntity(itemStack, par2EntityPlayer,
-                        par3EntityLivingBase);
+                .itemInteractionForEntity(itemStack, playerIn,
+                        target);
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
-        ItemStack itemStack = getActiveItemStack(par1ItemStack);
+    public EnumAction getItemUseAction(ItemStack stack) {
+        ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != null) {
             return itemStack.getItemUseAction();
         } else
-            return super.getItemUseAction(par1ItemStack);
+            return super.getItemUseAction(stack);
     }
 
     @Override
-    public int getMaxItemUseDuration(ItemStack par1ItemStack) {
-        ItemStack itemStack = getActiveItemStack(par1ItemStack);
+    public int getMaxItemUseDuration(ItemStack stack) {
+        ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != null) {
             return itemStack.getMaxItemUseDuration();
         } else
-            return super.getMaxItemUseDuration(par1ItemStack);
+            return super.getMaxItemUseDuration(stack);
     }
 
     @Override
@@ -233,12 +240,12 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     }
 
     @Override
-    public boolean canHarvestBlock(Block par1Block, ItemStack item) {
-        ItemStack itemStack = getActiveItemStack(item);
+    public boolean canHarvestBlock(Block block, ItemStack stack) {
+        ItemStack itemStack = getActiveItemStack(stack);
         if (itemStack != null) {
-            return itemStack.getItem().canHarvestBlock(par1Block, itemStack);
+            return itemStack.getItem().canHarvestBlock(block, itemStack);
         } else
-            return super.canHarvestBlock(par1Block, item);
+            return super.canHarvestBlock(block, stack);
     }
 
     @Override
@@ -260,15 +267,15 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
             return super.onBlockDestroyed(itemStack, world, block, blockPos, par7EntityLiving);
     }
 
-    private void attackTargetEntityWithTheItem(Entity par1Entity, EntityPlayer player, ItemStack stack) {
-        if (MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, par1Entity))) {
+    private void attackTargetEntityWithTheItem(Entity entity, EntityPlayer player, ItemStack stack) {
+        if (MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, entity))) {
             return;
         }
-        if (stack != null && stack.getItem().onLeftClickEntity(stack, player, par1Entity)) {
+        if (stack != null && stack.getItem().onLeftClickEntity(stack, player, entity)) {
             return;
         }
-        if (par1Entity.canAttackWithItem()) {
-            if (!par1Entity.hitByEntity(player)) {
+        if (entity.canAttackWithItem()) {
+            if (!entity.hitByEntity(player)) {
                 float var2 = (float) this.getItemStrength(stack);
 
                 if (player.isPotionActive(Potion.damageBoost)) {
@@ -282,8 +289,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                 int var3 = 0;
                 int var4 = 0;
 
-                if (par1Entity instanceof EntityLivingBase) {
-                    var4 = this.getEnchantmentModifierLiving(stack, player, (EntityLivingBase) par1Entity);
+                if (entity instanceof EntityLivingBase) {
+                    var4 = this.getEnchantmentModifierLiving(stack, player, (EntityLivingBase) entity);
                     var3 += EnchantmentHelper.getEnchantmentLevel(Enchantment.knockback.effectId, stack);
                 }
 
@@ -294,7 +301,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                 if (var2 > 0 || var4 > 0) {
                     boolean var5 = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder()
                             && !player.isInWater() && !player.isPotionActive(Potion.blindness)
-                            && player.ridingEntity == null && par1Entity instanceof EntityLivingBase;
+                            && player.ridingEntity == null && entity instanceof EntityLivingBase;
 
                     if (var5 && var2 > 0) {
                         var2 *= 1.5F;
@@ -304,16 +311,16 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                     boolean var6 = false;
                     int var7 = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack);
 
-                    if (par1Entity instanceof EntityLivingBase && var7 > 0 && !par1Entity.isBurning()) {
+                    if (entity instanceof EntityLivingBase && var7 > 0 && !entity.isBurning()) {
                         var6 = true;
-                        par1Entity.setFire(1);
+                        entity.setFire(1);
                     }
 
-                    boolean var8 = par1Entity.attackEntityFrom(DamageSource.causePlayerDamage(player), var2);
+                    boolean var8 = entity.attackEntityFrom(DamageSource.causePlayerDamage(player), var2);
 
                     if (var8) {
                         if (var3 > 0) {
-                            par1Entity.addVelocity(
+                            entity.addVelocity(
                                     (double) (-MathHelper.sin(player.rotationYaw * (float) Math.PI / 180.0F)
                                             * (float) var3 * 0.5F), 0.1D,
                                     (double) (MathHelper.cos(player.rotationYaw * (float) Math.PI / 180.0F)
@@ -324,42 +331,42 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                         }
 
                         if (var5) {
-                            player.onCriticalHit(par1Entity);
+                            player.onCriticalHit(entity);
                         }
 
                         if (var4 > 0) {
-                            player.onEnchantmentCritical(par1Entity);
+                            player.onEnchantmentCritical(entity);
                         }
 
                         if (var2 >= 18) {
                             player.triggerAchievement(AchievementList.overkill);
                         }
 
-                        player.setLastAttacker(par1Entity);
+                        player.setLastAttacker(entity);
 
-                        if (par1Entity instanceof EntityLivingBase) {
-                            EnchantmentHelper.applyThornEnchantments((EntityLivingBase) par1Entity, player);
+                        if (entity instanceof EntityLivingBase) {
+                            EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entity, player);
                         }
 
-                        EnchantmentHelper.applyArthropodEnchantments(player, par1Entity);
+                        EnchantmentHelper.applyArthropodEnchantments(player, entity);
                     }
 
-                    if (stack != null && par1Entity instanceof EntityLivingBase) {
-                        stack.hitEntity((EntityLivingBase) par1Entity, player);
+                    if (stack != null && entity instanceof EntityLivingBase) {
+                        stack.hitEntity((EntityLivingBase) entity, player);
 
                         if (stack.stackSize <= 0) {
                             this.destroyTheItem(player, stack);
                         }
                     }
 
-                    if (par1Entity instanceof EntityLivingBase) {
+                    if (entity instanceof EntityLivingBase) {
 
                         player.addStat(StatList.damageDealtStat, Math.round(var2 * 10.0F));
 
                         if (var7 > 0 && var8) {
-                            par1Entity.setFire(var7 * 4);
+                            entity.setFire(var7 * 4);
                         } else if (var6) {
-                            par1Entity.extinguish();
+                            entity.extinguish();
                         }
                     }
 

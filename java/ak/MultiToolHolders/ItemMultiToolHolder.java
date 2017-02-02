@@ -218,6 +218,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                     activeSlot, actionResult
                             .getResult());
             playerIn.setHeldItem(hand, itemStackIn);
+            tools.writeToNBT(itemStackIn.getTagCompound());
             return new ActionResult<>(actionResult.getType(), itemStackIn);
         }
         return super.onItemRightClick(worldIn, playerIn, hand);
@@ -225,10 +226,16 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-        ItemStack itemStack = getActiveItemStack(stack);
-        return itemStack != ItemStack.EMPTY && itemStack.getItem()
-                .itemInteractionForEntity(itemStack, playerIn,
-                        target, hand);
+        InventoryToolHolder tools = this.getInventoryFromItemStack(stack);
+        int activeSlot = getSlotNumFromItemStack(stack);
+        ItemStack itemStack = tools.getStackInSlot(activeSlot);
+        boolean ret = false;
+        if (itemStack != ItemStack.EMPTY) {
+            ret = itemStack.getItem()
+                    .itemInteractionForEntity(itemStack, playerIn,
+                            target, hand);
+        }
+        return ret;
     }
 
     @Override

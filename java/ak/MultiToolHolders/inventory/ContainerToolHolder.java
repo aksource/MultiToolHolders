@@ -40,8 +40,8 @@ public class ContainerToolHolder extends Container {
         }
     }
 
-    public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
-        return par1EntityPlayer.inventory.getCurrentItem() != ItemStack.EMPTY && par1EntityPlayer.inventory.getCurrentItem().getItem() instanceof ItemMultiToolHolder;
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return !playerIn.inventory.getCurrentItem().isEmpty() && playerIn.inventory.getCurrentItem().getItem() instanceof ItemMultiToolHolder;
     }
 
     /**

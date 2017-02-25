@@ -17,7 +17,7 @@ public class CommonProxy implements IGuiHandler {
     //returns an instance of the Container you made earlier
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        if (player.getHeldItemMainhand() != ItemStack.EMPTY && player.getHeldItemMainhand().getItem() instanceof ItemMultiToolHolder) {
+        if (!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemMultiToolHolder) {
             ItemStack stack = player.getHeldItemMainhand();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder) stack.getItem();
             int currentSlot = player.inventory.currentItem;
@@ -29,7 +29,7 @@ public class CommonProxy implements IGuiHandler {
     //returns an instance of the Gui you made earlier
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        if (player.getHeldItemMainhand() != ItemStack.EMPTY && player.getHeldItemMainhand().getItem() instanceof ItemMultiToolHolder) {
+        if (!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemMultiToolHolder) {
             ItemStack stack = player.getHeldItemMainhand();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder) stack.getItem();
             int currentSlot = player.inventory.currentItem;

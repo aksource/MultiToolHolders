@@ -82,7 +82,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         String ToolName;
         InventoryToolHolder tools = this.getInventoryFromItemStack(itemStack);
         for (int i = 0; i < inventorySize; i++) {
-            if (tools.getStackInSlot(i) != ItemStack.EMPTY) {
+            if (!tools.getStackInSlot(i).isEmpty()) {
                 ToolName = tools.getStackInSlot(i).getDisplayName();
                 tooltip.add(ToolName);
             }
@@ -105,7 +105,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
             }
 
             ItemStack nowItem = getActiveItemStack(itemStack);
-            if (nowItem != ItemStack.EMPTY) {
+            if (!nowItem.isEmpty()) {
                 nowItem.getItem().onUpdate(nowItem, world, entity, slot, true);
                 this.setEnchantments(itemStack, nowItem);
             }
@@ -125,7 +125,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
             this.setHarvestLevel(toolClass, -1);
         }
         ItemStack nowItem = getActiveItemStack(stack);
-        if (nowItem != ItemStack.EMPTY) {
+        if (!nowItem.isEmpty()) {
             Set<String> toolClasses = nowItem.getItem().getToolClasses(nowItem);
             IBlockState blockState = player.getEntityWorld().getBlockState(blockPos);
             int harvestLevel;
@@ -141,7 +141,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             this.attackTargetEntityWithTheItem(entity, player, itemStack);
             return true;
         }
@@ -155,7 +155,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         InventoryToolHolder toolHolder = getInventoryFromItemStack(heldItem);
         int activeSlot = getSlotNumFromItemStack(heldItem);
         ItemStack itemStack = toolHolder.getStackInSlot(activeSlot);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             player.setHeldItem(hand, itemStack);
             EnumActionResult ret = itemStack.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
             player.setHeldItem(hand, heldItem);
@@ -172,7 +172,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         InventoryToolHolder toolHolder = getInventoryFromItemStack(heldItem);
         int activeSlot = getSlotNumFromItemStack(heldItem);
         ItemStack itemStack = toolHolder.getStackInSlot(activeSlot);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             playerIn.setHeldItem(hand, itemStack);
             EnumActionResult ret = itemStack.getItem().onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
             playerIn.setHeldItem(hand, heldItem);
@@ -185,7 +185,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             itemStack.getItem().onPlayerStoppedUsing(itemStack, worldIn, entityLiving, timeLeft);
             if (itemStack.getCount() <= 0) {
                 this.destroyTheItem(entityLiving, itemStack, EnumHand.MAIN_HAND);
@@ -197,7 +197,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             itemStack.getItem().onItemUseFinish(itemStack, worldIn, entityLiving);
         }
         return stack;
@@ -210,7 +210,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         InventoryToolHolder tools = this.getInventoryFromItemStack(itemStackIn);
         int activeSlot = getSlotNumFromItemStack(itemStackIn);
         ItemStack itemStack = tools.getStackInSlot(activeSlot);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             playerIn.setHeldItem(hand, itemStack);
             ActionResult<ItemStack> actionResult = itemStack.getItem()
                     .onItemRightClick(worldIn, playerIn, hand);
@@ -230,7 +230,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         int activeSlot = getSlotNumFromItemStack(stack);
         ItemStack itemStack = tools.getStackInSlot(activeSlot);
         boolean ret = false;
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             ret = itemStack.getItem()
                     .itemInteractionForEntity(itemStack, playerIn,
                             target, hand);
@@ -242,7 +242,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Nonnull
     public EnumAction getItemUseAction(ItemStack stack) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             return itemStack.getItemUseAction();
         }
         return super.getItemUseAction(stack);
@@ -251,7 +251,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     public int getMaxItemUseDuration(ItemStack stack) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             return itemStack.getMaxItemUseDuration();
         }
         return super.getMaxItemUseDuration(stack);
@@ -260,7 +260,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     public float getStrVsBlock(ItemStack stack, IBlockState state) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             return itemStack.getItem().getStrVsBlock(itemStack, state);
         }
         return super.getStrVsBlock(stack, state);
@@ -269,7 +269,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Override
     public boolean canHarvestBlock(@Nonnull IBlockState state, ItemStack stack) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             return itemStack.getItem().canHarvestBlock(state, itemStack);
         }
         return super.canHarvestBlock(state, stack);
@@ -280,7 +280,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         InventoryToolHolder tools = getInventoryFromItemStack(stack);
         int activeSlot = getSlotNumFromItemStack(stack);
         ItemStack nowItem = tools.getStackInSlot(activeSlot);
-        if (nowItem != ItemStack.EMPTY && !worldIn.isRemote) {
+        if (!nowItem.isEmpty() && !worldIn.isRemote) {
             boolean ret = nowItem.getItem()
                     .onBlockDestroyed(nowItem, worldIn, state, pos,
                             entityLiving);
@@ -297,7 +297,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
     @Nonnull
     public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, ItemStack stack) {
         ItemStack itemStack = getActiveItemStack(stack);
-        if (itemStack != ItemStack.EMPTY) {
+        if (!itemStack.isEmpty()) {
             return itemStack.getAttributeModifiers(slot);
         }
         return super.getAttributeModifiers(slot, stack);
@@ -360,7 +360,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
                     if (isCooledATKOver && !isJumpingCritical && !isSprintingCritical
                             && player.onGround && walkedModified < (double) player.getAIMoveSpeed()) {
-                        if (stack != ItemStack.EMPTY && stack.getItem() instanceof ItemSword) {
+                        if (!stack.isEmpty() && stack.getItem() instanceof ItemSword) {
                             isSword = true;
                         }
                     }
@@ -459,8 +459,8 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                             EntityPlayer entityplayer = (EntityPlayer) entityIn;
                             ItemStack targetHandHeldItem = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : ItemStack.EMPTY;
 
-                            if (stack != ItemStack.EMPTY
-                                    && targetHandHeldItem != ItemStack.EMPTY
+                            if (!stack.isEmpty()
+                                    && !targetHandHeldItem.isEmpty()
                                     && stack.getItem() instanceof ItemAxe
                                     && targetHandHeldItem.getItem() == Items.SHIELD) {
                                 float efficiency = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(player) * 0.05F;
@@ -497,7 +497,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                             }
                         }
 
-                        if (stack != ItemStack.EMPTY && entity instanceof EntityLivingBase) {
+                        if (!stack.isEmpty() && entity instanceof EntityLivingBase) {
                             stack.hitEntity((EntityLivingBase) entity, player);
 
                             if (stack.getCount() <= 0) {

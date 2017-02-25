@@ -5,7 +5,6 @@ import ak.MultiToolHolders.ItemMultiToolHolder;
 import ak.MultiToolHolders.network.MessageKeyPressed;
 import ak.MultiToolHolders.network.PacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -36,7 +35,7 @@ public class KeyInputHandler {
         if (FMLClientHandler.instance().getClient().inGameHasFocus && FMLClientHandler.instance().getClientPlayerEntity() != null) {
             EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
             byte keyIndex = getKeyIndex();
-            if (keyIndex != -1 && entityPlayer.getHeldItemMainhand() != ItemStack.EMPTY && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
+            if (keyIndex != -1 && !entityPlayer.getHeldItemMainhand().isEmpty() && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
                 if (entityPlayer.getEntityWorld().isRemote) {
                     PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(keyIndex));
                 } else {

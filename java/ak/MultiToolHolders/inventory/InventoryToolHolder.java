@@ -68,7 +68,7 @@ public class InventoryToolHolder extends InventoryBasic{
         NBTTagList tagList = new NBTTagList();
 
         for (int var3 = 0; var3 < this.getSizeInventory(); ++var3) {
-            if (this.getStackInSlot(var3) != ItemStack.EMPTY) {
+            if (!this.getStackInSlot(var3).isEmpty()) {
                 NBTTagCompound var4 = new NBTTagCompound();
                 var4.setByte("Slot", (byte)var3);
                 this.getStackInSlot(var3).writeToNBT(var4);

@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
+
 /**
  * ツールホルダー内のアイテムをHUDに描画するクラス
  * Created by A.K. on 14/10/25.
@@ -23,7 +25,7 @@ public class RenderingHolderInventoryHUD {
     public void renderingOverlay(RenderGameOverlayEvent.Text event) {
         EntityPlayer player = mc.player;
         ItemStack holdItem = player.getHeldItemMainhand();
-        if (holdItem != null && holdItem.getItem() instanceof ItemMultiToolHolder) {
+        if (!holdItem.isEmpty() && holdItem.getItem() instanceof ItemMultiToolHolder) {
             renderHolderInventory(holdItem, event.getPartialTicks());
         }
     }
@@ -35,21 +37,18 @@ public class RenderingHolderInventoryHUD {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             itemStack = inventory.getStackInSlot(i);
             int xShift = (i == nowSlot) ? 16 : 0;
-            if (itemStack != null) {
+            if (!itemStack.isEmpty()) {
                 renderInventorySlot(itemStack, MultiToolHolders.toolHolderInvX + xShift, MultiToolHolders.toolHolderInvY + i * 16);
             }
         }
     }
 
-    private void renderInventorySlot(ItemStack itemstack, int par2, int par3) {
-        if (itemstack != null){
+    private void renderInventorySlot(@Nonnull ItemStack itemstack, int par2, int par3) {
+        if (!itemstack.isEmpty()){
             RenderHelper.enableGUIStandardItemLighting();
             itemRenderer.renderItemIntoGUI(itemstack, par2, par3);//Itemの描画
             itemRenderer.renderItemOverlays(this.mc.fontRendererObj, itemstack, par2, par3);//耐久値の描画
-//            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRenderer, this.mc.getTextureManager(), itemstack, par2, par3);
             RenderHelper.disableStandardItemLighting();
-//            String s = itemstack.getDisplayName();
-//            this.mc.fontRenderer.drawStringWithShadow(s, par2 + 16, par3 + 4, 0xFFFFFF);
         }
     }
 }

@@ -39,8 +39,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import static ak.MultiToolHolders.MultiToolHolders.NBT_KEY_MTH;
-import static ak.MultiToolHolders.MultiToolHolders.NBT_KEY_SLOT;
+import static ak.MultiToolHolders.Constants.NBT_KEY_ENCHANT;
+import static ak.MultiToolHolders.Constants.NBT_KEY_MTH;
+import static ak.MultiToolHolders.Constants.NBT_KEY_SLOT;
 
 @Optional.InterfaceList(
         {@Optional.Interface(iface = "cofh.api.item.IToolHammer", modid = "CoFHCore"),
@@ -62,8 +63,6 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         this.setCreativeTab(CreativeTabs.TOOLS);
         this.inventorySize = slot;
         this.guiId = guiId;
-        this.setRegistryName("itemmultitoolholder" + slot);
-        this.setUnlocalizedName(MultiToolHolders.TextureDomain + "Holder" + slot);
     }
 
     public static int getSlotNumFromItemStack(ItemStack itemStack) {
@@ -101,7 +100,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
         if (entity instanceof EntityPlayer && isHeld && !world.isRemote) {
 
             if (itemStack.hasTagCompound()) {
-                itemStack.getTagCompound().removeTag("ench");
+                itemStack.getTagCompound().removeTag(NBT_KEY_ENCHANT);
             }
 
             ItemStack nowItem = getActiveItemStack(itemStack);

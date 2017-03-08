@@ -9,6 +9,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class ContainerToolHolder extends Container {
     private IInventory holderInventory;
     private int holderNum;
@@ -27,7 +29,7 @@ public class ContainerToolHolder extends Container {
         bindPlayerInventory(entityPlayer.inventory);
     }
 
-    protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
+    private void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
@@ -40,7 +42,7 @@ public class ContainerToolHolder extends Container {
         }
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return !playerIn.inventory.getCurrentItem().isEmpty() && playerIn.inventory.getCurrentItem().getItem() instanceof ItemMultiToolHolder;
     }
 
@@ -77,6 +79,7 @@ public class ContainerToolHolder extends Container {
     }
 
     @Override
+    @Nonnull
     public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer playerIn) {
         if (currentSlot == slotId - 27 - this.holderNum) {
             return ItemStack.EMPTY;

@@ -2,7 +2,6 @@ package ak.MultiToolHolders.network;
 
 import ak.MultiToolHolders.IKeyEvent;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -15,7 +14,7 @@ public class MessageKeyPressedHandler implements IMessageHandler<MessageKeyPress
     @Override
     public IMessage onMessage(MessageKeyPressed message, MessageContext ctx) {
         EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
-        if (entityPlayer != null && entityPlayer.getHeldItemMainhand() != ItemStack.EMPTY
+        if (entityPlayer != null && !entityPlayer.getHeldItemMainhand().isEmpty()
                 && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
             ((IKeyEvent)entityPlayer.getHeldItemMainhand().getItem()).doKeyAction(
                     entityPlayer.getHeldItemMainhand(), entityPlayer, message.key);

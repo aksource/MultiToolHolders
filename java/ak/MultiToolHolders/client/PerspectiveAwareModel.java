@@ -1,4 +1,4 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;

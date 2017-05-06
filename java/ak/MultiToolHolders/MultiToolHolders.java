@@ -1,6 +1,6 @@
-package ak.multitoolholders;
+package ak.MultiToolHolders;
 
-import ak.multitoolholders.network.PacketHandler;
+import ak.MultiToolHolders.network.PacketHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -22,9 +22,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static ak.multitoolholders.Constants.NBT_KEY_ENCHANT;
-import static ak.multitoolholders.Constants.NBT_KEY_ENCHANT_ID;
-import static ak.multitoolholders.Constants.NBT_KEY_ENCHANT_LEVEL;
+import static ak.MultiToolHolders.Constants.NBT_KEY_ENCHANT;
+import static ak.MultiToolHolders.Constants.NBT_KEY_ENCHANT_ID;
+import static ak.MultiToolHolders.Constants.NBT_KEY_ENCHANT_LEVEL;
 
 @Mod(modid = Constants.MOD_ID,
         name = Constants.MOD_NAME,
@@ -46,7 +46,7 @@ public class MultiToolHolders {
     public static Set<String> toolNameSet = new HashSet<>();
     @Mod.Instance(Constants.MOD_ID)
     public static MultiToolHolders instance;
-    @SidedProxy(clientSide = "ak.multitoolholders.client.ClientProxy", serverSide = "ak.multitoolholders.CommonProxy")
+    @SidedProxy(clientSide = "ak.MultiToolHolders.client.ClientProxy", serverSide = "ak.MultiToolHolders.CommonProxy")
     public static CommonProxy proxy;
 
     public static void addEnchantmentToItem(ItemStack item,

@@ -1,8 +1,8 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
-import ak.multitoolholders.CommonProxy;
-import ak.multitoolholders.Constants;
-import ak.multitoolholders.MultiToolHolders;
+import ak.MultiToolHolders.CommonProxy;
+import ak.MultiToolHolders.Constants;
+import ak.MultiToolHolders.MultiToolHolders;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -21,9 +21,9 @@ import org.lwjgl.input.Keyboard;
 import java.util.Map;
 
 public class ClientProxy extends CommonProxy {
-    public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder", Keyboard.KEY_H, "multitoolholders");
-    public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder", Keyboard.KEY_U, "multitoolholders");
-    public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder", Keyboard.KEY_Y, "multitoolholders");
+    public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder", Keyboard.KEY_H, "MultiToolHolders");
+    public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder", Keyboard.KEY_U, "MultiToolHolders");
+    public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder", Keyboard.KEY_Y, "MultiToolHolders");
 
     public static final Map<String, ModelResourceLocation> MODEL_RESOURCE_LOCATION_MAP = Maps.newHashMap();
 
@@ -45,7 +45,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void registerItemClient(Item item, String name) {
-//        ModelBakery.addVariantName(item, multitoolholders.MOD_ID + ":" + name);
+//        ModelBakery.addVariantName(item, MultiToolHolders.MOD_ID + ":" + name);
         MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(Constants.MOD_ID + ":" + name, "inventory"));
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, MODEL_RESOURCE_LOCATION_MAP.get(name));
     }

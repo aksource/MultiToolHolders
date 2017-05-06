@@ -1,4 +1,4 @@
-package ak.MultiToolHolders;
+package ak.multitoolholders;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -16,7 +16,7 @@ public class Constants {
     public static final ResourceLocation GUI_7 = new ResourceLocation(MOD_ID.toLowerCase(), TEXTURES_GUI_TOOL_HOLDER7_PNG);
     public static final String TEXTURES_GUI_TOOL_HOLDER9_PNG = "textures/gui/toolholder9.png";
     public static final ResourceLocation GUI_9 = new ResourceLocation(MOD_ID.toLowerCase(), TEXTURES_GUI_TOOL_HOLDER9_PNG);
-    public static final String MOD_NAME = "MultiToolHolders";
+    public static final String MOD_NAME = "multitoolholders";
     public static final String MOD_VERSION = "@VERSION@";
     public static final String MOD_DEPENDENCIES = "required-after:forge@[13.19.1,)";
     public static final String MOD_MC_VERSION = "[1.11,1.19.99]";

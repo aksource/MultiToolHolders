@@ -1,6 +1,6 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
+import ak.multitoolholders.ItemMultiToolHolder;
 import com.google.common.collect.Maps;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

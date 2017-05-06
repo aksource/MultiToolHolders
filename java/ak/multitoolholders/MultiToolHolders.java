@@ -1,6 +1,6 @@
-package ak.MultiToolHolders;
+package ak.multitoolholders;
 
-import ak.MultiToolHolders.network.PacketHandler;
+import ak.multitoolholders.network.PacketHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class MultiToolHolders {
     public static final String MOD_ID = "multitoolholders";
     //Logger
-    public static final Logger logger = Logger.getLogger("MultiToolHolders");
+    public static final Logger logger = Logger.getLogger("multitoolholders");
     public static Item ItemMultiToolHolder3 = (new ItemMultiToolHolder(3, Constants.GUI_ID_HOLDER_3)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder3");
     public static Item ItemMultiToolHolder5 = (new ItemMultiToolHolder(5, Constants.GUI_ID_HOLDER_5)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder5");
     public static Item ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, Constants.GUI_ID_HOLDER_7)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder7");
@@ -43,7 +43,7 @@ public class MultiToolHolders {
     public static boolean enableDisplayToolHolderInventory = true;
     @Mod.Instance(MOD_ID)
     public static MultiToolHolders instance;
-    @SidedProxy(clientSide = "ak.MultiToolHolders.Client.ClientProxy", serverSide = "ak.MultiToolHolders.CommonProxy")
+    @SidedProxy(clientSide = "ak.multitoolholders.client.ClientProxy", serverSide = "ak.multitoolholders.CommonProxy")
     public static CommonProxy proxy;
 
     public static void addEnchantmentToItem(ItemStack item,

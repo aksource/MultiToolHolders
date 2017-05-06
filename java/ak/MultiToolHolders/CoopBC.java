@@ -1,4 +1,4 @@
-package ak.multitoolholders;
+package ak.MultiToolHolders;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

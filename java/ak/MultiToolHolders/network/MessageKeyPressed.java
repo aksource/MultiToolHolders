@@ -1,4 +1,4 @@
-package ak.multitoolholders.network;
+package ak.MultiToolHolders.network;
 
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;

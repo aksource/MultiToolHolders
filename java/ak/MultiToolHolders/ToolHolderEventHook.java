@@ -1,4 +1,4 @@
-package ak.multitoolholders;
+package ak.MultiToolHolders;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

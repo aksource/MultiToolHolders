@@ -1,6 +1,6 @@
-package ak.multitoolholders.network;
+package ak.MultiToolHolders.network;
 
-import ak.multitoolholders.IKeyEvent;
+import ak.MultiToolHolders.IKeyEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

@@ -22,6 +22,7 @@ public class RenderingHolderInventoryHUD {
     private final RenderItem itemRenderer = mc.getRenderItem();
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void renderingOverlay(RenderGameOverlayEvent.Text event) {
         EntityPlayer player = mc.player;
         ItemStack holdItem = player.getHeldItemMainhand();

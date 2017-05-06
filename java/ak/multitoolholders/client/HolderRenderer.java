@@ -83,7 +83,7 @@ public class HolderRenderer implements IBakedModel {
 
         @Nonnull
         @Override
-        public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+        public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, World world, EntityLivingBase entity) {
             ItemStack itemStack = ((ItemMultiToolHolder) stack.getItem()).getActiveItemStack(stack);
             if (!itemStack.isEmpty()) {
                 IBakedModel itemStackOrgModel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(itemStack);

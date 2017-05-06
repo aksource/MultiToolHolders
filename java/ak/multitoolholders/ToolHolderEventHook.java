@@ -3,7 +3,6 @@ package ak.multitoolholders;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * ツールホルダー用イベントフッククラス
@@ -11,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class ToolHolderEventHook {
 
-    @SubscribeEvent
+//    @SubscribeEvent
     public void destroyItemEvent(PlayerDestroyItemEvent event) {
         ItemStack original = event.getOriginal();
         if (original.hasTagCompound()

@@ -1,6 +1,7 @@
 package ak.multitoolholders.client;
 
 import ak.multitoolholders.CommonProxy;
+import ak.multitoolholders.Constants;
 import ak.multitoolholders.MultiToolHolders;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
@@ -24,7 +25,7 @@ public class ClientProxy extends CommonProxy {
     public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder", Keyboard.KEY_U, "multitoolholders");
     public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder", Keyboard.KEY_Y, "multitoolholders");
 
-    public static final Map<String, ModelResourceLocation> MODEL_RESOURCE_LOCATION_MAP = Maps.newHashMap();
+    private static final Map<String, ModelResourceLocation> MODEL_RESOURCE_LOCATION_MAP = Maps.newHashMap();
 
     @Override
     public void registerClientInformation() {
@@ -36,15 +37,18 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.registerKeyBinding(NextKey);
         ClientRegistry.registerKeyBinding(PrevKey);
 
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder3, "itemmultitoolholder3");
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder5, "itemmultitoolholder5");
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder7, "itemmultitoolholder7");
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder9, "itemmultitoolholder9");
+        registerItemClient(MultiToolHolders.ItemMultiToolHolder3);
+        registerItemClient(MultiToolHolders.ItemMultiToolHolder5);
+        registerItemClient(MultiToolHolders.ItemMultiToolHolder7);
+        registerItemClient(MultiToolHolders.ItemMultiToolHolder9);
     }
 
-    private void registerItemClient(Item item, String name) {
-        MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(MultiToolHolders.MOD_ID + ":" + name, "inventory"));
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, MODEL_RESOURCE_LOCATION_MAP.get(name));
+    private void registerItemClient(Item item) {
+        if (item.getRegistryName() != null) {
+            String name = item.getRegistryName().getResourcePath();
+            MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, MODEL_RESOURCE_LOCATION_MAP.get(name));
+        }
     }
 
     @Override
@@ -53,11 +57,12 @@ public class ClientProxy extends CommonProxy {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void bakedModelRegister(ModelBakeEvent event) {
-        changeModel(event.getModelRegistry(), "itemmultitoolholder3");
-        changeModel(event.getModelRegistry(), "itemmultitoolholder5");
-        changeModel(event.getModelRegistry(), "itemmultitoolholder7");
-        changeModel(event.getModelRegistry(), "itemmultitoolholder9");
+        changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3);
+        changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5);
+        changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7);
+        changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9);
     }
 
     private void changeModel(IRegistry<ModelResourceLocation, IBakedModel> modelRegistry, String name) {

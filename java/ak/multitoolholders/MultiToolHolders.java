@@ -32,10 +32,10 @@ public class MultiToolHolders {
     public static final String MOD_ID = "multitoolholders";
     //Logger
     public static final Logger logger = Logger.getLogger("multitoolholders");
-    public static Item ItemMultiToolHolder3 = (new ItemMultiToolHolder(3, Constants.GUI_ID_HOLDER_3)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder3");
-    public static Item ItemMultiToolHolder5 = (new ItemMultiToolHolder(5, Constants.GUI_ID_HOLDER_5)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder5");
-    public static Item ItemMultiToolHolder7 = (new ItemMultiToolHolder(7, Constants.GUI_ID_HOLDER_7)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder7");
-    public static Item ItemMultiToolHolder9 = (new ItemMultiToolHolder(9, Constants.GUI_ID_HOLDER_9)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder9");
+    public static Item ItemMultiToolHolder3 = (new ItemMultiToolHolder(EnumHolderType.HOLDER3)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder3");
+    public static Item ItemMultiToolHolder5 = (new ItemMultiToolHolder(EnumHolderType.HOLDER5)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder5");
+    public static Item ItemMultiToolHolder7 = (new ItemMultiToolHolder(EnumHolderType.HOLDER7)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder7");
+    public static Item ItemMultiToolHolder9 = (new ItemMultiToolHolder(EnumHolderType.HOLDER9)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder9");
     public static int toolHolderInvX = 0;
     public static int toolHolderInvY = 0;
     public static String[] toolStrArray = new String[]{};
@@ -67,6 +67,7 @@ public class MultiToolHolders {
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event) {
         Configuration config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
@@ -87,6 +88,7 @@ public class MultiToolHolders {
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void load(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         MinecraftForge.EVENT_BUS.register(proxy);
@@ -102,6 +104,5 @@ public class MultiToolHolders {
                     'C', Blocks.TRIPWIRE_HOOK);
         }
         proxy.registerClientInformation();
-//        if(Debug) DebugSystem();
     }
 }

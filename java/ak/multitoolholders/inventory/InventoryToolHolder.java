@@ -7,6 +7,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
+
 public class InventoryToolHolder extends InventoryBasic{
 
     private ItemStack holder;
@@ -28,12 +30,10 @@ public class InventoryToolHolder extends InventoryBasic{
 	@Override
 	public void markDirty() {
         super.markDirty();
-//		data.upDate = true;
-//        writeToNBT(holder.getTagCompound());
 	}
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
         super.openInventory(player);
         if (!holder.hasTagCompound()) {
             holder.setTagCompound(new NBTTagCompound());
@@ -42,16 +42,13 @@ public class InventoryToolHolder extends InventoryBasic{
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
         super.closeInventory(player);
         writeToNBT(holder.getTagCompound());
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
 
-//        for (int i = 0; i < this.getSizeInventory(); ++i) {
-//            this.setInventorySlotContents(i, null);
-//        }
         NBTTagList tagList = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
 
         for (int var3 = 0; var3 < tagList.tagCount(); ++var3) {

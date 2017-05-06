@@ -1,5 +1,6 @@
 package ak.multitoolholders.inventory;
 
+import ak.multitoolholders.EnumHolderType;
 import ak.multitoolholders.ItemMultiToolHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -12,18 +13,18 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public class ContainerToolHolder extends Container {
-    private IInventory holderInventory;
-    private int holderNum;
-    private ItemStack holderStack;
-    private int currentSlot;
+    private final IInventory holderInventory;
+    private final EnumHolderType type;
+    private final ItemStack holderStack;
+    private final int currentSlot;
 
-    public ContainerToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, int num, int currentSlot) {
+    public ContainerToolHolder(EntityPlayer entityPlayer, ItemStack holderStack, EnumHolderType type, int currentSlot) {
         this.holderInventory = ((ItemMultiToolHolder) holderStack.getItem()).getInventoryFromItemStack(holderStack);
-        this.holderNum = num;
+        this.type = type;
         this.holderStack = holderStack;
         holderInventory.openInventory(entityPlayer);
         this.currentSlot = currentSlot;
-        for (int k = 0; k < holderNum; ++k) {
+        for (int k = 0; k < this.type.getSize(); ++k) {
             this.addSlotToContainer(new SlotToolHolder(holderInventory, k, 8 + k * 18, 18));
         }
         bindPlayerInventory(entityPlayer.inventory);
@@ -42,29 +43,28 @@ public class ContainerToolHolder extends Container {
         }
     }
 
+    @Override
     public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return !playerIn.inventory.getCurrentItem().isEmpty() && playerIn.inventory.getCurrentItem().getItem() instanceof ItemMultiToolHolder;
     }
 
-    /**
-     * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
-     */
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
+    @Nonnull
+    public ItemStack transferStackInSlot(@Nonnull EntityPlayer playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.getSlot(par2);
+        Slot slot = this.getSlot(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (par2 < this.holderNum) {
-                if (!this.mergeItemStack(itemstack1, this.holderNum, this.inventorySlots.size(), true)) {
+            if (index < this.type.getSize()) {
+                if (!this.mergeItemStack(itemstack1, this.type.getSize(), this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (itemstack1.getItem() instanceof ItemMultiToolHolder || itemstack1.isStackable())
                 return ItemStack.EMPTY;
-            else if (!this.mergeItemStack(itemstack1, 0, this.holderNum, false)) {
+            else if (!this.mergeItemStack(itemstack1, 0, this.type.getSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -80,17 +80,15 @@ public class ContainerToolHolder extends Container {
 
     @Override
     @Nonnull
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer playerIn) {
-        if (currentSlot == slotId - 27 - this.holderNum) {
+    public ItemStack slotClick(int slotId, int dragType, @Nonnull ClickType clickTypeIn, @Nonnull EntityPlayer playerIn) {
+        if (currentSlot == slotId - 27 - this.type.getSize()) {
             return ItemStack.EMPTY;
         }
         return super.slotClick(slotId, dragType, clickTypeIn, playerIn);
     }
 
-    /**
-     * Callback for when the crafting gui is closed.
-     */
-    public void onContainerClosed(EntityPlayer player) {
+    @Override
+    public void onContainerClosed(@Nonnull EntityPlayer player) {
         super.onContainerClosed(player);
         this.holderInventory.closeInventory(player);
         player.inventory.setInventorySlotContents(player.inventory.currentItem, this.holderStack.copy());

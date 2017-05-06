@@ -21,7 +21,7 @@ public class CommonProxy implements IGuiHandler {
             ItemStack stack = player.getHeldItemMainhand();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder) stack.getItem();
             int currentSlot = player.inventory.currentItem;
-            return new ContainerToolHolder(player, stack, itemMultiToolHolder.inventorySize, currentSlot);
+            return new ContainerToolHolder(player, stack, itemMultiToolHolder.getType(), currentSlot);
         }
         return null;
     }
@@ -33,7 +33,7 @@ public class CommonProxy implements IGuiHandler {
             ItemStack stack = player.getHeldItemMainhand();
             ItemMultiToolHolder itemMultiToolHolder = (ItemMultiToolHolder) stack.getItem();
             int currentSlot = player.inventory.currentItem;
-            return new GuiToolHolder(player, stack, itemMultiToolHolder.inventorySize, currentSlot);
+            return new GuiToolHolder(player, stack, itemMultiToolHolder.getType(), currentSlot);
         }
         return null;
     }

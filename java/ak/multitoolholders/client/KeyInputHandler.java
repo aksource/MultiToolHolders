@@ -31,6 +31,7 @@ public class KeyInputHandler {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void KeyPressEvent(InputEvent.KeyInputEvent event) {
         if (FMLClientHandler.instance().getClient().inGameHasFocus && FMLClientHandler.instance().getClientPlayerEntity() != null) {
             EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();

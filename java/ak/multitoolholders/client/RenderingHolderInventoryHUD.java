@@ -1,7 +1,7 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
-import ak.MultiToolHolders.MultiToolHolders;
+import ak.multitoolholders.ItemMultiToolHolder;
+import ak.multitoolholders.MultiToolHolders;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;

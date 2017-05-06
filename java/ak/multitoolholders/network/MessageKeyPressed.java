@@ -1,4 +1,4 @@
-package ak.MultiToolHolders.network;
+package ak.multitoolholders.network;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;

@@ -1,7 +1,7 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
-import ak.MultiToolHolders.inventory.InventoryToolHolder;
+import ak.multitoolholders.ItemMultiToolHolder;
+import ak.multitoolholders.inventory.InventoryToolHolder;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,7 @@ public class HolderRenderer implements IItemRenderer {
     @SideOnly(Side.CLIENT)
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        InventoryToolHolder tools = ((ItemMultiToolHolder)item.getItem()).getInventoryFromItemStack(item);
+        InventoryToolHolder tools = ((ItemMultiToolHolder) item.getItem()).getInventoryFromItemStack(item);
         int SlotNum = ItemMultiToolHolder.getSlotNumFromItemStack(item);
         if (tools != null && tools.getStackInSlot(SlotNum) != null) {
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(tools.getStackInSlot(SlotNum),
@@ -49,7 +49,7 @@ public class HolderRenderer implements IItemRenderer {
     @SideOnly(Side.CLIENT)
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        InventoryToolHolder tools = ((ItemMultiToolHolder)item.getItem()).getInventoryFromItemStack(item);
+        InventoryToolHolder tools = ((ItemMultiToolHolder) item.getItem()).getInventoryFromItemStack(item);
         int SlotNum = ItemMultiToolHolder.getSlotNumFromItemStack(item);
         if (tools != null && tools.getStackInSlot(SlotNum) != null) {
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(tools.getStackInSlot(SlotNum),
@@ -61,9 +61,9 @@ public class HolderRenderer implements IItemRenderer {
                 if (itemInHolder.getItem().requiresMultipleRenderPasses()) {
                     for (int pass = 0; pass < itemInHolder.getItem().getRenderPasses(itemInHolder.getItemDamage()); pass++) {
                         int color = itemInHolder.getItem().getColorFromItemStack(itemInHolder, pass);
-                        float colorR = (float)(color >> 16 & 255) / 255.0F;
-                        float colorG = (float)(color >> 8 & 255) / 255.0F;
-                        float colorB = (float)(color & 255) / 255.0F;
+                        float colorR = (float) (color >> 16 & 255) / 255.0F;
+                        float colorG = (float) (color >> 8 & 255) / 255.0F;
+                        float colorB = (float) (color & 255) / 255.0F;
                         GL11.glColor4f(1.0F * colorR, 1.0F * colorG, 1.0F * colorB, 1.0F);
                         renderToolHolder((EntityLivingBase) data[1], tools.getStackInSlot(SlotNum), pass);
                     }
@@ -77,8 +77,7 @@ public class HolderRenderer implements IItemRenderer {
     }
 
     @SideOnly(Side.CLIENT)
-    public void renderToolHolder(EntityLivingBase entity, ItemStack stack, int pass)
-    {
+    public void renderToolHolder(EntityLivingBase entity, ItemStack stack, int pass) {
         GL11.glPushMatrix();
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager texturemanager = mc.getTextureManager();

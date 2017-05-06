@@ -1,4 +1,4 @@
-package ak.MultiToolHolders.inventory;
+package ak.multitoolholders.inventory;
 
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class InventoryToolHolder extends InventoryBasic{
 
-    private ItemStack holder;
+    private final ItemStack holder;
 
     public InventoryToolHolder(ItemStack stack) {
         super("ToolHolder", false, 9);
@@ -27,8 +27,6 @@ public class InventoryToolHolder extends InventoryBasic{
 	@Override
 	public void markDirty() {
         super.markDirty();
-//		data.upDate = true;
-//        writeToNBT(holder.getTagCompound());
 	}
 
     @Override
@@ -47,10 +45,6 @@ public class InventoryToolHolder extends InventoryBasic{
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
-
-//        for (int i = 0; i < this.getSizeInventory(); ++i) {
-//            this.setInventorySlotContents(i, null);
-//        }
         NBTTagList tagList = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
 
         for (int var3 = 0; var3 < tagList.tagCount(); ++var3) {

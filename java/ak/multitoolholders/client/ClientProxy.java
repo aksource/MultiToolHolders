@@ -1,7 +1,7 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.CommonProxy;
-import ak.MultiToolHolders.MultiToolHolders;
+import ak.multitoolholders.CommonProxy;
+import ak.multitoolholders.MultiToolHolders;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
@@ -14,9 +14,9 @@ import org.lwjgl.input.Keyboard;
 
 public class ClientProxy extends CommonProxy
 {
-	public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "MultiToolHolders");
-	public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "MultiToolHolders");
-	public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "MultiToolHolders");
+	public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "multitoolholders");
+	public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "multitoolholders");
+	public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "multitoolholders");
 	@Override
 	public void registerClientInformation()
 	{
@@ -28,10 +28,10 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.registerKeyBinding(OpenKey);
 		ClientRegistry.registerKeyBinding(NextKey);
 		ClientRegistry.registerKeyBinding(PrevKey);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder3, multiToolRenderer);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder5, multiToolRenderer);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder9, multiToolRenderer);
-		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder7, multiToolRenderer);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.itemMultiToolHolder3, multiToolRenderer);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.itemMultiToolHolder5, multiToolRenderer);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.itemMultiToolHolder9, multiToolRenderer);
+		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.itemMultiToolHolder7, multiToolRenderer);
 	}
 
     @Override

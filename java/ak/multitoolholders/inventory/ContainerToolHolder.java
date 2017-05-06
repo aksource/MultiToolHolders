@@ -1,6 +1,7 @@
-package ak.MultiToolHolders.inventory;
+package ak.multitoolholders.inventory;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
+import ak.multitoolholders.EnumHolderType;
+import ak.multitoolholders.ItemMultiToolHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -9,24 +10,24 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerToolHolder extends Container {
-    private IInventory holderInventory;
-    private int holderNum;
-    private ItemStack holderStack;
-    private int currentSlot;
+    private final IInventory holderInventory;
+    private final EnumHolderType type;
+    private final ItemStack holderStack;
+    private final int currentSlot;
 
-    public ContainerToolHolder(InventoryPlayer inventoryPlayer, ItemStack holderStack, int num, int currentSlot) {
+    public ContainerToolHolder(InventoryPlayer inventoryPlayer, ItemStack holderStack, EnumHolderType type, int currentSlot) {
         this.holderInventory = ((ItemMultiToolHolder) holderStack.getItem()).getInventoryFromItemStack(holderStack);
-        this.holderNum = num;
+        this.type = type;
         this.holderStack = holderStack;
         this.currentSlot = currentSlot;
         holderInventory.openInventory();
-        for (int k = 0; k < holderNum; ++k) {
+        for (int k = 0; k < this.type.getSize(); ++k) {
             this.addSlotToContainer(new SlotToolHolder(holderInventory, k, 8 + k * 18, 18));
         }
         bindPlayerInventory(inventoryPlayer);
     }
 
-    protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
+    private void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
@@ -39,28 +40,27 @@ public class ContainerToolHolder extends Container {
         }
     }
 
-    public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
-        return par1EntityPlayer.inventory.getCurrentItem() != null && par1EntityPlayer.inventory.getCurrentItem().getItem() instanceof ItemMultiToolHolder;
+    @Override
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return playerIn.inventory.getCurrentItem() != null && playerIn.inventory.getCurrentItem().getItem() instanceof ItemMultiToolHolder;
     }
 
-    /**
-     * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
-     */
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
         ItemStack itemstack = null;
-        Slot slot = this.getSlot(par2);
+        Slot slot = this.getSlot(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (par2 < this.holderNum) {
-                if (!this.mergeItemStack(itemstack1, this.holderNum, this.inventorySlots.size(), true)) {
+            if (index < this.type.getSize()) {
+                if (!this.mergeItemStack(itemstack1, this.type.getSize(), this.inventorySlots.size(), true)) {
                     return null;
                 }
             } else if (itemstack1.getItem() instanceof ItemMultiToolHolder || itemstack1.isStackable())
                 return null;
-            else if (!this.mergeItemStack(itemstack1, 0, this.holderNum, false)) {
+            else if (!this.mergeItemStack(itemstack1, 0, this.type.getSize(), false)) {
                 return null;
             }
 
@@ -77,15 +77,13 @@ public class ContainerToolHolder extends Container {
     @Override
     public ItemStack slotClick(int slotId, int clickedButton, int mode, EntityPlayer playerIn) {
 
-        if (currentSlot == slotId - 27 - this.holderNum) {
+        if (currentSlot == slotId - 27 - this.type.getSize()) {
             return null;
         }
         return super.slotClick(slotId, clickedButton, mode, playerIn);
     }
 
-    /**
-     * Callback for when the crafting gui is closed.
-     */
+    @Override
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);
         this.holderInventory.closeInventory();

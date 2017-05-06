@@ -1,4 +1,4 @@
-package ak.MultiToolHolders;
+package ak.multitoolholders;
 
 import buildcraft.api.tools.IToolWrench;
 import net.minecraft.entity.player.EntityPlayer;

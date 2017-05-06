@@ -1,9 +1,9 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.IKeyEvent;
-import ak.MultiToolHolders.ItemMultiToolHolder;
-import ak.MultiToolHolders.network.MessageKeyPressed;
-import ak.MultiToolHolders.network.PacketHandler;
+import ak.multitoolholders.IKeyEvent;
+import ak.multitoolholders.ItemMultiToolHolder;
+import ak.multitoolholders.network.MessageKeyPressed;
+import ak.multitoolholders.network.PacketHandler;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -30,6 +30,7 @@ public class KeyInputHandler {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void KeyPressEvent(InputEvent.KeyInputEvent event) {
         if (FMLClientHandler.instance().getClient().inGameHasFocus && FMLClientHandler.instance().getClientPlayerEntity() != null) {
             EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();

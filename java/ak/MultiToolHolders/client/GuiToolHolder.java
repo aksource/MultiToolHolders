@@ -1,15 +1,13 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
-import ak.multitoolholders.Constants;
-import ak.multitoolholders.EnumHolderType;
-import ak.multitoolholders.inventory.ContainerToolHolder;
+import ak.MultiToolHolders.EnumHolderType;
+import ak.MultiToolHolders.inventory.ContainerToolHolder;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 

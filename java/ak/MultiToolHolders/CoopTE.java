@@ -1,4 +1,4 @@
-package ak.multitoolholders;
+package ak.MultiToolHolders;
 
 import cofh.api.item.IToolHammer;
 import net.minecraft.entity.EntityLivingBase;

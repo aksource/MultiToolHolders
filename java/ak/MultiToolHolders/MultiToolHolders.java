@@ -1,6 +1,6 @@
-package ak.multitoolholders;
+package ak.MultiToolHolders;
 
-import ak.multitoolholders.network.PacketHandler;
+import ak.MultiToolHolders.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-@Mod(modid = Constants.MOD_ID, name = "multitoolholders", version = "@VERSION@", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
+@Mod(modid = Constants.MOD_ID, name = "MultiToolHolders", version = "@VERSION@", dependencies = "required-after:Forge@[10.12.1.1090,)", useMetadata = true)
 public class MultiToolHolders {
     //Logger
     public static final Logger logger = Logger.getLogger(Constants.MOD_ID);
@@ -36,7 +36,7 @@ public class MultiToolHolders {
     public static boolean enableDisplayToolHolderInventory = true;
     @Mod.Instance(Constants.MOD_ID)
     public static MultiToolHolders instance;
-    @SidedProxy(clientSide = "ak.multitoolholders.client.ClientProxy", serverSide = "ak.multitoolholders.CommonProxy")
+    @SidedProxy(clientSide = "ak.MultiToolHolders.client.ClientProxy", serverSide = "ak.MultiToolHolders.CommonProxy")
     public static CommonProxy proxy;
 
     public static void addEnchantmentToItem(ItemStack item,

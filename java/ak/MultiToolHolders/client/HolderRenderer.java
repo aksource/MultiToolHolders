@@ -1,7 +1,7 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
-import ak.multitoolholders.ItemMultiToolHolder;
-import ak.multitoolholders.inventory.InventoryToolHolder;
+import ak.MultiToolHolders.ItemMultiToolHolder;
+import ak.MultiToolHolders.inventory.InventoryToolHolder;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;

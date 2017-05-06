@@ -1,7 +1,7 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
-import ak.multitoolholders.CommonProxy;
-import ak.multitoolholders.MultiToolHolders;
+import ak.MultiToolHolders.CommonProxy;
+import ak.MultiToolHolders.MultiToolHolders;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
@@ -14,9 +14,9 @@ import org.lwjgl.input.Keyboard;
 
 public class ClientProxy extends CommonProxy
 {
-	public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "multitoolholders");
-	public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "multitoolholders");
-	public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "multitoolholders");
+	public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "MultiToolHolders");
+	public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "MultiToolHolders");
+	public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "MultiToolHolders");
 	@Override
 	public void registerClientInformation()
 	{

@@ -1,6 +1,6 @@
-package ak.multitoolholders.network;
+package ak.MultiToolHolders.network;
 
-import ak.multitoolholders.IKeyEvent;
+import ak.MultiToolHolders.IKeyEvent;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

@@ -1,9 +1,9 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
-import ak.multitoolholders.IKeyEvent;
-import ak.multitoolholders.ItemMultiToolHolder;
-import ak.multitoolholders.network.MessageKeyPressed;
-import ak.multitoolholders.network.PacketHandler;
+import ak.MultiToolHolders.IKeyEvent;
+import ak.MultiToolHolders.ItemMultiToolHolder;
+import ak.MultiToolHolders.network.MessageKeyPressed;
+import ak.MultiToolHolders.network.PacketHandler;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;

@@ -1,7 +1,7 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
-import ak.MultiToolHolders.MultiToolHolders;
+import ak.multitoolholders.ItemMultiToolHolder;
+import ak.multitoolholders.MultiToolHolders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
@@ -20,6 +20,7 @@ public class RenderingHolderInventoryHUD {
     private final RenderItem itemRenderer = mc.getRenderItem();
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void renderingOverlay(RenderGameOverlayEvent.Text event) {
         EntityPlayer player = mc.thePlayer;
         ItemStack holdItem = player.getHeldItemMainhand();
@@ -46,10 +47,7 @@ public class RenderingHolderInventoryHUD {
             RenderHelper.enableGUIStandardItemLighting();
             itemRenderer.renderItemIntoGUI(itemstack, par2, par3);//Itemの描画
             itemRenderer.renderItemOverlays(this.mc.fontRendererObj, itemstack, par2, par3);//耐久値の描画
-//            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRenderer, this.mc.getTextureManager(), itemstack, par2, par3);
             RenderHelper.disableStandardItemLighting();
-//            String s = itemstack.getDisplayName();
-//            this.mc.fontRenderer.drawStringWithShadow(s, par2 + 16, par3 + 4, 0xFFFFFF);
         }
     }
 }

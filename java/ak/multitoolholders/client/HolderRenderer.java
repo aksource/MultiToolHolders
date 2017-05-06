@@ -1,6 +1,6 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
+import ak.multitoolholders.ItemMultiToolHolder;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -25,7 +25,7 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class HolderRenderer implements ISmartItemModel {
     private Minecraft mc = Minecraft.getMinecraft();
-    private IFlexibleBakedModel defaultModel;
+    private final IFlexibleBakedModel defaultModel;
     private static final Map<IBakedModel, IPerspectiveAwareModel> PERSPECTIVE_AWARE_MODEL_MAP = Maps.newHashMap();
 
     public HolderRenderer(IFlexibleBakedModel defaultModel) {

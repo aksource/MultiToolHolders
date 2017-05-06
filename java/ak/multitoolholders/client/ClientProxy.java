@@ -1,7 +1,7 @@
-package ak.MultiToolHolders.Client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.CommonProxy;
-import ak.MultiToolHolders.MultiToolHolders;
+import ak.multitoolholders.CommonProxy;
+import ak.multitoolholders.MultiToolHolders;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -22,16 +22,15 @@ import java.util.Map;
 
 public class ClientProxy extends CommonProxy
 {
-	public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "MultiToolHolders");
-	public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "MultiToolHolders");
-	public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "MultiToolHolders");
+	public static final KeyBinding OpenKey = new KeyBinding("Key.openToolHolder",Keyboard.KEY_F, "multitoolholders");
+	public static final KeyBinding NextKey = new KeyBinding("Key.nextToolHolder",Keyboard.KEY_T, "multitoolholders");
+	public static final KeyBinding PrevKey = new KeyBinding("Key.prevToolHolder",Keyboard.KEY_R, "multitoolholders");
 
     public static final Map<String, ModelResourceLocation> MODEL_RESOURCE_LOCATION_MAP = Maps.newHashMap();
 
 	@Override
 	public void registerClientInformation()
 	{
-//        IItemRenderer multiToolRenderer = new HolderRenderer();
         FMLCommonHandler.instance().bus().register(new KeyInputHandler());
         if (MultiToolHolders.enableDisplayToolHolderInventory) {
             MinecraftForge.EVENT_BUS.register(new RenderingHolderInventoryHUD());
@@ -39,20 +38,16 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.registerKeyBinding(OpenKey);
 		ClientRegistry.registerKeyBinding(NextKey);
 		ClientRegistry.registerKeyBinding(PrevKey);
-//		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder3, multiToolRenderer);
-//		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder5, multiToolRenderer);
-//		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder9, multiToolRenderer);
-//		MinecraftForgeClient.registerItemRenderer(MultiToolHolders.ItemMultiToolHolder7, multiToolRenderer);
 
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder3, "itemmultitoolholder3");
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder5, "itemmultitoolholder5");
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder7, "itemmultitoolholder7");
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder9, "itemmultitoolholder9");
+        registerItemClient(MultiToolHolders.itemMultiToolHolder3);
+        registerItemClient(MultiToolHolders.itemMultiToolHolder5);
+        registerItemClient(MultiToolHolders.itemMultiToolHolder7);
+        registerItemClient(MultiToolHolders.itemMultiToolHolder9);
 	}
 
-    private void registerItemClient(Item item, String name) {
-//        ModelBakery.addVariantName(item, MultiToolHolders.MOD_ID + ":" + name);
-        MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(MultiToolHolders.MOD_ID + ":" + name, "inventory"));
+    private void registerItemClient(Item item) {
+	    String name = item.getRegistryName();
+        MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(name, "inventory"));
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, MODEL_RESOURCE_LOCATION_MAP.get(name));
     }
     @Override
@@ -61,11 +56,12 @@ public class ClientProxy extends CommonProxy
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void bakedModelRegister(ModelBakeEvent event) {
-        changeModel(event.modelRegistry, "itemmultitoolholder3");
-        changeModel(event.modelRegistry, "itemmultitoolholder5");
-        changeModel(event.modelRegistry, "itemmultitoolholder7");
-        changeModel(event.modelRegistry, "itemmultitoolholder9");
+        changeModel(event.modelRegistry, MultiToolHolders.itemMultiToolHolder3.getRegistryName());
+        changeModel(event.modelRegistry, MultiToolHolders.itemMultiToolHolder5.getRegistryName());
+        changeModel(event.modelRegistry, MultiToolHolders.itemMultiToolHolder7.getRegistryName());
+        changeModel(event.modelRegistry, MultiToolHolders.itemMultiToolHolder9.getRegistryName());
     }
     private void changeModel(IRegistry modelRegistry, String name) {
         IBakedModel holderOrgModel = (IBakedModel)modelRegistry.getObject(MODEL_RESOURCE_LOCATION_MAP.get(name));

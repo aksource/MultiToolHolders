@@ -1,7 +1,7 @@
-package ak.multitoolholders.inventory;
+package ak.MultiToolHolders.inventory;
 
-import ak.multitoolholders.EnumHolderType;
-import ak.multitoolholders.ItemMultiToolHolder;
+import ak.MultiToolHolders.EnumHolderType;
+import ak.MultiToolHolders.ItemMultiToolHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

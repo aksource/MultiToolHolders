@@ -1,4 +1,4 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;

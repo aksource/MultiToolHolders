@@ -1,7 +1,7 @@
-package ak.multitoolholders;
+package ak.MultiToolHolders;
 
-import ak.multitoolholders.inventory.ContainerToolHolder;
-import ak.multitoolholders.inventory.InventoryToolHolder;
+import ak.MultiToolHolders.inventory.ContainerToolHolder;
+import ak.MultiToolHolders.inventory.InventoryToolHolder;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -462,21 +462,21 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
 
     public static int getSlotNumFromItemStack(ItemStack itemStack) {
         if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
-        if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
+        if (!itemStack.getTagCompound().hasKey("MultiToolHolders")) {
             NBTTagCompound nbtTagCompound = new NBTTagCompound();
-            itemStack.getTagCompound().setTag("multitoolholders", nbtTagCompound);
+            itemStack.getTagCompound().setTag("MultiToolHolders", nbtTagCompound);
         }
-        NBTTagCompound nbt = (NBTTagCompound) itemStack.getTagCompound().getTag("multitoolholders");
+        NBTTagCompound nbt = (NBTTagCompound) itemStack.getTagCompound().getTag("MultiToolHolders");
         return nbt.getInteger("slot");
     }
 
     public void setSlotNumToItemStack(ItemStack itemStack, int slotNum) {
         if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
-        if (!itemStack.getTagCompound().hasKey("multitoolholders")) {
+        if (!itemStack.getTagCompound().hasKey("MultiToolHolders")) {
             NBTTagCompound nbtTagCompound = new NBTTagCompound();
-            itemStack.getTagCompound().setTag("multitoolholders", nbtTagCompound);
+            itemStack.getTagCompound().setTag("MultiToolHolders", nbtTagCompound);
         }
-        NBTTagCompound nbt = (NBTTagCompound) itemStack.getTagCompound().getTag("multitoolholders");
+        NBTTagCompound nbt = (NBTTagCompound) itemStack.getTagCompound().getTag("MultiToolHolders");
         nbt.setInteger("slot", slotNum);
     }
 

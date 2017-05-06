@@ -1,6 +1,6 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
-import ak.multitoolholders.ItemMultiToolHolder;
+import ak.MultiToolHolders.ItemMultiToolHolder;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;

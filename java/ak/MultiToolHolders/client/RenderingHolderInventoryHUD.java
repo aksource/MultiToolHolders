@@ -1,7 +1,7 @@
-package ak.multitoolholders.client;
+package ak.MultiToolHolders.client;
 
-import ak.multitoolholders.ItemMultiToolHolder;
-import ak.multitoolholders.MultiToolHolders;
+import ak.MultiToolHolders.ItemMultiToolHolder;
+import ak.MultiToolHolders.MultiToolHolders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;

@@ -1,4 +1,4 @@
-package ak.multitoolholders.inventory;
+package ak.MultiToolHolders.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;

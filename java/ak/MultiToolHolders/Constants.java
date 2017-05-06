@@ -1,4 +1,4 @@
-package ak.multitoolholders;
+package ak.MultiToolHolders;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class Constants {
     public static final String MOD_ID = "MultiToolHolders";
-    public static final String MOD_NAME = "multitoolholders";
+    public static final String MOD_NAME = "MultiToolHolders";
     public static final String MOD_VERSION = "@VERSION@";
     public static final String MOD_DEPENDENCIES = "required-after:Forge@[11.15.0,)";
     public static final String MOD_MC_VERSION = "[1.8.8,1.8.9]";

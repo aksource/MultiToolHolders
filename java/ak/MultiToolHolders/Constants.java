@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class Constants {
     public static final String TEXTURES_GUI_TOOL_HOLDER3_PNG = "textures/gui/ToolHolder3.png";
-    public static final String MOD_ID = "MultiToolHolders";
+    public static final String MOD_ID = "multitoolholders";
     public static final ResourceLocation GUI_3 = new ResourceLocation(MOD_ID.toLowerCase(), TEXTURES_GUI_TOOL_HOLDER3_PNG);
     public static final String TEXTURES_GUI_TOOL_HOLDER5_PNG = "textures/gui/toolholder5.png";
     public static final ResourceLocation GUI_5 = new ResourceLocation(MOD_ID.toLowerCase(), TEXTURES_GUI_TOOL_HOLDER5_PNG);

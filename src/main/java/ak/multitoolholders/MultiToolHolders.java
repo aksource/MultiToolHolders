@@ -1,6 +1,6 @@
-package ak.MultiToolHolders;
+package ak.multitoolholders;
 
-import ak.MultiToolHolders.network.PacketHandler;
+import ak.multitoolholders.network.PacketHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -42,7 +42,7 @@ public class MultiToolHolders {
     public static boolean enableDisplayToolHolderInventory = true;
     @Mod.Instance(Constants.MOD_ID)
     public static MultiToolHolders instance;
-    @SidedProxy(clientSide = "ak.MultiToolHolders.client.ClientProxy", serverSide = "ak.MultiToolHolders.CommonProxy")
+    @SidedProxy(clientSide = "ak.multitoolholders.client.ClientProxy", serverSide = "ak.multitoolholders.CommonProxy")
     public static CommonProxy proxy;
 
     public static void addEnchantmentToItem(ItemStack item,

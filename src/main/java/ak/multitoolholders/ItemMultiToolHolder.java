@@ -1,7 +1,7 @@
-package ak.MultiToolHolders;
+package ak.multitoolholders;
 
-import ak.MultiToolHolders.inventory.ContainerToolHolder;
-import ak.MultiToolHolders.inventory.InventoryToolHolder;
+import ak.multitoolholders.inventory.ContainerToolHolder;
+import ak.multitoolholders.inventory.InventoryToolHolder;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
-import static ak.MultiToolHolders.Constants.*;
+import static ak.multitoolholders.Constants.*;
 
 @Optional.InterfaceList(
         {@Optional.Interface(iface = "cofh.api.item.IToolHammer", modid = "CoFHCore"),

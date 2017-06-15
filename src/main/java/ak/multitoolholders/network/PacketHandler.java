@@ -1,6 +1,6 @@
-package ak.MultiToolHolders.network;
+package ak.multitoolholders.network;
 
-import ak.MultiToolHolders.Constants;
+import ak.multitoolholders.Constants;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;

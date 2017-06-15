@@ -1,7 +1,7 @@
-package ak.MultiToolHolders.inventory;
+package ak.multitoolholders.inventory;
 
-import ak.MultiToolHolders.ItemMultiToolHolder;
-import ak.MultiToolHolders.MultiToolHolders;
+import ak.multitoolholders.ItemMultiToolHolder;
+import ak.multitoolholders.MultiToolHolders;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;

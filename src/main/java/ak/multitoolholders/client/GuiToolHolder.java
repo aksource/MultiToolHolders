@@ -1,7 +1,7 @@
-package ak.MultiToolHolders.client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.EnumHolderType;
-import ak.MultiToolHolders.inventory.ContainerToolHolder;
+import ak.multitoolholders.EnumHolderType;
+import ak.multitoolholders.inventory.ContainerToolHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;

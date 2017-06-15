@@ -1,4 +1,4 @@
-package ak.MultiToolHolders;
+package ak.multitoolholders;
 
 import net.minecraft.util.ResourceLocation;
 

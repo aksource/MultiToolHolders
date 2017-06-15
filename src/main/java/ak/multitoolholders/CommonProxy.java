@@ -1,7 +1,7 @@
-package ak.MultiToolHolders;
+package ak.multitoolholders;
 
-import ak.MultiToolHolders.client.GuiToolHolder;
-import ak.MultiToolHolders.inventory.ContainerToolHolder;
+import ak.multitoolholders.client.GuiToolHolder;
+import ak.multitoolholders.inventory.ContainerToolHolder;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

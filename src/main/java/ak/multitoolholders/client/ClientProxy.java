@@ -1,8 +1,8 @@
-package ak.MultiToolHolders.client;
+package ak.multitoolholders.client;
 
-import ak.MultiToolHolders.CommonProxy;
-import ak.MultiToolHolders.Constants;
-import ak.MultiToolHolders.MultiToolHolders;
+import ak.multitoolholders.CommonProxy;
+import ak.multitoolholders.Constants;
+import ak.multitoolholders.MultiToolHolders;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;

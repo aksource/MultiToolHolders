@@ -1,0 +1,60 @@
+sourceSets.main {
+    java.srcDirs project.projectDir.name
+    resources.srcDirs project.projectDir.name
+}
+
+configurations {
+    deployerJars
+}
+dependencies {
+    //compile files('lib/CoFHCore-[1.7.10]3.0.0B6-dev-32.jar'), files('lib/buildcraft-6.1.2-dev.jar')
+    // dependency in deployerJars, for maven deployment. see definition in mavenDeployer{} below
+    deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
+}
+group= "com.ak"
+version = "1.12.0-1.4.6"
+minecraft {
+    // replacing stuff in the source
+    replace '@VERSION@', project.version
+    replace '@MC_VERSION@', version
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+apply plugin: 'maven'
+
+// maven ローカルリポジトリのパス
+ext {
+    mavenRepository = '/maven'
+}
+
+artifacts {
+    // the default jar is already here by default
+    archives sourceJar
+//    archives deobfJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri(mavenRepository))
+        }
+    }
+}

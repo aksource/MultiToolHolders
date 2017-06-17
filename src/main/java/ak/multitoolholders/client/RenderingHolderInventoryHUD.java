@@ -48,7 +48,7 @@ public class RenderingHolderInventoryHUD {
         if (!itemstack.isEmpty()){
             RenderHelper.enableGUIStandardItemLighting();
             itemRenderer.renderItemIntoGUI(itemstack, par2, par3);//Itemの描画
-            itemRenderer.renderItemOverlays(this.mc.fontRendererObj, itemstack, par2, par3);//耐久値の描画
+            itemRenderer.renderItemOverlays(this.mc.fontRenderer, itemstack, par2, par3);//耐久値の描画
             RenderHelper.disableStandardItemLighting();
         }
     }

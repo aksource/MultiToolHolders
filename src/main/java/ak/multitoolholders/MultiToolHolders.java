@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -84,6 +86,7 @@ public class MultiToolHolders {
         GameRegistry.register(ItemMultiToolHolder7);
 
         PacketHandler.init();
+        addRecipe();
     }
 
     @Mod.EventHandler
@@ -91,17 +94,21 @@ public class MultiToolHolders {
     public void load(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         MinecraftForge.EVENT_BUS.register(proxy);
+        proxy.registerClientInformation();
+    }
+
+    private void addRecipe() {
         ItemStack[] toolHolders = new ItemStack[]{new ItemStack(ItemMultiToolHolder3), new ItemStack(ItemMultiToolHolder5), new ItemStack(ItemMultiToolHolder7), new ItemStack(ItemMultiToolHolder9)};
         ItemStack[] holderMaterials = new ItemStack[]{new ItemStack(Items.IRON_INGOT), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND)};
+        ResourceLocation rl = new ResourceLocation("","");
         for (int i = 0; i < toolHolders.length; i++) {
-            GameRegistry.addRecipe(toolHolders[i],
+            GameRegistry.register(new ShapedOreRecipe(rl, toolHolders[i],
                     "AAA",
                     "ABA",
                     "CCC",
                     'A', holderMaterials[i],
                     'B', Blocks.CHEST,
-                    'C', Blocks.TRIPWIRE_HOOK);
+                    'C', Blocks.TRIPWIRE_HOOK).setRegistryName(toolHolders[i].getItem().getRegistryName()));
         }
-        proxy.registerClientInformation();
     }
 }

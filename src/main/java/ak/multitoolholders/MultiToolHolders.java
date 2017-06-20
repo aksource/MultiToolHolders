@@ -107,8 +107,8 @@ public class MultiToolHolders {
                     "ABA",
                     "CCC",
                     'A', holderMaterials[i],
-                    'B', Blocks.CHEST,
-                    'C', Blocks.TRIPWIRE_HOOK).setRegistryName(toolHolders[i].getItem().getRegistryName()));
+                    'B', new ItemStack(Blocks.CHEST),
+                    'C', new ItemStack(Blocks.TRIPWIRE_HOOK)).setRegistryName(toolHolders[i].getItem().getRegistryName()));
         }
     }
 }

@@ -508,7 +508,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                             player.addStat(AchievementList.OVERKILL);
                         }
 
-                        player.setLastAttacker(entityIn);
+                        player.setLastAttackedEntity(entityIn);
 
                         if (entityIn instanceof EntityLivingBase) {
                             EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entityIn, player);
@@ -518,7 +518,7 @@ public class ItemMultiToolHolder extends Item implements IKeyEvent/*, IToolHamme
                         Entity entity = entityIn;
 
                         if (entityIn instanceof EntityDragonPart) {
-                            IEntityMultiPart ientitymultipart = ((EntityDragonPart) entityIn).entityDragonObj;
+                            IEntityMultiPart ientitymultipart = ((EntityDragonPart) entityIn).parent;
 
                             if (ientitymultipart instanceof EntityLivingBase) {
                                 entity = (EntityLivingBase) ientitymultipart;

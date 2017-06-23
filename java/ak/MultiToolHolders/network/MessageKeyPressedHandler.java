@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class MessageKeyPressedHandler implements IMessageHandler<MessageKeyPressed, IMessage> {
     @Override
     public IMessage onMessage(MessageKeyPressed message, MessageContext ctx) {
-        EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
+        EntityPlayer entityPlayer = ctx.getServerHandler().player;
         if (entityPlayer != null && !entityPlayer.getHeldItemMainhand().isEmpty()
                 && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
             ((IKeyEvent)entityPlayer.getHeldItemMainhand().getItem()).doKeyAction(

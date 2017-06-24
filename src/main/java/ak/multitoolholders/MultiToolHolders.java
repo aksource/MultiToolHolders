@@ -6,18 +6,21 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -79,14 +82,24 @@ public class MultiToolHolders {
         toolStrArray = config.get(Configuration.CATEGORY_GENERAL, "toolStrArray", toolStrArray, "Tool ids that can set ToolHolders.").getStringList();
         toolNameSet.addAll(Arrays.asList(toolStrArray));
         config.save();
-
-        GameRegistry.register(ItemMultiToolHolder3);
-        GameRegistry.register(ItemMultiToolHolder5);
-        GameRegistry.register(ItemMultiToolHolder9);
-        GameRegistry.register(ItemMultiToolHolder7);
-
+        MinecraftForge.EVENT_BUS.register(this);
         PacketHandler.init();
-        addRecipe();
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void registerItems(RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> registry = event.getRegistry();
+        registry.register(ItemMultiToolHolder3);
+        registry.register(ItemMultiToolHolder5);
+        registry.register(ItemMultiToolHolder9);
+        registry.register(ItemMultiToolHolder7);
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+        addRecipe(event.getRegistry());
     }
 
     @Mod.EventHandler
@@ -97,12 +110,12 @@ public class MultiToolHolders {
         proxy.registerClientInformation();
     }
 
-    private void addRecipe() {
+    private void addRecipe(IForgeRegistry<IRecipe> registry) {
         ItemStack[] toolHolders = new ItemStack[]{new ItemStack(ItemMultiToolHolder3), new ItemStack(ItemMultiToolHolder5), new ItemStack(ItemMultiToolHolder7), new ItemStack(ItemMultiToolHolder9)};
         ItemStack[] holderMaterials = new ItemStack[]{new ItemStack(Items.IRON_INGOT), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND)};
         ResourceLocation rl = new ResourceLocation("","");
         for (int i = 0; i < toolHolders.length; i++) {
-            GameRegistry.register(new ShapedOreRecipe(rl, toolHolders[i],
+            registry.register(new ShapedOreRecipe(rl, toolHolders[i],
                     "AAA",
                     "ABA",
                     "CCC",

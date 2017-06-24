@@ -16,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +78,7 @@ public class HolderRenderer implements IBakedModel {
         private final IBakedModel defaultModel;
 
         private HolderItemOverrideList(IBakedModel defaultModel) {
-            super(defaultModel.getOverrides().getOverrides());
+            super(new ArrayList<>());
             this.defaultModel = defaultModel;
         }
 

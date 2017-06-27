@@ -19,12 +19,13 @@ import javax.annotation.Nonnull;
  */
 public class RenderingHolderInventoryHUD {
     private final Minecraft mc = Minecraft.getMinecraft();
-    private final RenderItem itemRenderer = mc.getRenderItem();
+    private RenderItem itemRenderer;
 
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void renderingOverlay(RenderGameOverlayEvent.Text event) {
         EntityPlayer player = mc.player;
+        itemRenderer = mc.getRenderItem();
         ItemStack holdItem = player.getHeldItemMainhand();
         if (!holdItem.isEmpty() && holdItem.getItem() instanceof ItemMultiToolHolder) {
             renderHolderInventory(holdItem, event.getPartialTicks());
@@ -44,11 +45,11 @@ public class RenderingHolderInventoryHUD {
         }
     }
 
-    private void renderInventorySlot(@Nonnull ItemStack itemstack, int par2, int par3) {
+    private void renderInventorySlot(@Nonnull ItemStack itemstack, int x, int y) {
         if (!itemstack.isEmpty()){
             RenderHelper.enableGUIStandardItemLighting();
-            itemRenderer.renderItemIntoGUI(itemstack, par2, par3);//Itemの描画
-            itemRenderer.renderItemOverlays(this.mc.fontRenderer, itemstack, par2, par3);//耐久値の描画
+            itemRenderer.renderItemIntoGUI(itemstack, x, y);//Itemの描画
+            itemRenderer.renderItemOverlays(this.mc.fontRenderer, itemstack, x, y);//耐久値の描画
             RenderHelper.disableStandardItemLighting();
         }
     }

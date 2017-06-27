@@ -7,8 +7,6 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -20,7 +18,7 @@ import java.util.List;
  * GUIアイコンと手持ちアイコンの描画を変えるモデルクラス
  * Created by AKIRA on 15/01/30.
  */
-public class PerspectiveAwareModel implements IPerspectiveAwareModel{
+public class PerspectiveAwareModel implements IBakedModel{
     //インベントリアイコン用モデル
     private IBakedModel guiModel;
     //一人称・三人称視点用モデル
@@ -31,15 +29,11 @@ public class PerspectiveAwareModel implements IPerspectiveAwareModel{
     }
 
     @Override
-    public Pair<? extends IBakedModel, Matrix4f>  handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+    @Nonnull
+    public Pair<? extends IBakedModel, Matrix4f>  handlePerspective(@Nonnull ItemCameraTransforms.TransformType cameraTransformType) {
         IBakedModel model = (cameraTransformType == ItemCameraTransforms.TransformType.GUI) ? this.guiModel: this.handHeldModel;
         model.getItemCameraTransforms().applyTransform(cameraTransformType);
-        Pair<? extends IBakedModel, Matrix4f> pair = Pair.of(model,
-                ForgeHooksClient.getMatrix(model.getItemCameraTransforms().getTransform(cameraTransformType)));
-        if (model instanceof IPerspectiveAwareModel) {
-            pair = ((IPerspectiveAwareModel)model).handlePerspective(cameraTransformType);
-        }
-        return pair;
+        return model.handlePerspective(cameraTransformType);
     }
 
     @Override

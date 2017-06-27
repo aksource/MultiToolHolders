@@ -14,7 +14,6 @@ import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
@@ -28,8 +27,16 @@ public class ClientProxy extends CommonProxy {
     private static final Map<String, ModelResourceLocation> MODEL_RESOURCE_LOCATION_MAP = Maps.newHashMap();
 
     @Override
+    public void registerClientPreInformation() {
+        registerMap(MultiToolHolders.itemMultiToolHolder3);
+        registerMap(MultiToolHolders.itemMultiToolHolder5);
+        registerMap(MultiToolHolders.itemMultiToolHolder7);
+        registerMap(MultiToolHolders.itemMultiToolHolder9);
+    }
+
+    @Override
     public void registerClientInformation() {
-        FMLCommonHandler.instance().bus().register(new KeyInputHandler());
+        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
         if (MultiToolHolders.enableDisplayToolHolderInventory) {
             MinecraftForge.EVENT_BUS.register(new RenderingHolderInventoryHUD());
         }
@@ -37,17 +44,23 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.registerKeyBinding(NextKey);
         ClientRegistry.registerKeyBinding(PrevKey);
 
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder3);
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder5);
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder7);
-        registerItemClient(MultiToolHolders.ItemMultiToolHolder9);
+        registerItemClient(MultiToolHolders.itemMultiToolHolder3);
+        registerItemClient(MultiToolHolders.itemMultiToolHolder5);
+        registerItemClient(MultiToolHolders.itemMultiToolHolder7);
+        registerItemClient(MultiToolHolders.itemMultiToolHolder9);
     }
 
     private void registerItemClient(Item item) {
         if (item.getRegistryName() != null) {
             String name = item.getRegistryName().getResourcePath();
-            MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, MODEL_RESOURCE_LOCATION_MAP.get(name));
+        }
+    }
+
+    private void registerMap(Item item) {
+        if (item.getRegistryName() != null) {
+            String name = item.getRegistryName().getResourcePath();
+            MODEL_RESOURCE_LOCATION_MAP.put(name, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
     }
 
@@ -66,7 +79,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void changeModel(IRegistry<ModelResourceLocation, IBakedModel> modelRegistry, String name) {
-        IBakedModel holderOrgModel = modelRegistry.getObject(MODEL_RESOURCE_LOCATION_MAP.get(name));
-        modelRegistry.putObject(MODEL_RESOURCE_LOCATION_MAP.get(name), new HolderRenderer(holderOrgModel));
+        ModelResourceLocation rl = MODEL_RESOURCE_LOCATION_MAP.get(name);
+        IBakedModel holderOrgModel = modelRegistry.getObject(rl);
+        modelRegistry.putObject(rl, new HolderRenderer(holderOrgModel));
+    }
+    static {
+
     }
 }

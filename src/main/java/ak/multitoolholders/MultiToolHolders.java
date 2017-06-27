@@ -36,10 +36,10 @@ import java.util.logging.Logger;
 public class MultiToolHolders {
     //Logger
     public static final Logger logger = Logger.getLogger("MultiToolHolders");
-    public static Item ItemMultiToolHolder3 = (new ItemMultiToolHolder(EnumHolderType.HOLDER3)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder3");
-    public static Item ItemMultiToolHolder5 = (new ItemMultiToolHolder(EnumHolderType.HOLDER5)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder5");
-    public static Item ItemMultiToolHolder7 = (new ItemMultiToolHolder(EnumHolderType.HOLDER7)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder7");
-    public static Item ItemMultiToolHolder9 = (new ItemMultiToolHolder(EnumHolderType.HOLDER9)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder9");
+    public static Item itemMultiToolHolder3 = (new ItemMultiToolHolder(EnumHolderType.HOLDER3)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder3");
+    public static Item itemMultiToolHolder5 = (new ItemMultiToolHolder(EnumHolderType.HOLDER5)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder5");
+    public static Item itemMultiToolHolder7 = (new ItemMultiToolHolder(EnumHolderType.HOLDER7)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder7");
+    public static Item itemMultiToolHolder9 = (new ItemMultiToolHolder(EnumHolderType.HOLDER9)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder9");
     public static int toolHolderInvX = 0;
     public static int toolHolderInvY = 0;
     public static String[] toolStrArray = new String[]{};
@@ -83,6 +83,8 @@ public class MultiToolHolders {
         toolNameSet.addAll(Arrays.asList(toolStrArray));
         config.save();
         MinecraftForge.EVENT_BUS.register(this);
+        proxy.registerClientPreInformation();
+        MinecraftForge.EVENT_BUS.register(proxy);
         PacketHandler.init();
     }
 
@@ -90,10 +92,10 @@ public class MultiToolHolders {
     @SuppressWarnings("unused")
     public void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> registry = event.getRegistry();
-        registry.register(ItemMultiToolHolder3);
-        registry.register(ItemMultiToolHolder5);
-        registry.register(ItemMultiToolHolder9);
-        registry.register(ItemMultiToolHolder7);
+        registry.register(itemMultiToolHolder3);
+        registry.register(itemMultiToolHolder5);
+        registry.register(itemMultiToolHolder9);
+        registry.register(itemMultiToolHolder7);
     }
 
     @SubscribeEvent
@@ -106,12 +108,11 @@ public class MultiToolHolders {
     @SuppressWarnings("unused")
     public void load(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
-        MinecraftForge.EVENT_BUS.register(proxy);
         proxy.registerClientInformation();
     }
 
     private void addRecipe(IForgeRegistry<IRecipe> registry) {
-        ItemStack[] toolHolders = new ItemStack[]{new ItemStack(ItemMultiToolHolder3), new ItemStack(ItemMultiToolHolder5), new ItemStack(ItemMultiToolHolder7), new ItemStack(ItemMultiToolHolder9)};
+        ItemStack[] toolHolders = new ItemStack[]{new ItemStack(itemMultiToolHolder3), new ItemStack(itemMultiToolHolder5), new ItemStack(itemMultiToolHolder7), new ItemStack(itemMultiToolHolder9)};
         ItemStack[] holderMaterials = new ItemStack[]{new ItemStack(Items.IRON_INGOT), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND)};
         ResourceLocation rl = new ResourceLocation("","");
         for (int i = 0; i < toolHolders.length; i++) {

@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 public class CommonProxy implements IGuiHandler {
     public CommonProxy() {}
 
+    public void registerClientPreInformation() {}
     public void registerClientInformation() {}
 
     public EntityPlayer getPlayer() {return null;}

@@ -4,19 +4,20 @@ import ak.multitoolholders.ItemMultiToolHolder;
 import com.google.common.collect.Maps;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import java.util.Map;
 public class HolderRenderer implements IBakedModel {
     private final IBakedModel defaultModel;
     private final ItemOverrideList holderItemOverrideList;
-    private static final Map<IBakedModel, IPerspectiveAwareModel> PERSPECTIVE_AWARE_MODEL_MAP = Maps.newHashMap();
+    private static final Map<IBakedModel, IBakedModel> PERSPECTIVE_AWARE_MODEL_MAP = Maps.newHashMap();
 
     public HolderRenderer(IBakedModel defaultModel) {
         this.defaultModel = defaultModel;
@@ -78,7 +79,7 @@ public class HolderRenderer implements IBakedModel {
         private final IBakedModel defaultModel;
 
         private HolderItemOverrideList(IBakedModel defaultModel) {
-            super(new ArrayList<>());
+            super(defaultModel.getOverrides().getOverrides());
             this.defaultModel = defaultModel;
         }
 

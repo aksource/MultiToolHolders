@@ -34,4 +34,6 @@ public class Constants {
     public static final String NBT_KEY_ENCHANT = "ench";
     public static final String NBT_KEY_ENCHANT_ID = "id";
     public static final String NBT_KEY_ENCHANT_LEVEL = "lvl";
+
+    public static final ResourceLocation ADVANCEMENT_RECIPE_ROOT = new ResourceLocation("minecraft", ":recipes/root");
 }

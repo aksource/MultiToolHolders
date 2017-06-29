@@ -1,6 +1,8 @@
 package ak.multitoolholders;
 
 import ak.multitoolholders.network.PacketHandler;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -10,6 +12,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent;
@@ -27,7 +30,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-@Mod(modid = Constants.MOD_ID,
+import static ak.multitoolholders.Constants.ADVANCEMENT_RECIPE_ROOT;
+import static ak.multitoolholders.Constants.MOD_ID;
+
+@Mod(modid = MOD_ID,
         name = Constants.MOD_NAME,
         version = Constants.MOD_VERSION,
         dependencies = Constants.MOD_DEPENDENCIES,
@@ -36,16 +42,16 @@ import java.util.logging.Logger;
 public class MultiToolHolders {
     //Logger
     public static final Logger logger = Logger.getLogger("MultiToolHolders");
-    public static Item itemMultiToolHolder3 = (new ItemMultiToolHolder(EnumHolderType.HOLDER3)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder3");
-    public static Item itemMultiToolHolder5 = (new ItemMultiToolHolder(EnumHolderType.HOLDER5)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder5");
-    public static Item itemMultiToolHolder7 = (new ItemMultiToolHolder(EnumHolderType.HOLDER7)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder7");
-    public static Item itemMultiToolHolder9 = (new ItemMultiToolHolder(EnumHolderType.HOLDER9)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9).setUnlocalizedName(Constants.MOD_ID.toLowerCase() + ":Holder9");
+    public static Item itemMultiToolHolder3 = (new ItemMultiToolHolder(EnumHolderType.HOLDER3)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3).setUnlocalizedName(MOD_ID.toLowerCase() + ":Holder3");
+    public static Item itemMultiToolHolder5 = (new ItemMultiToolHolder(EnumHolderType.HOLDER5)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5).setUnlocalizedName(MOD_ID.toLowerCase() + ":Holder5");
+    public static Item itemMultiToolHolder7 = (new ItemMultiToolHolder(EnumHolderType.HOLDER7)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7).setUnlocalizedName(MOD_ID.toLowerCase() + ":Holder7");
+    public static Item itemMultiToolHolder9 = (new ItemMultiToolHolder(EnumHolderType.HOLDER9)).setRegistryName(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9).setUnlocalizedName(MOD_ID.toLowerCase() + ":Holder9");
     public static int toolHolderInvX = 0;
     public static int toolHolderInvY = 0;
     public static String[] toolStrArray = new String[]{};
     public static Set<String> toolNameSet = new HashSet<>();
     public static boolean enableDisplayToolHolderInventory = true;
-    @Mod.Instance(Constants.MOD_ID)
+    @Mod.Instance(MOD_ID)
     public static MultiToolHolders instance;
     @SidedProxy(clientSide = "ak.multitoolholders.client.ClientProxy", serverSide = "ak.multitoolholders.CommonProxy")
     public static CommonProxy proxy;
@@ -124,5 +130,11 @@ public class MultiToolHolders {
                     'B', new ItemStack(Blocks.CHEST),
                     'C', new ItemStack(Blocks.TRIPWIRE_HOOK)).setRegistryName(toolHolders[i].getItem().getRegistryName()));
         }
+    }
+
+    private void addAdvancement(WorldServer worldServer) {
+        AdvancementManager manager = worldServer.getAdvancementManager();
+        Advancement root = manager.getAdvancement(ADVANCEMENT_RECIPE_ROOT);
+
     }
 }

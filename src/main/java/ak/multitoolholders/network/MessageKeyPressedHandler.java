@@ -1,24 +1,23 @@
 package ak.multitoolholders.network;
 
 import ak.multitoolholders.IKeyEvent;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 /**
- * キー判定用Handler
- * Created by A.K. on 14/07/31.
+ * キー判定用Handler Created by A.K. on 14/07/31.
  */
-public class MessageKeyPressedHandler implements IMessageHandler<MessageKeyPressed, IMessage> {
-    @Override
-    public IMessage onMessage(MessageKeyPressed message, MessageContext ctx) {
-        EntityPlayer entityPlayer = ctx.getServerHandler().player;
-        if (entityPlayer != null && !entityPlayer.getHeldItemMainhand().isEmpty()
-                && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
-            ((IKeyEvent)entityPlayer.getHeldItemMainhand().getItem()).doKeyAction(
-                    entityPlayer.getHeldItemMainhand(), entityPlayer, message.key);
-        }
-        return null;
+public class MessageKeyPressedHandler implements BiConsumer<MessageKeyPressed, Supplier<Context>> {
+
+  @Override
+  public void accept(MessageKeyPressed message, Supplier<Context> contextSupplier) {
+    EntityPlayer entityPlayer = contextSupplier.get().getSender();
+    if (entityPlayer != null && !entityPlayer.getHeldItemMainhand().isEmpty()
+        && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
+      ((IKeyEvent) entityPlayer.getHeldItemMainhand().getItem()).doKeyAction(
+          entityPlayer.getHeldItemMainhand(), entityPlayer, message.getKey());
     }
+  }
 }

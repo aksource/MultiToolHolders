@@ -1,29 +1,29 @@
 package ak.multitoolholders.network;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import io.netty.buffer.ByteBuf;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import net.minecraft.network.PacketBuffer;
 
 /**
- * キー判定Message
- * Created by A.K. on 14/05/28.
+ * キー判定Message Created by A.K. on 14/05/28.
  */
-public class MessageKeyPressed implements IMessage {
+public class MessageKeyPressed {
 
-    public byte key;
+  public static BiConsumer<MessageKeyPressed, PacketBuffer> encoder = ((messageKeyPressed, packetBuffer) -> packetBuffer
+      .writeByte(messageKeyPressed.getKey()));
+  public static Function<PacketBuffer, MessageKeyPressed> decoder = packetBuffer -> new MessageKeyPressed(
+      packetBuffer.readByte());
+  private byte key;
 
-    public MessageKeyPressed(){}
+  @SuppressWarnings("unused")
+  public MessageKeyPressed() {
+  }
 
-    public MessageKeyPressed(byte keyPressed) {
-        this.key = keyPressed;
-    }
+  public MessageKeyPressed(byte keyPressed) {
+    this.key = keyPressed;
+  }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.key = buf.readByte();
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeByte(this.key);
-    }
+  byte getKey() {
+    return key;
+  }
 }

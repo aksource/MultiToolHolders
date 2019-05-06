@@ -1,0 +1,10 @@
+{
+  "item.multitoolholders.itemmultitoolholder3": "3-匣工具包",
+  "item.multitoolholders.itemmultitoolholder5": "5-匣工具包",
+  "item.multitoolholders.itemmultitoolholder7": "7-匣工具包",
+  "item.multitoolholders.itemmultitoolholder9": "9-匣工具包",
+  "container.toolholder": "工具包",
+  "Key.openToolHolder": "打开工具包",
+  "Key.nextToolHolder": "工具包下一格",
+  "Key.prevToolHolder": "工具包上一格"
+}

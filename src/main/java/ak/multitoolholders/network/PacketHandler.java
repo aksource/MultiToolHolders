@@ -1,20 +1,24 @@
 package ak.multitoolholders.network;
 
 import ak.multitoolholders.Constants;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 
 /**
- * PacketHandler
- * Created by A.K. on 14/05/28.
+ * PacketHandler Created by A.K. on 14/05/28.
  */
 public class PacketHandler {
 
-    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Constants.MOD_ID.toLowerCase());
+  public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
+      .named(new ResourceLocation(Constants.MOD_ID.toLowerCase(), "channel"))
+      .networkProtocolVersion(() -> "1").clientAcceptedVersions(e -> true)
+      .serverAcceptedVersions(e -> true).simpleChannel();
 
-    public static void init() {
-        INSTANCE.registerMessage(MessageKeyPressedHandler.class, MessageKeyPressed.class, 0, Side.SERVER);
-    }
+  public static void init() {
+    INSTANCE
+        .registerMessage(0, MessageKeyPressed.class, MessageKeyPressed.encoder,
+            MessageKeyPressed.decoder, new MessageKeyPressedHandler());
+  }
 }

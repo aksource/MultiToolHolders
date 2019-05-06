@@ -4,45 +4,49 @@ import ak.multitoolholders.IKeyEvent;
 import ak.multitoolholders.ItemMultiToolHolder;
 import ak.multitoolholders.network.MessageKeyPressed;
 import ak.multitoolholders.network.PacketHandler;
+import java.util.Objects;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
- * キー入力を検知するクラス
- * Created by A.K. on 14/05/28.
+ * キー入力を検知するクラス Created by A.K. on 14/05/28.
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class KeyInputHandler {
 
-    private byte getKeyIndex() {
-        byte key = -1;
-        if (ClientProxy.OpenKey.isPressed()) {
-            key = ItemMultiToolHolder.OPEN_KEY;
-        } else if (ClientProxy.NextKey.isPressed()) {
-            key = ItemMultiToolHolder.NEXT_KEY;
-        } else if (ClientProxy.PrevKey.isPressed()) {
-            key = ItemMultiToolHolder.PREV_KEY;
-        }
-        return key;
-    }
+  /**
+   * Instance of {@link Minecraft}
+   */
+  private Minecraft mc = Minecraft.getInstance();
 
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void KeyPressEvent(InputEvent.KeyInputEvent event) {
-        if (FMLClientHandler.instance().getClient().inGameHasFocus && FMLClientHandler.instance().getClientPlayerEntity() != null) {
-            EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
-            byte keyIndex = getKeyIndex();
-            if (keyIndex != -1 && !entityPlayer.getHeldItemMainhand().isEmpty() && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
-                if (entityPlayer.getEntityWorld().isRemote) {
-                    PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(keyIndex));
-                } else {
-                    ((IKeyEvent)entityPlayer.getHeldItemMainhand().getItem()).doKeyAction(entityPlayer.getHeldItemMainhand(), entityPlayer, keyIndex);
-                }
-            }
-        }
+  private byte getKeyIndex() {
+    byte key = -1;
+    if (ClientProxy.OPEN_KEY.isPressed()) {
+      key = ItemMultiToolHolder.OPEN_KEY;
+    } else if (ClientProxy.NEXT_KEY.isPressed()) {
+      key = ItemMultiToolHolder.NEXT_KEY;
+    } else if (ClientProxy.PREV_KEY.isPressed()) {
+      key = ItemMultiToolHolder.PREV_KEY;
     }
+    return key;
+  }
+
+  @SuppressWarnings("unused")
+  @SubscribeEvent
+  public void keyPressEvent(InputEvent event) {
+    if (mc.isGameFocused() && Objects.nonNull(mc.player)) {
+      EntityPlayer entityPlayer = mc.player;
+      byte keyIndex = getKeyIndex();
+      if (keyIndex != -1 && !entityPlayer.getHeldItemMainhand().isEmpty() && entityPlayer
+          .getHeldItemMainhand().getItem() instanceof IKeyEvent) {
+        if (entityPlayer.getEntityWorld().isRemote) {
+          PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(keyIndex));
+        }
+      }
+    }
+  }
 }

@@ -12,33 +12,22 @@ public class Constants {
   public static final ResourceLocation GUI_3 = new ResourceLocation(MOD_ID.toLowerCase(),
       TEXTURES_GUI_TOOL_HOLDER3_PNG);
   public static final String TEXTURES_GUI_TOOL_HOLDER5_PNG = "textures/gui/toolholder5.png";
-  public static final String CONTAINER_NAME_3 = "item.multitoolholders:Holder3";
   public static final ResourceLocation GUI_5 = new ResourceLocation(MOD_ID.toLowerCase(),
       TEXTURES_GUI_TOOL_HOLDER5_PNG);
   public static final String TEXTURES_GUI_TOOL_HOLDER7_PNG = "textures/gui/toolholder7.png";
-  public static final String CONTAINER_NAME_5 = "item.multitoolholders:Holder5";
   public static final ResourceLocation GUI_7 = new ResourceLocation(MOD_ID.toLowerCase(),
       TEXTURES_GUI_TOOL_HOLDER7_PNG);
   public static final String TEXTURES_GUI_TOOL_HOLDER9_PNG = "textures/gui/toolholder9.png";
-  public static final String CONTAINER_NAME_7 = "item.multitoolholders:Holder7";
   public static final ResourceLocation GUI_9 = new ResourceLocation(MOD_ID.toLowerCase(),
       TEXTURES_GUI_TOOL_HOLDER9_PNG);
-  public static final String CONTAINER_NAME_9 = "item.multitoolholders:Holder9";
-  public static final String MOD_NAME = "MultiToolHolders";
-  public static final String MOD_VERSION = "@VERSION@";
-  public static final String MOD_DEPENDENCIES = "required-after:forge@[13.19.1,)";
-  public static final String MOD_MC_VERSION = "[1.11,1.19.99]";
   public static final String NBT_KEY_MTH = "MultiToolHolders";
   public static final String NBT_KEY_SLOT = "slot";
   public static final String NBT_KEY_INCLUDE_MTH = "include_mth";
-  public static final int GUI_ID_HOLDER_3 = 0;
-  public static final int GUI_ID_HOLDER_5 = 1;
-  public static final int GUI_ID_HOLDER_9 = 2;
-  public static final int GUI_ID_HOLDER_7 = 3;
-  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_3 = "itemmultitoolholder3";
-  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_5 = "itemmultitoolholder5";
-  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_9 = "itemmultitoolholder9";
-  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_7 = "itemmultitoolholder7";
+  public static final String REG_NAME_ITEM_MULTI_TOOL_PREFIX = "itemmultitoolholder";
+  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_3 = REG_NAME_ITEM_MULTI_TOOL_PREFIX + "3";
+  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_5 = REG_NAME_ITEM_MULTI_TOOL_PREFIX + "5";
+  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_7 = REG_NAME_ITEM_MULTI_TOOL_PREFIX + "7";
+  public static final String REG_NAME_ITEM_MULTI_TOOL_HOLDER_9 = REG_NAME_ITEM_MULTI_TOOL_PREFIX + "9";
   public static final String NBT_KEY_ENCHANT = "Enchantments";
   public static final String NBT_KEY_ENCHANT_ID = "id";
   public static final String NBT_KEY_ENCHANT_LEVEL = "lvl";

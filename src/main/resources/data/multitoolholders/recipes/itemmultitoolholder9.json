@@ -1,0 +1,21 @@
+{
+  "type": "crafting_shaped",
+  "group": "multitoolholders.itemmultitoolholder",
+  "pattern": [
+    "AAA", "ABA", "CCC"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "minecraft:chest"
+    },
+    "C": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "item": "multitoolholders:itemmultitoolholder9"
+  }
+}

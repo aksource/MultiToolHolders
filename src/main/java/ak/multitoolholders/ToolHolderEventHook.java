@@ -1,7 +1,7 @@
 package ak.multitoolholders;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 /**
@@ -15,9 +15,9 @@ public class ToolHolderEventHook {
     if (original.hasTag()
         && original.getTag().contains(Constants.NBT_KEY_INCLUDE_MTH,
         net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND)) {
-      NBTTagCompound mthNBTTagCompound = original.getTag()
+      CompoundNBT mthCompoundNBT = original.getTag()
           .getCompound(Constants.NBT_KEY_INCLUDE_MTH);
-      ItemStack mth = ItemStack.read(mthNBTTagCompound);
+      ItemStack mth = ItemStack.read(mthCompoundNBT);
 
     }
   }

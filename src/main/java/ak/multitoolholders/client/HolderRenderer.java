@@ -1,30 +1,34 @@
 package ak.multitoolholders.client;
 
-import ak.multitoolholders.ItemMultiToolHolder;
+import ak.multitoolholders.item.MultiToolHolderItem;
 import com.google.common.collect.Maps;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import net.minecraft.block.state.IBlockState;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * ツールホルダー内のアイテム描画モデルクラス Created by A.K. on 14/08/01.
  */
 @OnlyIn(Dist.CLIENT)
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class HolderRenderer implements IBakedModel {
 
   private static final Map<IBakedModel, IBakedModel> PERSPECTIVE_AWARE_MODEL_MAP = Maps
@@ -37,11 +41,15 @@ public class HolderRenderer implements IBakedModel {
     this.holderItemOverrideList = new HolderItemOverrideList(defaultModel);
   }
 
-  @Nonnull
   @Override
-  public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side,
-      Random rand) {
+  public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side,
+                                  Random rand) {
     return this.defaultModel.getQuads(state, side, rand);
+  }
+
+  @Override
+  public boolean isSideLit() {
+    return true;
   }
 
   @Override
@@ -59,24 +67,23 @@ public class HolderRenderer implements IBakedModel {
     return defaultModel.isBuiltInRenderer();
   }
 
-  @Nonnull
   @Override
   public TextureAtlasSprite getParticleTexture() {
     return defaultModel.getParticleTexture();
   }
 
-  @Nonnull
   @Override
   public ItemCameraTransforms getItemCameraTransforms() {
     return defaultModel.getItemCameraTransforms();
   }
 
-  @Nonnull
   @Override
   public ItemOverrideList getOverrides() {
     return this.holderItemOverrideList;
   }
 
+  @ParametersAreNonnullByDefault
+  @MethodsReturnNonnullByDefault
   private static class HolderItemOverrideList extends ItemOverrideList {
 
     private final IBakedModel defaultModel;
@@ -86,11 +93,10 @@ public class HolderRenderer implements IBakedModel {
       this.defaultModel = defaultModel;
     }
 
-    @Nonnull
     @Override
-    public IBakedModel getModelWithOverrides(@Nonnull IBakedModel originalModel,
-        @Nonnull ItemStack stack, World world, EntityLivingBase entity) {
-      ItemStack itemStack = ((ItemMultiToolHolder) stack.getItem()).getActiveItemStack(stack);
+    public IBakedModel getOverrideModel(IBakedModel originalModel,
+                                        ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+      ItemStack itemStack = ((MultiToolHolderItem) stack.getItem()).getActiveItemStack(stack);
       if (!itemStack.isEmpty()) {
         IBakedModel itemStackOrgModel = Minecraft.getInstance().getItemRenderer()
             .getItemModelMesher().getItemModel(itemStack);

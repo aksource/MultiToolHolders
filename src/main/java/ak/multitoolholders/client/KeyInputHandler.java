@@ -1,16 +1,17 @@
 package ak.multitoolholders.client;
 
 import ak.multitoolholders.IKeyEvent;
-import ak.multitoolholders.ItemMultiToolHolder;
+import ak.multitoolholders.item.MultiToolHolderItem;
 import ak.multitoolholders.network.MessageKeyPressed;
 import ak.multitoolholders.network.PacketHandler;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.Objects;
 
 /**
  * キー入力を検知するクラス Created by A.K. on 14/05/28.
@@ -21,16 +22,16 @@ public class KeyInputHandler {
   /**
    * Instance of {@link Minecraft}
    */
-  private Minecraft mc = Minecraft.getInstance();
+  private final Minecraft mc = Minecraft.getInstance();
 
   private byte getKeyIndex() {
     byte key = -1;
-    if (ClientProxy.OPEN_KEY.isPressed()) {
-      key = ItemMultiToolHolder.OPEN_KEY;
-    } else if (ClientProxy.NEXT_KEY.isPressed()) {
-      key = ItemMultiToolHolder.NEXT_KEY;
-    } else if (ClientProxy.PREV_KEY.isPressed()) {
-      key = ItemMultiToolHolder.PREV_KEY;
+    if (ClientSettingUtility.OPEN_KEY.isPressed()) {
+      key = MultiToolHolderItem.OPEN_KEY;
+    } else if (ClientSettingUtility.NEXT_KEY.isPressed()) {
+      key = MultiToolHolderItem.NEXT_KEY;
+    } else if (ClientSettingUtility.PREV_KEY.isPressed()) {
+      key = MultiToolHolderItem.PREV_KEY;
     }
     return key;
   }
@@ -39,7 +40,7 @@ public class KeyInputHandler {
   @SubscribeEvent
   public void keyPressEvent(InputEvent event) {
     if (mc.isGameFocused() && Objects.nonNull(mc.player)) {
-      EntityPlayer entityPlayer = mc.player;
+      PlayerEntity entityPlayer = mc.player;
       byte keyIndex = getKeyIndex();
       if (keyIndex != -1 && !entityPlayer.getHeldItemMainhand().isEmpty() && entityPlayer
           .getHeldItemMainhand().getItem() instanceof IKeyEvent) {

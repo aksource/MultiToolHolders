@@ -26,11 +26,11 @@ public class KeyInputHandler {
 
   private byte getKeyIndex() {
     byte key = -1;
-    if (ClientSettingUtility.OPEN_KEY.isPressed()) {
+    if (ClientSettingUtility.OPEN_KEY.consumeClick()) {
       key = MultiToolHolderItem.OPEN_KEY;
-    } else if (ClientSettingUtility.NEXT_KEY.isPressed()) {
+    } else if (ClientSettingUtility.NEXT_KEY.consumeClick()) {
       key = MultiToolHolderItem.NEXT_KEY;
-    } else if (ClientSettingUtility.PREV_KEY.isPressed()) {
+    } else if (ClientSettingUtility.PREV_KEY.consumeClick()) {
       key = MultiToolHolderItem.PREV_KEY;
     }
     return key;
@@ -39,12 +39,12 @@ public class KeyInputHandler {
   @SuppressWarnings("unused")
   @SubscribeEvent
   public void keyPressEvent(InputEvent event) {
-    if (mc.isGameFocused() && Objects.nonNull(mc.player)) {
+    if (mc.isWindowActive() && Objects.nonNull(mc.player)) {
       PlayerEntity entityPlayer = mc.player;
       byte keyIndex = getKeyIndex();
-      if (keyIndex != -1 && !entityPlayer.getHeldItemMainhand().isEmpty() && entityPlayer
-          .getHeldItemMainhand().getItem() instanceof IKeyEvent) {
-        if (entityPlayer.getEntityWorld().isRemote) {
+      if (keyIndex != -1 && !entityPlayer.getMainHandItem().isEmpty() && entityPlayer
+          .getMainHandItem().getItem() instanceof IKeyEvent) {
+        if (entityPlayer.getCommandSenderWorld().isClientSide) {
           PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(keyIndex));
         }
       }

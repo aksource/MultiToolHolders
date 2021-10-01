@@ -21,23 +21,23 @@ public class ToolHolderScreen extends ContainerScreen<ToolHolderContainer> {
   public ToolHolderScreen(ToolHolderContainer toolHolderContainer, PlayerInventory playerInventory, ITextComponent textComponent, HolderType type) {
     super(toolHolderContainer, playerInventory, textComponent);
     this.type = type;
-    this.ySize = 114 + ROW_SIZE * 18;
-    this.playerInventoryTitleY = this.ySize - 94;
+    this.imageHeight = 114 + ROW_SIZE * 18;
+    this.inventoryLabelY = this.imageHeight - 94;
   }
 
   @Override
   public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
     this.renderBackground(matrixStack);
     super.render(matrixStack, mouseX, mouseY, partialTicks);
-    this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+    this.renderTooltip(matrixStack, mouseX, mouseY);
   }
 
   @Override
-  protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+  protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    this.getMinecraft().getTextureManager().bindTexture(type.getGuiFile());
-    int i = (width - xSize) / 2;
-    int j = (height - ySize) / 2;
-    this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
+    this.getMinecraft().getTextureManager().bind(type.getGuiFile());
+    int i = (width - imageWidth) / 2;
+    int j = (height - imageHeight) / 2;
+    this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
   }
 }

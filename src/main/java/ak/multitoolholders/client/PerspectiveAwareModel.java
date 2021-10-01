@@ -48,8 +48,8 @@ public class PerspectiveAwareModel implements IBakedModel {
   }
 
   @Override
-  public boolean isSideLit() {
-    return this.guiModel.isSideLit();
+  public boolean usesBlockLight() {
+    return this.guiModel.usesBlockLight();
   }
 
   @Override
@@ -58,23 +58,23 @@ public class PerspectiveAwareModel implements IBakedModel {
   }
 
   @Override
-  public boolean isAmbientOcclusion() {
-    return this.guiModel.isAmbientOcclusion();
+  public boolean useAmbientOcclusion() {
+    return this.guiModel.useAmbientOcclusion();
   }
 
   @Override
-  public boolean isBuiltInRenderer() {
-    return this.guiModel.isBuiltInRenderer();
+  public boolean isCustomRenderer() {
+    return this.guiModel.isCustomRenderer();
   }
 
   @Override
-  public TextureAtlasSprite getParticleTexture() {
-    return this.guiModel.getParticleTexture();
+  public TextureAtlasSprite getParticleIcon() {
+    return this.guiModel.getParticleIcon();
   }
 
   @Override
-  public ItemCameraTransforms getItemCameraTransforms() {
-    return this.guiModel.getItemCameraTransforms();
+  public ItemCameraTransforms getTransforms() {
+    return this.guiModel.getTransforms();
   }
 
   @Override

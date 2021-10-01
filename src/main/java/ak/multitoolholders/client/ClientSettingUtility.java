@@ -51,7 +51,7 @@ public class ClientSettingUtility {
     ClientRegistry.registerKeyBinding(OPEN_KEY);
     ClientRegistry.registerKeyBinding(NEXT_KEY);
     ClientRegistry.registerKeyBinding(PREV_KEY);
-    ScreenManager.registerFactory(ToolHolderContainer.TOOL_HOLDER_3_CONTAINER_TYPE,
+    ScreenManager.register(ToolHolderContainer.TOOL_HOLDER_3_CONTAINER_TYPE,
             new ScreenManager.IScreenFactory<ToolHolderContainer, ToolHolderScreen>() {
               @Override
               @Nonnull
@@ -59,7 +59,7 @@ public class ClientSettingUtility {
                 return new ToolHolderScreen(toolContainer, playerInventory, textComponent, HolderType.HOLDER3);
               }
             });
-    ScreenManager.registerFactory(ToolHolderContainer.TOOL_HOLDER_5_CONTAINER_TYPE,
+    ScreenManager.register(ToolHolderContainer.TOOL_HOLDER_5_CONTAINER_TYPE,
             new ScreenManager.IScreenFactory<ToolHolderContainer, ToolHolderScreen>() {
               @Override
               @Nonnull
@@ -67,7 +67,7 @@ public class ClientSettingUtility {
                 return new ToolHolderScreen(toolContainer, playerInventory, textComponent, HolderType.HOLDER5);
               }
             });
-    ScreenManager.registerFactory(ToolHolderContainer.TOOL_HOLDER_7_CONTAINER_TYPE,
+    ScreenManager.register(ToolHolderContainer.TOOL_HOLDER_7_CONTAINER_TYPE,
             new ScreenManager.IScreenFactory<ToolHolderContainer, ToolHolderScreen>() {
               @Override
               @Nonnull
@@ -75,7 +75,7 @@ public class ClientSettingUtility {
                 return new ToolHolderScreen(toolContainer, playerInventory, textComponent, HolderType.HOLDER7);
               }
             });
-    ScreenManager.registerFactory(ToolHolderContainer.TOOL_HOLDER_9_CONTAINER_TYPE,
+    ScreenManager.register(ToolHolderContainer.TOOL_HOLDER_9_CONTAINER_TYPE,
             new ScreenManager.IScreenFactory<ToolHolderContainer, ToolHolderScreen>() {
               @Override
               @Nonnull

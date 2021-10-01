@@ -48,7 +48,7 @@ public class HolderRenderer implements IBakedModel {
   }
 
   @Override
-  public boolean isSideLit() {
+  public boolean usesBlockLight() {
     return true;
   }
 
@@ -58,23 +58,23 @@ public class HolderRenderer implements IBakedModel {
   }
 
   @Override
-  public boolean isAmbientOcclusion() {
-    return defaultModel.isAmbientOcclusion();
+  public boolean useAmbientOcclusion() {
+    return defaultModel.useAmbientOcclusion();
   }
 
   @Override
-  public boolean isBuiltInRenderer() {
-    return defaultModel.isBuiltInRenderer();
+  public boolean isCustomRenderer() {
+    return defaultModel.isCustomRenderer();
   }
 
   @Override
-  public TextureAtlasSprite getParticleTexture() {
-    return defaultModel.getParticleTexture();
+  public TextureAtlasSprite getParticleIcon() {
+    return defaultModel.getParticleIcon();
   }
 
   @Override
-  public ItemCameraTransforms getItemCameraTransforms() {
-    return defaultModel.getItemCameraTransforms();
+  public ItemCameraTransforms getTransforms() {
+    return defaultModel.getTransforms();
   }
 
   @Override
@@ -94,12 +94,12 @@ public class HolderRenderer implements IBakedModel {
     }
 
     @Override
-    public IBakedModel getOverrideModel(IBakedModel originalModel,
+    public IBakedModel resolve(IBakedModel originalModel,
                                         ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
       ItemStack itemStack = ((MultiToolHolderItem) stack.getItem()).getActiveItemStack(stack);
       if (!itemStack.isEmpty()) {
         IBakedModel itemStackOrgModel = Minecraft.getInstance().getItemRenderer()
-            .getItemModelMesher().getItemModel(itemStack);
+            .getItemModelShaper().getItemModel(itemStack);
         if (!PERSPECTIVE_AWARE_MODEL_MAP.containsKey(itemStackOrgModel)) {
           PERSPECTIVE_AWARE_MODEL_MAP
               .put(itemStackOrgModel, new PerspectiveAwareModel(defaultModel, itemStackOrgModel));

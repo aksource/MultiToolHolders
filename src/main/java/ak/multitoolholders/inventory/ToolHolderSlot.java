@@ -16,8 +16,8 @@ public class ToolHolderSlot extends Slot {
   }
 
   @Override
-  public boolean isItemValid(@Nonnull ItemStack item) {
-    return !(item.isStackable()) && (item.isDamageable() || item.getItem() instanceof ToolItem
+  public boolean mayPlace(@Nonnull ItemStack item) {
+    return !(item.isStackable()) && (item.isDamageableItem() || item.getItem() instanceof ToolItem
         || isRegisteredTool(item)) && !(item.getItem() instanceof MultiToolHolderItem);
   }
 

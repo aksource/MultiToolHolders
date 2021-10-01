@@ -15,10 +15,10 @@ public class MessageKeyPressedHandler implements BiConsumer<MessageKeyPressed, S
   @Override
   public void accept(MessageKeyPressed message, Supplier<Context> contextSupplier) {
     PlayerEntity entityPlayer = contextSupplier.get().getSender();
-    if (entityPlayer != null && !entityPlayer.getHeldItemMainhand().isEmpty()
-        && entityPlayer.getHeldItemMainhand().getItem() instanceof IKeyEvent) {
-      ((IKeyEvent) entityPlayer.getHeldItemMainhand().getItem()).doKeyAction(
-          entityPlayer.getHeldItemMainhand(), entityPlayer, message.getKey());
+    if (entityPlayer != null && !entityPlayer.getMainHandItem().isEmpty()
+        && entityPlayer.getMainHandItem().getItem() instanceof IKeyEvent) {
+      ((IKeyEvent) entityPlayer.getMainHandItem().getItem()).doKeyAction(
+          entityPlayer.getMainHandItem(), entityPlayer, message.getKey());
     }
   }
 }

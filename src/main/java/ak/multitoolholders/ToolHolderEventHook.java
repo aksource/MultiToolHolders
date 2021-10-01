@@ -17,7 +17,7 @@ public class ToolHolderEventHook {
         net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND)) {
       CompoundNBT mthCompoundNBT = original.getTag()
           .getCompound(Constants.NBT_KEY_INCLUDE_MTH);
-      ItemStack mth = ItemStack.read(mthCompoundNBT);
+      ItemStack mth = ItemStack.of(mthCompoundNBT);
 
     }
   }

@@ -57,7 +57,7 @@ public class ToolHolderContainer extends Container {
     super(getContainerType(type), id);
     this.currentSlot = currentSlot;
       this.holderInventory = holderInventory;
-      for (int k = 0; k < this.holderInventory.getSizeInventory(); ++k) {
+      for (int k = 0; k < this.holderInventory.getContainerSize(); ++k) {
         this.addSlot(new ToolHolderSlot(holderInventory, k, 8 + k * 18, 18));
       }
     bindPlayerInventory(playerInventory);
@@ -77,35 +77,35 @@ public class ToolHolderContainer extends Container {
   }
 
   @Override
-  public boolean canInteractWith(PlayerEntity playerIn) {
-    return !playerIn.inventory.getCurrentItem().isEmpty() && playerIn.inventory.getCurrentItem()
+  public boolean stillValid(PlayerEntity playerIn) {
+    return !playerIn.inventory.getSelected().isEmpty() && playerIn.inventory.getSelected()
         .getItem() instanceof MultiToolHolderItem;
   }
 
   @Override
-  public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+  public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
     ItemStack itemstack = ItemStack.EMPTY;
     Slot slot = this.getSlot(index);
 
-    if (slot.getHasStack()) {
-      ItemStack itemstack1 = slot.getStack();
+    if (slot.hasItem()) {
+      ItemStack itemstack1 = slot.getItem();
       itemstack = itemstack1.copy();
 
-      if (index < this.holderInventory.getSizeInventory()) {
+      if (index < this.holderInventory.getContainerSize()) {
         if (!this
-            .mergeItemStack(itemstack1, this.holderInventory.getSizeInventory(), this.inventorySlots.size(), true)) {
+            .moveItemStackTo(itemstack1, this.holderInventory.getContainerSize(), this.slots.size(), true)) {
           return ItemStack.EMPTY;
         }
       } else if (itemstack1.getItem() instanceof MultiToolHolderItem || itemstack1.isStackable()) {
         return ItemStack.EMPTY;
-      } else if (!this.mergeItemStack(itemstack1, 0, this.holderInventory.getSizeInventory(), false)) {
+      } else if (!this.moveItemStackTo(itemstack1, 0, this.holderInventory.getContainerSize(), false)) {
         return ItemStack.EMPTY;
       }
 
       if (itemstack1.getCount() == 0) {
-        slot.putStack(ItemStack.EMPTY);
+        slot.set(ItemStack.EMPTY);
       } else {
-        slot.onSlotChanged();
+        slot.setChanged();
       }
     }
 
@@ -113,10 +113,10 @@ public class ToolHolderContainer extends Container {
   }
 
   @Override
-  public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity playerIn) {
-    if (currentSlot == slotId - 27 - this.holderInventory.getSizeInventory()) {
+  public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity playerIn) {
+    if (currentSlot == slotId - 27 - this.holderInventory.getContainerSize()) {
       return ItemStack.EMPTY;
     }
-    return super.slotClick(slotId, dragType, clickTypeIn, playerIn);
+    return super.clicked(slotId, dragType, clickTypeIn, playerIn);
   }
 }

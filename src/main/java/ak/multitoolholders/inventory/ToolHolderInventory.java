@@ -32,22 +32,22 @@ public class ToolHolderInventory implements IInventory {
   }
 
   @Override
-  public int getInventoryStackLimit() {
+  public int getMaxStackSize() {
     return 1;
   }
 
   @Override
-  public void markDirty() {
+  public void setChanged() {
 
   }
 
   @Override
-  public boolean isUsableByPlayer(PlayerEntity player) {
-    return this.holder.isItemEqual(player.getHeldItemMainhand());
+  public boolean stillValid(PlayerEntity player) {
+    return this.holder.sameItem(player.getMainHandItem());
   }
 
   @Override
-  public int getSizeInventory() {
+  public int getContainerSize() {
     return itemList.size();
   }
 
@@ -57,16 +57,16 @@ public class ToolHolderInventory implements IInventory {
   }
 
   @Override
-  public ItemStack getStackInSlot(int index) {
+  public ItemStack getItem(int index) {
     return itemList.get(index % itemList.size());
   }
 
   @Override
-  public ItemStack decrStackSize(int index, int count) {
-    ItemStack itemStack = this.getStackInSlot(index);
+  public ItemStack removeItem(int index, int count) {
+    ItemStack itemStack = this.getItem(index);
     if (!itemStack.isEmpty()) {
       if (itemStack.getCount() <= count) {
-        this.setInventorySlotContents(index, ItemStack.EMPTY);
+        this.setItem(index, ItemStack.EMPTY);
       } else {
         itemStack = itemStack.split(count);
       }
@@ -76,20 +76,20 @@ public class ToolHolderInventory implements IInventory {
   }
 
   @Override
-  public ItemStack removeStackFromSlot(int index) {
-    ItemStack itemStack = this.getStackInSlot(index);
-    this.setInventorySlotContents(index, ItemStack.EMPTY);
+  public ItemStack removeItemNoUpdate(int index) {
+    ItemStack itemStack = this.getItem(index);
+    this.setItem(index, ItemStack.EMPTY);
     return itemStack;
   }
 
   @Override
-  public void setInventorySlotContents(int index, ItemStack stack) {
+  public void setItem(int index, ItemStack stack) {
     itemList.set(index, stack);
     writeToNBT(Objects.requireNonNull(holder.getTag()));
   }
 
   @Override
-  public void openInventory(PlayerEntity player) {
+  public void startOpen(PlayerEntity player) {
     if (!holder.hasTag()) {
       holder.setTag(new CompoundNBT());
     }
@@ -97,7 +97,7 @@ public class ToolHolderInventory implements IInventory {
   }
 
   @Override
-  public void closeInventory(PlayerEntity player) {
+  public void stopOpen(PlayerEntity player) {
     if (!holder.hasTag()) {
       holder.setTag(new CompoundNBT());
     }
@@ -112,8 +112,8 @@ public class ToolHolderInventory implements IInventory {
       CompoundNBT nbtTagCompound = (CompoundNBT) inbt;
       int slot = nbtTagCompound.getByte("Slot") & 255;
 
-      if (slot < this.getSizeInventory()) {
-        this.setInventorySlotContents(slot, ItemStack.read(nbtTagCompound));
+      if (slot < this.getContainerSize()) {
+        this.setItem(slot, ItemStack.of(nbtTagCompound));
       }
     }
   }
@@ -121,11 +121,11 @@ public class ToolHolderInventory implements IInventory {
   public void writeToNBT(CompoundNBT nbt) {
     ListNBT tagList = new ListNBT();
 
-    for (int i = 0; i < this.getSizeInventory(); ++i) {
-      if (!this.getStackInSlot(i).isEmpty()) {
+    for (int i = 0; i < this.getContainerSize(); ++i) {
+      if (!this.getItem(i).isEmpty()) {
         CompoundNBT nbtTagCompound = new CompoundNBT();
         nbtTagCompound.putByte("Slot", (byte) i);
-        this.getStackInSlot(i).write(nbtTagCompound);
+        this.getItem(i).save(nbtTagCompound);
         tagList.add(nbtTagCompound);
       }
     }
@@ -134,7 +134,7 @@ public class ToolHolderInventory implements IInventory {
   }
 
   @Override
-  public void clear() {
+  public void clearContent() {
 
   }
 }

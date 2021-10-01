@@ -28,7 +28,7 @@ public class RenderingHolderInventoryHUD {
     PlayerEntity player = mc.player;
     itemRenderer = mc.getItemRenderer();
     if (Objects.nonNull(player)) {
-      ItemStack holdItem = player.getHeldItemMainhand();
+      ItemStack holdItem = player.getMainHandItem();
       if (!holdItem.isEmpty() && holdItem.getItem() instanceof MultiToolHolderItem) {
         renderHolderInventory(holdItem, event.getPartialTicks());
       }
@@ -40,8 +40,8 @@ public class RenderingHolderInventoryHUD {
         .getInventoryFromItemStack(holder);
     int nowSlot = MultiToolHolderItem.getSlotNumFromItemStack(holder);
     ItemStack itemStack;
-    for (int i = 0; i < inventory.getSizeInventory(); i++) {
-      itemStack = inventory.getStackInSlot(i);
+    for (int i = 0; i < inventory.getContainerSize(); i++) {
+      itemStack = inventory.getItem(i);
       int xShift = (i == nowSlot) ? 16 : 0;
       if (!itemStack.isEmpty()) {
         renderInventorySlot(itemStack, ConfigUtils.COMMON.toolHolderInvX + xShift,
@@ -52,10 +52,10 @@ public class RenderingHolderInventoryHUD {
 
   private void renderInventorySlot(@Nonnull ItemStack itemstack, int x, int y) {
     if (!itemstack.isEmpty()) {
-      RenderHelper.enableStandardItemLighting();
-      itemRenderer.renderItemIntoGUI(itemstack, x, y);//Itemの描画
-      itemRenderer.renderItemOverlays(this.mc.fontRenderer, itemstack, x, y);//耐久値の描画
-      RenderHelper.disableStandardItemLighting();
+      RenderHelper.turnBackOn();
+      itemRenderer.renderGuiItem(itemstack, x, y);//Itemの描画
+      itemRenderer.renderGuiItemDecorations(this.mc.font, itemstack, x, y);//耐久値の描画
+      RenderHelper.turnOff();
     }
   }
 }

@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static ak.multitoolholders.Constants.*;
 
@@ -118,7 +119,7 @@ public class MultiToolHolderItem extends Item implements IKeyEvent/*, IToolHamme
       @Nonnull PlayerEntity player) {
     ItemStack nowItem = getActiveItemStack(stack);
     if (!nowItem.isEmpty()) {
-      return nowItem.getItem().onBlockStartBreak(stack, blockPos, player);
+      return nowItem.onBlockStartBreak(blockPos, player);
     }
     return super.onBlockStartBreak(stack, blockPos, player);
   }
@@ -128,7 +129,7 @@ public class MultiToolHolderItem extends Item implements IKeyEvent/*, IToolHamme
       @Nullable BlockState blockState) {
     ItemStack nowItem = getActiveItemStack(stack);
     if (!nowItem.isEmpty()) {
-      return nowItem.getItem().getHarvestLevel(nowItem, tool, player, blockState);
+      return nowItem.getHarvestLevel(tool, player, blockState);
     }
     return super.getHarvestLevel(stack, tool, player, blockState);
   }
@@ -253,7 +254,7 @@ public class MultiToolHolderItem extends Item implements IKeyEvent/*, IToolHamme
   public float getDestroySpeed(@Nonnull ItemStack stack, @Nonnull BlockState state) {
     ItemStack itemStack = getActiveItemStack(stack);
     if (!itemStack.isEmpty()) {
-      return itemStack.getItem().getDestroySpeed(itemStack, state);
+      return itemStack.getDestroySpeed(state);
     }
     return super.getDestroySpeed(stack, state);
   }
@@ -262,9 +263,18 @@ public class MultiToolHolderItem extends Item implements IKeyEvent/*, IToolHamme
   public boolean canHarvestBlock(ItemStack stack, BlockState state) {
     ItemStack itemStack = getActiveItemStack(stack);
     if (!itemStack.isEmpty()) {
-      return itemStack.getItem().canHarvestBlock(stack, state);
+      return itemStack.canHarvestBlock(state);
     }
     return super.canHarvestBlock(stack, state);
+  }
+
+  @Override
+  public Set<ToolType> getToolTypes(ItemStack stack) {
+    ItemStack itemStack = getActiveItemStack(stack);
+    if (!itemStack.isEmpty()) {
+      return itemStack.getToolTypes();
+    }
+    return super.getToolTypes(stack);
   }
 
   @Override

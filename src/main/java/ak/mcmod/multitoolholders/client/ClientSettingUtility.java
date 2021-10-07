@@ -1,10 +1,10 @@
-package ak.multitoolholders.client;
+package ak.mcmod.multitoolholders.client;
 
-import ak.multitoolholders.ConfigUtils;
-import ak.multitoolholders.Constants;
-import ak.multitoolholders.MultiToolHolders;
-import ak.multitoolholders.inventory.ToolHolderContainer;
-import ak.multitoolholders.item.HolderType;
+import ak.mcmod.multitoolholders.ConfigUtils;
+import ak.mcmod.multitoolholders.Constants;
+import ak.mcmod.multitoolholders.MultiToolHolders;
+import ak.mcmod.multitoolholders.inventory.ToolHolderContainer;
+import ak.mcmod.multitoolholders.item.HolderType;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -28,12 +28,9 @@ import java.util.Map;
 
 public class ClientSettingUtility {
 
-  public static final KeyBinding OPEN_KEY = new KeyBinding("Key.openToolHolder", GLFW.GLFW_KEY_H,
-          "MultiToolHolders");
-  public static final KeyBinding NEXT_KEY = new KeyBinding("Key.nextToolHolder", GLFW.GLFW_KEY_U,
-          "MultiToolHolders");
-  public static final KeyBinding PREV_KEY = new KeyBinding("Key.prevToolHolder", GLFW.GLFW_KEY_Y,
-          "MultiToolHolders");
+  public static final KeyBinding OPEN_KEY = new KeyBinding(Constants.KEY_OPEN, GLFW.GLFW_KEY_H, Constants.KEY_CATEGORY);
+  public static final KeyBinding NEXT_KEY = new KeyBinding(Constants.KEY_NEXT, GLFW.GLFW_KEY_U, Constants.KEY_CATEGORY);
+  public static final KeyBinding PREV_KEY = new KeyBinding(Constants.KEY_PREVIOUS, GLFW.GLFW_KEY_Y, Constants.KEY_CATEGORY);
 
   private static final Map<String, ModelResourceLocation> MODEL_RESOURCE_LOCATION_MAP = Maps
           .newHashMap();
@@ -99,7 +96,6 @@ public class ClientSettingUtility {
   }
 
   @SubscribeEvent
-  @SuppressWarnings("unused")
   public void bakedModelRegister(final ModelBakeEvent event) {
     changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3);
     changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5);

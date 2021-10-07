@@ -3,8 +3,8 @@
   "item.multitoolholders.itemmultitoolholder5": "5-Way Tool Holder",
   "item.multitoolholders.itemmultitoolholder7": "7-Way Tool Holder",
   "item.multitoolholders.itemmultitoolholder9": "9-Way Tool Holder",
-  "container.toolholder": "ToolHolder",
-  "Key.openToolHolder": "Open ToolHolder",
-  "Key.nextToolHolder": "ToolHolder Next Slot",
-  "Key.prevToolHolder": "ToolHolder Previous Slot"
+  "multitoolholders.container.toolholder": "ToolHolder",
+  "multitoolholders.key.open": "Open ToolHolder",
+  "multitoolholders.key.next": "ToolHolder Next Slot",
+  "multitoolholders.key.previous": "ToolHolder Previous Slot"
 }

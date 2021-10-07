@@ -1,13 +1,11 @@
-package ak.multitoolholders.client;
+package ak.mcmod.multitoolholders.client;
 
-import ak.multitoolholders.IKeyEvent;
-import ak.multitoolholders.item.MultiToolHolderItem;
-import ak.multitoolholders.network.MessageKeyPressed;
-import ak.multitoolholders.network.PacketHandler;
+import ak.mcmod.multitoolholders.IKeyEvent;
+import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
+import ak.mcmod.multitoolholders.network.MessageKeyPressed;
+import ak.mcmod.multitoolholders.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -16,7 +14,6 @@ import java.util.Objects;
 /**
  * キー入力を検知するクラス Created by A.K. on 14/05/28.
  */
-@OnlyIn(Dist.CLIENT)
 public class KeyInputHandler {
 
   /**
@@ -36,14 +33,13 @@ public class KeyInputHandler {
     return key;
   }
 
-  @SuppressWarnings("unused")
   @SubscribeEvent
   public void keyPressEvent(InputEvent event) {
     if (mc.isWindowActive() && Objects.nonNull(mc.player)) {
       PlayerEntity entityPlayer = mc.player;
       byte keyIndex = getKeyIndex();
       if (keyIndex != -1 && !entityPlayer.getMainHandItem().isEmpty() && entityPlayer
-          .getMainHandItem().getItem() instanceof IKeyEvent) {
+              .getMainHandItem().getItem() instanceof IKeyEvent) {
         if (entityPlayer.getCommandSenderWorld().isClientSide) {
           PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(keyIndex));
         }

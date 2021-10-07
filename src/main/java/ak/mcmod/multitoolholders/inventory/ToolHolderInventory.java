@@ -1,7 +1,7 @@
-package ak.multitoolholders.inventory;
+package ak.mcmod.multitoolholders.inventory;
 
-import ak.multitoolholders.item.HolderType;
-import ak.multitoolholders.item.MultiToolHolderItem;
+import ak.mcmod.multitoolholders.item.HolderType;
+import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;

@@ -1,18 +1,15 @@
-package ak.multitoolholders.client;
+package ak.mcmod.multitoolholders.client;
 
-import ak.multitoolholders.inventory.ToolHolderContainer;
-import ak.multitoolholders.item.HolderType;
+import ak.mcmod.multitoolholders.inventory.ToolHolderContainer;
+import ak.mcmod.multitoolholders.item.HolderType;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-@OnlyIn(Dist.CLIENT)
 @ParametersAreNonnullByDefault
 public class ToolHolderScreen extends ContainerScreen<ToolHolderContainer> {
   private static final int ROW_SIZE = 1;

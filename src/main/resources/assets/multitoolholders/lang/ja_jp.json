@@ -3,8 +3,8 @@
   "item.multitoolholders.itemmultitoolholder5": "5-Wayツールホルダー",
   "item.multitoolholders.itemmultitoolholder7": "7-Wayツールホルダー",
   "item.multitoolholders.itemmultitoolholder9": "9-Wayツールホルダー",
-  "container.toolholder": "ツールホルダー",
-  "Key.openToolHolder": "ツールホルダーを開く",
-  "Key.nextToolHolder": "次のスロット",
-  "Key.prevToolHolder": "前のスロット"
+  "multitoolholders.container.toolholder": "ツールホルダー",
+  "multitoolholders.key.open": "ツールホルダーを開く",
+  "multitoolholders.key.next": "次のスロット",
+  "multitoolholders.key.previous": "前のスロット"
 }

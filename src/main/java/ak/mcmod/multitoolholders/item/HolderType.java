@@ -1,6 +1,6 @@
-package ak.multitoolholders.item;
+package ak.mcmod.multitoolholders.item;
 
-import ak.multitoolholders.Constants;
+import ak.mcmod.multitoolholders.Constants;
 import net.minecraft.util.ResourceLocation;
 
 /**

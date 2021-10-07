@@ -1,6 +1,6 @@
-package ak.multitoolholders.network;
+package ak.mcmod.multitoolholders.network;
 
-import ak.multitoolholders.IKeyEvent;
+import ak.mcmod.multitoolholders.IKeyEvent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
@@ -16,9 +16,9 @@ public class MessageKeyPressedHandler implements BiConsumer<MessageKeyPressed, S
   public void accept(MessageKeyPressed message, Supplier<Context> contextSupplier) {
     PlayerEntity entityPlayer = contextSupplier.get().getSender();
     if (entityPlayer != null && !entityPlayer.getMainHandItem().isEmpty()
-        && entityPlayer.getMainHandItem().getItem() instanceof IKeyEvent) {
+            && entityPlayer.getMainHandItem().getItem() instanceof IKeyEvent) {
       ((IKeyEvent) entityPlayer.getMainHandItem().getItem()).doKeyAction(
-          entityPlayer.getMainHandItem(), entityPlayer, message.getKey());
+              entityPlayer.getMainHandItem(), entityPlayer, message.getKey());
     }
   }
 }

@@ -1,6 +1,6 @@
-package ak.multitoolholders.client;
+package ak.mcmod.multitoolholders.client;
 
-import ak.multitoolholders.item.MultiToolHolderItem;
+import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import com.google.common.collect.Maps;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
@@ -14,8 +14,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,13 +24,12 @@ import java.util.Random;
 /**
  * ツールホルダー内のアイテム描画モデルクラス Created by A.K. on 14/08/01.
  */
-@OnlyIn(Dist.CLIENT)
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HolderRenderer implements IBakedModel {
 
   private static final Map<IBakedModel, IBakedModel> PERSPECTIVE_AWARE_MODEL_MAP = Maps
-      .newHashMap();
+          .newHashMap();
   private final IBakedModel defaultModel;
   private final ItemOverrideList holderItemOverrideList;
 
@@ -95,14 +92,14 @@ public class HolderRenderer implements IBakedModel {
 
     @Override
     public IBakedModel resolve(IBakedModel originalModel,
-                                        ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-      ItemStack itemStack = ((MultiToolHolderItem) stack.getItem()).getActiveItemStack(stack);
+                               ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+      ItemStack itemStack = MultiToolHolderItem.getActiveItemStack(stack);
       if (!itemStack.isEmpty()) {
         IBakedModel itemStackOrgModel = Minecraft.getInstance().getItemRenderer()
-            .getItemModelShaper().getItemModel(itemStack);
+                .getItemModelShaper().getItemModel(itemStack);
         if (!PERSPECTIVE_AWARE_MODEL_MAP.containsKey(itemStackOrgModel)) {
           PERSPECTIVE_AWARE_MODEL_MAP
-              .put(itemStackOrgModel, new PerspectiveAwareModel(defaultModel, itemStackOrgModel));
+                  .put(itemStackOrgModel, new PerspectiveAwareModel(defaultModel, itemStackOrgModel));
         }
         return PERSPECTIVE_AWARE_MODEL_MAP.get(itemStackOrgModel);
       }

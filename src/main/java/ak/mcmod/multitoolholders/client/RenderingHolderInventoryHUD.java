@@ -1,7 +1,7 @@
-package ak.multitoolholders.client;
+package ak.mcmod.multitoolholders.client;
 
-import ak.multitoolholders.ConfigUtils;
-import ak.multitoolholders.item.MultiToolHolderItem;
+import ak.mcmod.multitoolholders.ConfigUtils;
+import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
@@ -23,7 +23,6 @@ public class RenderingHolderInventoryHUD {
   private ItemRenderer itemRenderer;
 
   @SubscribeEvent
-  @SuppressWarnings("unused")
   public void renderingOverlay(RenderGameOverlayEvent.Text event) {
     PlayerEntity player = mc.player;
     itemRenderer = mc.getItemRenderer();
@@ -36,8 +35,8 @@ public class RenderingHolderInventoryHUD {
   }
 
   private void renderHolderInventory(ItemStack holder, float partialTicks) {
-    IInventory inventory = ((MultiToolHolderItem) holder.getItem())
-        .getInventoryFromItemStack(holder);
+    IInventory inventory = MultiToolHolderItem
+            .getInventoryFromItemStack(holder);
     int nowSlot = MultiToolHolderItem.getSlotNumFromItemStack(holder);
     ItemStack itemStack;
     for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -45,7 +44,7 @@ public class RenderingHolderInventoryHUD {
       int xShift = (i == nowSlot) ? 16 : 0;
       if (!itemStack.isEmpty()) {
         renderInventorySlot(itemStack, ConfigUtils.COMMON.toolHolderInvX + xShift,
-            ConfigUtils.COMMON.toolHolderInvY + i * 16);
+                ConfigUtils.COMMON.toolHolderInvY + i * 16);
       }
     }
   }

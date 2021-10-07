@@ -1,7 +1,7 @@
-package ak.multitoolholders.inventory;
+package ak.mcmod.multitoolholders.inventory;
 
-import ak.multitoolholders.item.HolderType;
-import ak.multitoolholders.item.MultiToolHolderItem;
+import ak.mcmod.multitoolholders.item.HolderType;
+import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -44,11 +44,15 @@ public class ToolHolderContainer extends Container {
 
   private static ContainerType<?> getContainerType(HolderType type) {
     switch (type) {
-      case HOLDER5: return TOOL_HOLDER_5_CONTAINER_TYPE;
-      case HOLDER7: return TOOL_HOLDER_7_CONTAINER_TYPE;
-      case HOLDER9: return TOOL_HOLDER_9_CONTAINER_TYPE;
+      case HOLDER5:
+        return TOOL_HOLDER_5_CONTAINER_TYPE;
+      case HOLDER7:
+        return TOOL_HOLDER_7_CONTAINER_TYPE;
+      case HOLDER9:
+        return TOOL_HOLDER_9_CONTAINER_TYPE;
       case HOLDER3:
-      default: return TOOL_HOLDER_3_CONTAINER_TYPE;
+      default:
+        return TOOL_HOLDER_3_CONTAINER_TYPE;
     }
   }
 
@@ -56,10 +60,10 @@ public class ToolHolderContainer extends Container {
                              int currentSlot) {
     super(getContainerType(type), id);
     this.currentSlot = currentSlot;
-      this.holderInventory = holderInventory;
-      for (int k = 0; k < this.holderInventory.getContainerSize(); ++k) {
-        this.addSlot(new ToolHolderSlot(holderInventory, k, 8 + k * 18, 18));
-      }
+    this.holderInventory = holderInventory;
+    for (int k = 0; k < this.holderInventory.getContainerSize(); ++k) {
+      this.addSlot(new ToolHolderSlot(holderInventory, k, 8 + k * 18, 18));
+    }
     bindPlayerInventory(playerInventory);
   }
 
@@ -67,7 +71,7 @@ public class ToolHolderContainer extends Container {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {
         addSlot(new Slot(inventoryPlayer, j + i * 9 + 9,
-            8 + j * 18, 50 + i * 18));
+                8 + j * 18, 50 + i * 18));
       }
     }
 
@@ -79,7 +83,7 @@ public class ToolHolderContainer extends Container {
   @Override
   public boolean stillValid(PlayerEntity playerIn) {
     return !playerIn.inventory.getSelected().isEmpty() && playerIn.inventory.getSelected()
-        .getItem() instanceof MultiToolHolderItem;
+            .getItem() instanceof MultiToolHolderItem;
   }
 
   @Override
@@ -93,7 +97,7 @@ public class ToolHolderContainer extends Container {
 
       if (index < this.holderInventory.getContainerSize()) {
         if (!this
-            .moveItemStackTo(itemstack1, this.holderInventory.getContainerSize(), this.slots.size(), true)) {
+                .moveItemStackTo(itemstack1, this.holderInventory.getContainerSize(), this.slots.size(), true)) {
           return ItemStack.EMPTY;
         }
       } else if (itemstack1.getItem() instanceof MultiToolHolderItem || itemstack1.isStackable()) {

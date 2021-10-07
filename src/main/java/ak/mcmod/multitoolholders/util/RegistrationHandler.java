@@ -1,8 +1,8 @@
-package ak.multitoolholders.util;
+package ak.mcmod.multitoolholders.util;
 
-import ak.multitoolholders.Constants;
-import ak.multitoolholders.MultiToolHolders;
-import ak.multitoolholders.inventory.ToolHolderContainer;
+import ak.mcmod.multitoolholders.Constants;
+import ak.mcmod.multitoolholders.MultiToolHolders;
+import ak.mcmod.multitoolholders.inventory.ToolHolderContainer;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,6 +18,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RegistrationHandler {
   private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MOD_ID);
   private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Constants.MOD_ID);
+
   public static void register(IEventBus eventBus) {
     ITEMS.register(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3, () -> MultiToolHolders.itemMultiToolHolder3);
     ITEMS.register(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5, () -> MultiToolHolders.itemMultiToolHolder5);

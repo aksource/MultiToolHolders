@@ -1,4 +1,4 @@
-package ak.multitoolholders.client;
+package ak.mcmod.multitoolholders.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mcp.MethodsReturnNonnullByDefault;
@@ -36,8 +36,8 @@ public class PerspectiveAwareModel implements IBakedModel {
   public IBakedModel handlePerspective(
           ItemCameraTransforms.TransformType cameraTransformType, MatrixStack matrixStack) {
     IBakedModel model =
-        (cameraTransformType == ItemCameraTransforms.TransformType.GUI) ? this.guiModel
-            : this.handHeldModel;
+            (cameraTransformType == ItemCameraTransforms.TransformType.GUI) ? this.guiModel
+                    : this.handHeldModel;
     return model.handlePerspective(cameraTransformType, matrixStack);
   }
 

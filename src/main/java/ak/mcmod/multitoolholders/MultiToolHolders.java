@@ -1,10 +1,10 @@
-package ak.multitoolholders;
+package ak.mcmod.multitoolholders;
 
-import ak.multitoolholders.client.ClientSettingUtility;
-import ak.multitoolholders.item.HolderType;
-import ak.multitoolholders.item.MultiToolHolderItem;
-import ak.multitoolholders.network.PacketHandler;
-import ak.multitoolholders.util.RegistrationHandler;
+import ak.mcmod.multitoolholders.client.ClientSettingUtility;
+import ak.mcmod.multitoolholders.item.HolderType;
+import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
+import ak.mcmod.multitoolholders.network.PacketHandler;
+import ak.mcmod.multitoolholders.util.RegistrationHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,28 +20,35 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import static ak.multitoolholders.Constants.MOD_ID;
+import java.util.Objects;
+
+import static ak.mcmod.multitoolholders.Constants.MOD_ID;
 
 @Mod(MOD_ID)
 public class MultiToolHolders {
-  public static Item itemMultiToolHolder3 = (new MultiToolHolderItem(HolderType.HOLDER3));
-  public static Item itemMultiToolHolder5 = (new MultiToolHolderItem(HolderType.HOLDER5));
-  public static Item itemMultiToolHolder7 = (new MultiToolHolderItem(HolderType.HOLDER7));
-  public static Item itemMultiToolHolder9 = (new MultiToolHolderItem(HolderType.HOLDER9));
+  public static final Item itemMultiToolHolder3 = (new MultiToolHolderItem(HolderType.HOLDER3));
+  public static final Item itemMultiToolHolder5 = (new MultiToolHolderItem(HolderType.HOLDER5));
+  public static final Item itemMultiToolHolder7 = (new MultiToolHolderItem(HolderType.HOLDER7));
+  public static final Item itemMultiToolHolder9 = (new MultiToolHolderItem(HolderType.HOLDER9));
+  public static final Logger LOGGER = LogManager.getLogger();
 
   public MultiToolHolders() {
     final IEventBus modEventBus =
-        FMLJavaModLoadingContext.get().getModEventBus();
+            FMLJavaModLoadingContext.get().getModEventBus();
     modEventBus.addListener(this::preInit);
     modEventBus.addListener(this::doClientStuff);
     MinecraftForge.EVENT_BUS.register(this);
+    MinecraftForge.EVENT_BUS.register(ToolHolderEventHook.class);
     RegistrationHandler.register(modEventBus);
     ModLoadingContext.get().registerConfig(Type.COMMON, ConfigUtils.configSpec);
+    modEventBus.register(ConfigUtils.class);
   }
 
   public static void addEnchantmentToItem(ItemStack item,
-      Enchantment enchantment, int lv) {
+                                          Enchantment enchantment, int lv) {
     if (item == null || enchantment == null || lv < 0) {
       return;
     }
@@ -51,10 +58,10 @@ public class MultiToolHolders {
     }
 
     ListNBT tagList = item.getOrCreateTag().getList(Constants.NBT_KEY_ENCHANT,
-        NBT.TAG_COMPOUND);
+            NBT.TAG_COMPOUND);
     CompoundNBT nbtTagCompound = new CompoundNBT();
     nbtTagCompound.putString(Constants.NBT_KEY_ENCHANT_ID,
-        ForgeRegistries.ENCHANTMENTS.getKey(enchantment).toString());
+            Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(enchantment)).toString());
     nbtTagCompound.putShort(Constants.NBT_KEY_ENCHANT_LEVEL, (short) (lv));
     tagList.add(nbtTagCompound);
   }

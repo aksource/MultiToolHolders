@@ -31,7 +31,7 @@ public class Constants {
   public static final String NBT_KEY_ENCHANT_ID = "id";
   public static final String NBT_KEY_ENCHANT_LEVEL = "lvl";
   public static final String KEY_CATEGORY = "MultiToolHolders";
-  public static final String KEY_OPEN = MOD_ID + ".key.open_tool_holder";
+  public static final String KEY_OPEN = MOD_ID + ".key.open";
   public static final String KEY_NEXT = MOD_ID + ".key.next";
   public static final String KEY_PREVIOUS = MOD_ID + ".key.previous";
 

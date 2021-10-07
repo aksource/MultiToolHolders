@@ -14,7 +14,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 def mc_version = '1.16.4'
-version = "${mc_version}-1.5.2.0" as Object
+version = "${mc_version}-1.5.2.1" as Object
 group = 'ak.mcmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'multi-tool-holders'
 //tasks.withType(JavaCompile) {

@@ -1,7 +1,7 @@
 package ak.mcmod.multitoolholders.item;
 
 import ak.mcmod.multitoolholders.Constants;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * ツールホルダータイプ Created by A.K. on 2017/05/06.

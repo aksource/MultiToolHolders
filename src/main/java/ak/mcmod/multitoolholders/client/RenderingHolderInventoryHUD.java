@@ -3,11 +3,9 @@ package ak.mcmod.multitoolholders.client;
 import ak.mcmod.multitoolholders.ConfigUtils;
 import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -24,7 +22,7 @@ public class RenderingHolderInventoryHUD {
 
   @SubscribeEvent
   public void renderingOverlay(RenderGameOverlayEvent.Text event) {
-    PlayerEntity player = mc.player;
+    Player player = mc.player;
     itemRenderer = mc.getItemRenderer();
     if (Objects.nonNull(player)) {
       ItemStack holdItem = player.getMainHandItem();
@@ -35,13 +33,13 @@ public class RenderingHolderInventoryHUD {
   }
 
   private void renderHolderInventory(ItemStack holder, float partialTicks) {
-    IInventory inventory = MultiToolHolderItem
+    var inventory = MultiToolHolderItem
             .getInventoryFromItemStack(holder);
-    int nowSlot = MultiToolHolderItem.getSlotNumFromItemStack(holder);
+    var nowSlot = MultiToolHolderItem.getSlotNumFromItemStack(holder);
     ItemStack itemStack;
     for (int i = 0; i < inventory.getContainerSize(); i++) {
       itemStack = inventory.getItem(i);
-      int xShift = (i == nowSlot) ? 16 : 0;
+      var xShift = (i == nowSlot) ? 16 : 0;
       if (!itemStack.isEmpty()) {
         renderInventorySlot(itemStack, ConfigUtils.COMMON.toolHolderInvX + xShift,
                 ConfigUtils.COMMON.toolHolderInvY + i * 16);
@@ -51,10 +49,10 @@ public class RenderingHolderInventoryHUD {
 
   private void renderInventorySlot(@Nonnull ItemStack itemstack, int x, int y) {
     if (!itemstack.isEmpty()) {
-      RenderHelper.turnBackOn();
+//      RenderHelper.turnBackOn();
       itemRenderer.renderGuiItem(itemstack, x, y);//Itemの描画
       itemRenderer.renderGuiItemDecorations(this.mc.font, itemstack, x, y);//耐久値の描画
-      RenderHelper.turnOff();
+//      RenderHelper.turnOff();
     }
   }
 }

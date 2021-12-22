@@ -1,7 +1,7 @@
 package ak.mcmod.multitoolholders;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
@@ -10,5 +10,5 @@ import javax.annotation.Nonnull;
  */
 public interface IKeyEvent {
 
-  void doKeyAction(@Nonnull ItemStack itemStack, @Nonnull PlayerEntity player, byte key);
+  void doKeyAction(@Nonnull ItemStack itemStack, @Nonnull Player player, byte key);
 }

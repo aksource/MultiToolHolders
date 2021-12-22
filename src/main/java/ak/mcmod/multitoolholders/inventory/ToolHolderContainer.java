@@ -2,61 +2,55 @@ package ak.mcmod.multitoolholders.inventory;
 
 import ak.mcmod.multitoolholders.item.HolderType;
 import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ToolHolderContainer extends Container {
+public class ToolHolderContainer extends AbstractContainerMenu {
 
-  public static final ContainerType<ToolHolderContainer> TOOL_HOLDER_3_CONTAINER_TYPE = new ContainerType<>(ToolHolderContainer::createHolderType3);
-  public static final ContainerType<ToolHolderContainer> TOOL_HOLDER_5_CONTAINER_TYPE = new ContainerType<>(ToolHolderContainer::createHolderType5);
-  public static final ContainerType<ToolHolderContainer> TOOL_HOLDER_7_CONTAINER_TYPE = new ContainerType<>(ToolHolderContainer::createHolderType7);
-  public static final ContainerType<ToolHolderContainer> TOOL_HOLDER_9_CONTAINER_TYPE = new ContainerType<>(ToolHolderContainer::createHolderType9);
-  private final IInventory holderInventory;
+  public static final MenuType<ToolHolderContainer> TOOL_HOLDER_3_CONTAINER_TYPE = new MenuType<>(ToolHolderContainer::createHolderType3);
+  public static final MenuType<ToolHolderContainer> TOOL_HOLDER_5_CONTAINER_TYPE = new MenuType<>(ToolHolderContainer::createHolderType5);
+  public static final MenuType<ToolHolderContainer> TOOL_HOLDER_7_CONTAINER_TYPE = new MenuType<>(ToolHolderContainer::createHolderType7);
+  public static final MenuType<ToolHolderContainer> TOOL_HOLDER_9_CONTAINER_TYPE = new MenuType<>(ToolHolderContainer::createHolderType9);
+  private final Container holderInventory;
   private final int currentSlot;
 
-  public static ToolHolderContainer createHolderType3(int id, PlayerInventory playerInventory) {
-    return new ToolHolderContainer(HolderType.HOLDER3, id, playerInventory, new Inventory(3), 0);
+  public static ToolHolderContainer createHolderType3(int id, Inventory playerInventory) {
+    return new ToolHolderContainer(HolderType.HOLDER3, id, playerInventory, new SimpleContainer(3), 0);
   }
 
-  public static ToolHolderContainer createHolderType5(int id, PlayerInventory playerInventory) {
-    return new ToolHolderContainer(HolderType.HOLDER5, id, playerInventory, new Inventory(5), 0);
+  public static ToolHolderContainer createHolderType5(int id, Inventory playerInventory) {
+    return new ToolHolderContainer(HolderType.HOLDER5, id, playerInventory, new SimpleContainer(5), 0);
   }
 
-  public static ToolHolderContainer createHolderType7(int id, PlayerInventory playerInventory) {
-    return new ToolHolderContainer(HolderType.HOLDER7, id, playerInventory, new Inventory(7), 0);
+  public static ToolHolderContainer createHolderType7(int id, Inventory playerInventory) {
+    return new ToolHolderContainer(HolderType.HOLDER7, id, playerInventory, new SimpleContainer(7), 0);
   }
 
-  public static ToolHolderContainer createHolderType9(int id, PlayerInventory playerInventory) {
-    return new ToolHolderContainer(HolderType.HOLDER9, id, playerInventory, new Inventory(9), 0);
+  public static ToolHolderContainer createHolderType9(int id, Inventory playerInventory) {
+    return new ToolHolderContainer(HolderType.HOLDER9, id, playerInventory, new SimpleContainer(9), 0);
   }
 
-  private static ContainerType<?> getContainerType(HolderType type) {
-    switch (type) {
-      case HOLDER5:
-        return TOOL_HOLDER_5_CONTAINER_TYPE;
-      case HOLDER7:
-        return TOOL_HOLDER_7_CONTAINER_TYPE;
-      case HOLDER9:
-        return TOOL_HOLDER_9_CONTAINER_TYPE;
-      case HOLDER3:
-      default:
-        return TOOL_HOLDER_3_CONTAINER_TYPE;
-    }
+  private static MenuType<?> getContainerType(HolderType type) {
+    return switch (type) {
+      case HOLDER5 -> TOOL_HOLDER_5_CONTAINER_TYPE;
+      case HOLDER7 -> TOOL_HOLDER_7_CONTAINER_TYPE;
+      case HOLDER9 -> TOOL_HOLDER_9_CONTAINER_TYPE;
+      case HOLDER3 -> TOOL_HOLDER_3_CONTAINER_TYPE;
+    };
   }
 
-  public ToolHolderContainer(HolderType type, int id, PlayerInventory playerInventory, IInventory holderInventory,
+  public ToolHolderContainer(HolderType type, int id, Inventory playerInventory, Container holderInventory,
                              int currentSlot) {
     super(getContainerType(type), id);
     this.currentSlot = currentSlot;
@@ -67,7 +61,7 @@ public class ToolHolderContainer extends Container {
     bindPlayerInventory(playerInventory);
   }
 
-  private void bindPlayerInventory(PlayerInventory inventoryPlayer) {
+  private void bindPlayerInventory(Inventory inventoryPlayer) {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {
         addSlot(new Slot(inventoryPlayer, j + i * 9 + 9,
@@ -81,13 +75,13 @@ public class ToolHolderContainer extends Container {
   }
 
   @Override
-  public boolean stillValid(PlayerEntity playerIn) {
-    return !playerIn.inventory.getSelected().isEmpty() && playerIn.inventory.getSelected()
+  public boolean stillValid(Player playerIn) {
+    return !playerIn.getInventory().getSelected().isEmpty() && playerIn.getInventory().getSelected()
             .getItem() instanceof MultiToolHolderItem;
   }
 
   @Override
-  public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+  public ItemStack quickMoveStack(Player playerIn, int index) {
     ItemStack itemstack = ItemStack.EMPTY;
     Slot slot = this.getSlot(index);
 
@@ -116,11 +110,11 @@ public class ToolHolderContainer extends Container {
     return itemstack;
   }
 
-  @Override
-  public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity playerIn) {
-    if (currentSlot == slotId - 27 - this.holderInventory.getContainerSize()) {
-      return ItemStack.EMPTY;
-    }
-    return super.clicked(slotId, dragType, clickTypeIn, playerIn);
-  }
+//  @Override
+//  public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player playerIn) {
+//    if (currentSlot == slotId - 27 - this.holderInventory.getContainerSize()) {
+//      return ItemStack.EMPTY;
+//    }
+//    return super.clicked(slotId, dragType, clickTypeIn, playerIn);
+//  }
 }

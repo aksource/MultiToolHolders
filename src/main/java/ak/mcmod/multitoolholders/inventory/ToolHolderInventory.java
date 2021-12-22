@@ -2,21 +2,21 @@ package ak.mcmod.multitoolholders.inventory;
 
 import ak.mcmod.multitoolholders.item.HolderType;
 import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class ToolHolderInventory implements IInventory {
+public class ToolHolderInventory implements Container {
 
   private final ItemStack holder;
   private final NonNullList<ItemStack> itemList;
@@ -26,7 +26,7 @@ public class ToolHolderInventory implements IInventory {
     HolderType type = ((MultiToolHolderItem) stack.getItem()).getType();
     itemList = NonNullList.withSize(type.getSize(), ItemStack.EMPTY);
     if (!holder.hasTag()) {
-      holder.setTag(new CompoundNBT());
+      holder.setTag(new CompoundTag());
     }
     readFromNBT(Objects.requireNonNull(holder.getTag()));
   }
@@ -42,7 +42,7 @@ public class ToolHolderInventory implements IInventory {
   }
 
   @Override
-  public boolean stillValid(PlayerEntity player) {
+  public boolean stillValid(Player player) {
     return this.holder.sameItem(player.getMainHandItem());
   }
 
@@ -89,27 +89,27 @@ public class ToolHolderInventory implements IInventory {
   }
 
   @Override
-  public void startOpen(PlayerEntity player) {
+  public void startOpen(Player player) {
     if (!holder.hasTag()) {
-      holder.setTag(new CompoundNBT());
+      holder.setTag(new CompoundTag());
     }
     readFromNBT(Objects.requireNonNull(holder.getTag()));
   }
 
   @Override
-  public void stopOpen(PlayerEntity player) {
+  public void stopOpen(Player player) {
     if (!holder.hasTag()) {
-      holder.setTag(new CompoundNBT());
+      holder.setTag(new CompoundTag());
     }
     writeToNBT(Objects.requireNonNull(holder.getTag()));
   }
 
-  public void readFromNBT(CompoundNBT nbt) {
+  public void readFromNBT(CompoundTag nbt) {
 
-    ListNBT tagList = nbt.getList("Items", Constants.NBT.TAG_COMPOUND);
+    var tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
 
-    for (net.minecraft.nbt.INBT inbt : tagList) {
-      CompoundNBT nbtTagCompound = (CompoundNBT) inbt;
+    for (var inbt : tagList) {
+      var nbtTagCompound = (CompoundTag) inbt;
       int slot = nbtTagCompound.getByte("Slot") & 255;
 
       if (slot < this.getContainerSize()) {
@@ -118,12 +118,12 @@ public class ToolHolderInventory implements IInventory {
     }
   }
 
-  public void writeToNBT(CompoundNBT nbt) {
-    ListNBT tagList = new ListNBT();
+  public void writeToNBT(CompoundTag nbt) {
+    var tagList = new ListTag();
 
-    for (int i = 0; i < this.getContainerSize(); ++i) {
+    for (var i = 0; i < this.getContainerSize(); ++i) {
       if (!this.getItem(i).isEmpty()) {
-        CompoundNBT nbtTagCompound = new CompoundNBT();
+        var nbtTagCompound = new CompoundTag();
         nbtTagCompound.putByte("Slot", (byte) i);
         this.getItem(i).save(nbtTagCompound);
         tagList.add(nbtTagCompound);

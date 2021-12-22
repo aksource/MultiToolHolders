@@ -1,6 +1,7 @@
 package ak.mcmod.multitoolholders;
 
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * 定数クラス Created by A.K. on 2017/03/04.

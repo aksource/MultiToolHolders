@@ -1,12 +1,7 @@
 package ak.mcmod.multitoolholders;
 
 import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,16 +21,16 @@ public class ToolHolderEventHook {
             && !(event.getPlayer() instanceof FakePlayer)
             && !event.getPlayer().getMainHandItem().isEmpty()
             && event.getPlayer().getMainHandItem().getItem() instanceof MultiToolHolderItem) {
-      PlayerEntity player = event.getPlayer();
-      ItemStack stack = player.getMainHandItem();
-      World world = event.getWorld();
-      BlockPos blockPos = event.getPos();
-      BlockState state = world.getBlockState(blockPos);
-      int firstSlot = MultiToolHolderItem.getSlotNumFromItemStack(stack);
-      int slot = firstSlot;
-      ItemStack slotItem = MultiToolHolderItem.getInventoryFromItemStack(stack).getItem(slot);
-      float miningSpeed = slotItem.getDestroySpeed(state);
-      int inventorySize = MultiToolHolderItem.getInventoryFromItemStack(stack).getContainerSize();
+      var player = event.getPlayer();
+      var stack = player.getMainHandItem();
+      var world = event.getWorld();
+      var blockPos = event.getPos();
+      var state = world.getBlockState(blockPos);
+      var firstSlot = MultiToolHolderItem.getSlotNumFromItemStack(stack);
+      var slot = firstSlot;
+      var slotItem = MultiToolHolderItem.getInventoryFromItemStack(stack).getItem(slot);
+      var miningSpeed = slotItem.getDestroySpeed(state);
+      var inventorySize = MultiToolHolderItem.getInventoryFromItemStack(stack).getContainerSize();
 
       while (miningSpeed - 1.0F < 0.0001F) {
         slot = (slot + 1) % inventorySize;

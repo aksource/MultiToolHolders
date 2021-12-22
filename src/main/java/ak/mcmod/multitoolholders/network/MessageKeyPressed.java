@@ -1,6 +1,6 @@
 package ak.mcmod.multitoolholders.network;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -10,9 +10,9 @@ import java.util.function.Function;
  */
 public class MessageKeyPressed {
 
-  public static final BiConsumer<MessageKeyPressed, PacketBuffer> encoder = ((messageKeyPressed, packetBuffer) -> packetBuffer
+  public static final BiConsumer<MessageKeyPressed, FriendlyByteBuf> encoder = ((messageKeyPressed, packetBuffer) -> packetBuffer
           .writeByte(messageKeyPressed.getKey()));
-  public static final Function<PacketBuffer, MessageKeyPressed> decoder = packetBuffer -> new MessageKeyPressed(
+  public static final Function<FriendlyByteBuf, MessageKeyPressed> decoder = packetBuffer -> new MessageKeyPressed(
           packetBuffer.readByte());
   private byte key;
 

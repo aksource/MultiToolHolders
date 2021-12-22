@@ -5,13 +5,13 @@ import ak.mcmod.multitoolholders.item.HolderType;
 import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import ak.mcmod.multitoolholders.network.PacketHandler;
 import ak.mcmod.multitoolholders.util.RegistrationHandler;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -54,12 +54,12 @@ public class MultiToolHolders {
     }
 
     if (!item.getOrCreateTag().contains(Constants.NBT_KEY_ENCHANT)) {
-      item.getOrCreateTag().put(Constants.NBT_KEY_ENCHANT, new ListNBT());
+      item.getOrCreateTag().put(Constants.NBT_KEY_ENCHANT, new ListTag());
     }
 
-    ListNBT tagList = item.getOrCreateTag().getList(Constants.NBT_KEY_ENCHANT,
-            NBT.TAG_COMPOUND);
-    CompoundNBT nbtTagCompound = new CompoundNBT();
+    ListTag tagList = item.getOrCreateTag().getList(Constants.NBT_KEY_ENCHANT,
+            Tag.TAG_COMPOUND);
+    CompoundTag nbtTagCompound = new CompoundTag();
     nbtTagCompound.putString(Constants.NBT_KEY_ENCHANT_ID,
             Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(enchantment)).toString());
     nbtTagCompound.putShort(Constants.NBT_KEY_ENCHANT_LEVEL, (short) (lv));

@@ -1,14 +1,14 @@
 package ak.mcmod.multitoolholders.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,25 +20,25 @@ import java.util.Random;
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PerspectiveAwareModel implements IBakedModel {
+public class PerspectiveAwareModel implements BakedModel {
 
   //インベントリアイコン用モデル
-  private final IBakedModel guiModel;
+  private final BakedModel guiModel;
   //一人称・三人称視点用モデル
-  private final IBakedModel handHeldModel;
+  private final BakedModel handHeldModel;
 
-  PerspectiveAwareModel(IBakedModel model1, IBakedModel model2) {
+  PerspectiveAwareModel(BakedModel model1, BakedModel model2) {
     this.guiModel = model1;
     this.handHeldModel = model2;
   }
 
   @Override
-  public IBakedModel handlePerspective(
-          ItemCameraTransforms.TransformType cameraTransformType, MatrixStack matrixStack) {
-    IBakedModel model =
-            (cameraTransformType == ItemCameraTransforms.TransformType.GUI) ? this.guiModel
+  public BakedModel handlePerspective(
+          ItemTransforms.TransformType cameraTransformType, PoseStack poseStack) {
+    BakedModel model =
+            (cameraTransformType == ItemTransforms.TransformType.GUI) ? this.guiModel
                     : this.handHeldModel;
-    return model.handlePerspective(cameraTransformType, matrixStack);
+    return model.handlePerspective(cameraTransformType, poseStack);
   }
 
   @Override
@@ -73,12 +73,12 @@ public class PerspectiveAwareModel implements IBakedModel {
   }
 
   @Override
-  public ItemCameraTransforms getTransforms() {
+  public ItemTransforms getTransforms() {
     return this.guiModel.getTransforms();
   }
 
   @Override
-  public ItemOverrideList getOverrides() {
+  public ItemOverrides getOverrides() {
     return this.guiModel.getOverrides();
   }
 }

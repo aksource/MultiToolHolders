@@ -2,39 +2,41 @@ package ak.mcmod.multitoolholders.client;
 
 import ak.mcmod.multitoolholders.inventory.ToolHolderContainer;
 import ak.mcmod.multitoolholders.item.HolderType;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ToolHolderScreen extends ContainerScreen<ToolHolderContainer> {
+public class ToolHolderScreen extends AbstractContainerScreen<ToolHolderContainer> {
   private static final int ROW_SIZE = 1;
   private final HolderType type;
 
-  public ToolHolderScreen(ToolHolderContainer toolHolderContainer, PlayerInventory playerInventory, ITextComponent textComponent, HolderType type) {
-    super(toolHolderContainer, playerInventory, textComponent);
+  public ToolHolderScreen(ToolHolderContainer toolHolderContainer, Inventory inventory, Component component, HolderType type) {
+    super(toolHolderContainer, inventory, component);
     this.type = type;
     this.imageHeight = 114 + ROW_SIZE * 18;
     this.inventoryLabelY = this.imageHeight - 94;
   }
 
   @Override
-  public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-    this.renderBackground(matrixStack);
-    super.render(matrixStack, mouseX, mouseY, partialTicks);
-    this.renderTooltip(matrixStack, mouseX, mouseY);
+  public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    this.renderBackground(poseStack);
+    super.render(poseStack, mouseX, mouseY, partialTicks);
+    this.renderTooltip(poseStack, mouseX, mouseY);
   }
 
   @Override
-  protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    this.getMinecraft().getTextureManager().bind(type.getGuiFile());
+  protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderSystem.setShaderTexture(0, type.getGuiFile());
     int i = (width - imageWidth) / 2;
     int j = (height - imageHeight) / 2;
-    this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+    this.blit(poseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
   }
 }

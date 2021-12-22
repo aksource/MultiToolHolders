@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig.Loading;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public class ConfigUtils {
   }
 
   @SubscribeEvent
-  public static void configLoading(final Loading event) {
+  public static void configLoading(final ModConfigEvent.Loading event) {
     LogManager
             .getLogger().debug("Loaded MultiToolHolders config file {}",
                     event.getConfig().getFileName());

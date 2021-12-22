@@ -13,16 +13,16 @@ apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remappe
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-def mc_version = '1.17.1'
-def forge_version = '37.1.1'
-version = "${mc_version}-1.5.2.3" as Object
+def mc_version = '1.18.1'
+def forge_version = '39.0.7'
+version = "${mc_version}-1.5.2.4" as Object
 group = 'ak.mcmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'multi-tool-holders'
 def mod_id = 'multitoolholders'
 //tasks.withType(JavaCompile) {
 //    options.encoding = 'UTF-8'
 //}
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     // the mappings can be changed at any time, and must be in the following format.

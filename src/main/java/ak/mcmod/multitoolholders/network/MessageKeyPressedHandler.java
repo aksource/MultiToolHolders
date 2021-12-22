@@ -2,7 +2,7 @@ package ak.mcmod.multitoolholders.network;
 
 import ak.mcmod.multitoolholders.IKeyEvent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

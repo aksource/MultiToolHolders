@@ -23,7 +23,7 @@ public class ConfigUtils {
   static final ForgeConfigSpec configSpec;
 
   static {
-    Builder builder = new ForgeConfigSpec.Builder();
+    var builder = new ForgeConfigSpec.Builder();
     COMMON = new Common(builder);
     configSpec = builder.build();
   }

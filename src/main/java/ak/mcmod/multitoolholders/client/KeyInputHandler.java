@@ -5,7 +5,6 @@ import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import ak.mcmod.multitoolholders.network.MessageKeyPressed;
 import ak.mcmod.multitoolholders.network.PacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -36,8 +35,8 @@ public class KeyInputHandler {
   @SubscribeEvent
   public void keyPressEvent(InputEvent event) {
     if (mc.isWindowActive() && Objects.nonNull(mc.player)) {
-      Player entityPlayer = mc.player;
-      byte keyIndex = getKeyIndex();
+      var entityPlayer = mc.player;
+      var keyIndex = getKeyIndex();
       if (keyIndex != -1 && !entityPlayer.getMainHandItem().isEmpty() && entityPlayer
               .getMainHandItem().getItem() instanceof IKeyEvent) {
         if (entityPlayer.getCommandSenderWorld().isClientSide) {

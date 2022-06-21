@@ -1,18 +1,14 @@
 package ak.mcmod.multitoolholders;
 
 import ak.mcmod.multitoolholders.client.ClientSettingUtility;
-import ak.mcmod.multitoolholders.item.HolderType;
-import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import ak.mcmod.multitoolholders.network.PacketHandler;
 import ak.mcmod.multitoolholders.util.RegistrationHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
@@ -20,8 +16,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
@@ -29,14 +23,9 @@ import static ak.mcmod.multitoolholders.Constants.MOD_ID;
 
 @Mod(MOD_ID)
 public class MultiToolHolders {
-  public static final Item itemMultiToolHolder3 = (new MultiToolHolderItem(HolderType.HOLDER3));
-  public static final Item itemMultiToolHolder5 = (new MultiToolHolderItem(HolderType.HOLDER5));
-  public static final Item itemMultiToolHolder7 = (new MultiToolHolderItem(HolderType.HOLDER7));
-  public static final Item itemMultiToolHolder9 = (new MultiToolHolderItem(HolderType.HOLDER9));
-  public static final Logger LOGGER = LogManager.getLogger();
 
   public MultiToolHolders() {
-    final IEventBus modEventBus =
+    final var modEventBus =
             FMLJavaModLoadingContext.get().getModEventBus();
     modEventBus.addListener(this::preInit);
     modEventBus.addListener(this::doClientStuff);
@@ -49,7 +38,7 @@ public class MultiToolHolders {
 
   public static void addEnchantmentToItem(ItemStack item,
                                           Enchantment enchantment, int lv) {
-    if (item == null || enchantment == null || lv < 0) {
+    if (Objects.isNull(item) || Objects.isNull(enchantment) || lv < 0) {
       return;
     }
 
@@ -57,9 +46,9 @@ public class MultiToolHolders {
       item.getOrCreateTag().put(Constants.NBT_KEY_ENCHANT, new ListTag());
     }
 
-    ListTag tagList = item.getOrCreateTag().getList(Constants.NBT_KEY_ENCHANT,
+    var tagList = item.getOrCreateTag().getList(Constants.NBT_KEY_ENCHANT,
             Tag.TAG_COMPOUND);
-    CompoundTag nbtTagCompound = new CompoundTag();
+    var nbtTagCompound = new CompoundTag();
     nbtTagCompound.putString(Constants.NBT_KEY_ENCHANT_ID,
             Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(enchantment)).toString());
     nbtTagCompound.putShort(Constants.NBT_KEY_ENCHANT_LEVEL, (short) (lv));
@@ -71,8 +60,8 @@ public class MultiToolHolders {
   }
 
   private void doClientStuff(final FMLClientSetupEvent event) {
-    ClientSettingUtility proxy = new ClientSettingUtility();
-    final IEventBus modEventBus =
+    var proxy = new ClientSettingUtility();
+    final var modEventBus =
             FMLJavaModLoadingContext.get().getModEventBus();
     modEventBus.addListener(proxy::bakedModelRegister);
     proxy.registerClientInformation(event);

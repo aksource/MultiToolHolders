@@ -1,6 +1,5 @@
 package ak.mcmod.multitoolholders.inventory;
 
-import ak.mcmod.multitoolholders.item.HolderType;
 import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
@@ -23,7 +22,7 @@ public class ToolHolderInventory implements Container {
 
   public ToolHolderInventory(ItemStack stack) {
     holder = stack;
-    HolderType type = ((MultiToolHolderItem) stack.getItem()).getType();
+    var type = ((MultiToolHolderItem) stack.getItem()).getType();
     itemList = NonNullList.withSize(type.getSize(), ItemStack.EMPTY);
     if (!holder.hasTag()) {
       holder.setTag(new CompoundTag());
@@ -63,7 +62,7 @@ public class ToolHolderInventory implements Container {
 
   @Override
   public ItemStack removeItem(int index, int count) {
-    ItemStack itemStack = this.getItem(index);
+    var itemStack = this.getItem(index);
     if (!itemStack.isEmpty()) {
       if (itemStack.getCount() <= count) {
         this.setItem(index, ItemStack.EMPTY);
@@ -77,7 +76,7 @@ public class ToolHolderInventory implements Container {
 
   @Override
   public ItemStack removeItemNoUpdate(int index) {
-    ItemStack itemStack = this.getItem(index);
+    var itemStack = this.getItem(index);
     this.setItem(index, ItemStack.EMPTY);
     return itemStack;
   }

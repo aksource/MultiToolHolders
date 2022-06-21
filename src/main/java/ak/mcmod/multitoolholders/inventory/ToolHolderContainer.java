@@ -55,21 +55,21 @@ public class ToolHolderContainer extends AbstractContainerMenu {
     super(getContainerType(type), id);
     this.currentSlot = currentSlot;
     this.holderInventory = holderInventory;
-    for (int k = 0; k < this.holderInventory.getContainerSize(); ++k) {
+    for (var k = 0; k < this.holderInventory.getContainerSize(); ++k) {
       this.addSlot(new ToolHolderSlot(holderInventory, k, 8 + k * 18, 18));
     }
     bindPlayerInventory(playerInventory);
   }
 
   private void bindPlayerInventory(Inventory inventoryPlayer) {
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 9; j++) {
+    for (var i = 0; i < 3; i++) {
+      for (var j = 0; j < 9; j++) {
         addSlot(new Slot(inventoryPlayer, j + i * 9 + 9,
                 8 + j * 18, 50 + i * 18));
       }
     }
 
-    for (int i = 0; i < 9; i++) {
+    for (var i = 0; i < 9; i++) {
       addSlot(new Slot(inventoryPlayer, i, 8 + i * 18, 108));
     }
   }
@@ -82,11 +82,11 @@ public class ToolHolderContainer extends AbstractContainerMenu {
 
   @Override
   public ItemStack quickMoveStack(Player playerIn, int index) {
-    ItemStack itemstack = ItemStack.EMPTY;
-    Slot slot = this.getSlot(index);
+    var itemstack = ItemStack.EMPTY;
+    var slot = this.getSlot(index);
 
     if (slot.hasItem()) {
-      ItemStack itemstack1 = slot.getItem();
+      var itemstack1 = slot.getItem();
       itemstack = itemstack1.copy();
 
       if (index < this.holderInventory.getContainerSize()) {
@@ -109,12 +109,4 @@ public class ToolHolderContainer extends AbstractContainerMenu {
 
     return itemstack;
   }
-
-//  @Override
-//  public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player playerIn) {
-//    if (currentSlot == slotId - 27 - this.holderInventory.getContainerSize()) {
-//      return ItemStack.EMPTY;
-//    }
-//    return super.clicked(slotId, dragType, clickTypeIn, playerIn);
-//  }
 }

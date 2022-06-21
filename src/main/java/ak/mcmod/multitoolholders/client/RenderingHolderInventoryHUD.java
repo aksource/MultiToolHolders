@@ -4,7 +4,6 @@ import ak.mcmod.multitoolholders.ConfigUtils;
 import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,12 +21,12 @@ public class RenderingHolderInventoryHUD {
 
   @SubscribeEvent
   public void renderingOverlay(RenderGameOverlayEvent.Text event) {
-    Player player = mc.player;
+    var player = mc.player;
     itemRenderer = mc.getItemRenderer();
     if (Objects.nonNull(player)) {
-      ItemStack holdItem = player.getMainHandItem();
+      var holdItem = player.getMainHandItem();
       if (!holdItem.isEmpty() && holdItem.getItem() instanceof MultiToolHolderItem) {
-        renderHolderInventory(holdItem, event.getPartialTicks());
+        renderHolderInventory(holdItem, event.getPartialTick());
       }
     }
   }

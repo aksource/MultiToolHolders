@@ -6,6 +6,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TieredItem;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -24,6 +25,6 @@ public class ToolHolderSlot extends Slot {
 
   private boolean isRegisteredTool(@Nonnull ItemStack itemStack) {
     return ConfigUtils.COMMON.toolNameSet
-            .contains(Objects.requireNonNull(itemStack.getItem().getRegistryName()).toString());
+            .contains(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(itemStack.getItem())).toString());
   }
 }

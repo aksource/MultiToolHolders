@@ -2,29 +2,28 @@ package ak.mcmod.multitoolholders.client;
 
 import ak.mcmod.multitoolholders.ConfigUtils;
 import ak.mcmod.multitoolholders.Constants;
-import ak.mcmod.multitoolholders.MultiToolHolders;
 import ak.mcmod.multitoolholders.inventory.ToolHolderContainer;
 import ak.mcmod.multitoolholders.item.HolderType;
+import ak.mcmod.multitoolholders.util.RegistrationHandler;
 import com.google.common.collect.Maps;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.Objects;
 
 public class ClientSettingUtility {
 
@@ -36,10 +35,10 @@ public class ClientSettingUtility {
           .newHashMap();
 
   public void registerClientInformation(final FMLClientSetupEvent event) {
-    registerMap(MultiToolHolders.itemMultiToolHolder3);
-    registerMap(MultiToolHolders.itemMultiToolHolder5);
-    registerMap(MultiToolHolders.itemMultiToolHolder7);
-    registerMap(MultiToolHolders.itemMultiToolHolder9);
+    registerMap(RegistrationHandler.itemMultiToolHolder3.get());
+    registerMap(RegistrationHandler.itemMultiToolHolder5.get());
+    registerMap(RegistrationHandler.itemMultiToolHolder7.get());
+    registerMap(RegistrationHandler.itemMultiToolHolder9.get());
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
     if (ConfigUtils.COMMON.enableDisplayToolHolderInventory) {
@@ -48,51 +47,20 @@ public class ClientSettingUtility {
     ClientRegistry.registerKeyBinding(OPEN_KEY);
     ClientRegistry.registerKeyBinding(NEXT_KEY);
     ClientRegistry.registerKeyBinding(PREV_KEY);
-    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_3_CONTAINER_TYPE,
-            new MenuScreens.ScreenConstructor<ToolHolderContainer, ToolHolderScreen>() {
-              @Override
-              @Nonnull
-              public ToolHolderScreen create(@Nonnull ToolHolderContainer toolContainer, @Nonnull Inventory playerInventory, @Nonnull Component textComponent) {
-                return new ToolHolderScreen(toolContainer, playerInventory, textComponent, HolderType.HOLDER3);
-              }
-            });
-    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_5_CONTAINER_TYPE,
-            new MenuScreens.ScreenConstructor<ToolHolderContainer, ToolHolderScreen>() {
-              @Override
-              @Nonnull
-              public ToolHolderScreen create(@Nonnull ToolHolderContainer toolContainer, @Nonnull Inventory playerInventory, @Nonnull Component textComponent) {
-                return new ToolHolderScreen(toolContainer, playerInventory, textComponent, HolderType.HOLDER5);
-              }
-            });
-    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_7_CONTAINER_TYPE,
-            new MenuScreens.ScreenConstructor<ToolHolderContainer, ToolHolderScreen>() {
-              @Override
-              @Nonnull
-              public ToolHolderScreen create(@Nonnull ToolHolderContainer toolContainer, @Nonnull Inventory playerInventory, @Nonnull Component textComponent) {
-                return new ToolHolderScreen(toolContainer, playerInventory, textComponent, HolderType.HOLDER7);
-              }
-            });
-    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_9_CONTAINER_TYPE,
-            new MenuScreens.ScreenConstructor<ToolHolderContainer, ToolHolderScreen>() {
-              @Override
-              @Nonnull
-              public ToolHolderScreen create(@Nonnull ToolHolderContainer toolContainer, @Nonnull Inventory playerInventory, @Nonnull Component textComponent) {
-                return new ToolHolderScreen(toolContainer, playerInventory, textComponent, HolderType.HOLDER9);
-              }
-            });
 
+    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_3_CONTAINER_TYPE,(ToolHolderContainer container, Inventory inventory, Component component) -> new ToolHolderScreen(container, inventory, component, HolderType.HOLDER3));
+    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_5_CONTAINER_TYPE,(ToolHolderContainer container, Inventory inventory, Component component) -> new ToolHolderScreen(container, inventory, component, HolderType.HOLDER5));
+    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_7_CONTAINER_TYPE,(ToolHolderContainer container, Inventory inventory, Component component) -> new ToolHolderScreen(container, inventory, component, HolderType.HOLDER7));
+    MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_9_CONTAINER_TYPE,(ToolHolderContainer container, Inventory inventory, Component component) -> new ToolHolderScreen(container, inventory, component, HolderType.HOLDER9));
   }
 
   private void registerMap(Item item) {
-    if (item.getRegistryName() != null) {
-      String name = item.getRegistryName().getPath();
+    var key = ForgeRegistries.ITEMS.getKey(item);
+    if (Objects.nonNull(key)) {
+      var path = key.getPath();
       MODEL_RESOURCE_LOCATION_MAP
-              .put(name, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+              .put(path, new ModelResourceLocation(key, "inventory"));
     }
-  }
-
-  public Player getPlayer() {
-    return Minecraft.getInstance().player;
   }
 
   @SubscribeEvent
@@ -104,7 +72,7 @@ public class ClientSettingUtility {
   }
 
   private void changeModel(Map<ResourceLocation, BakedModel> modelRegistry, String name) {
-    ModelResourceLocation rl = MODEL_RESOURCE_LOCATION_MAP.get(name);
+    var rl = MODEL_RESOURCE_LOCATION_MAP.get(name);
     modelRegistry.computeIfPresent(rl, (r, m) -> new HolderRenderer(m));
   }
 }

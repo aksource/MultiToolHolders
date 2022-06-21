@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,7 +20,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * ツールホルダー内のアイテム描画モデルクラス Created by A.K. on 14/08/01.
@@ -39,12 +39,6 @@ public class HolderRenderer implements BakedModel {
   }
 
   @Override
-  public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side,
-                                  Random rand) {
-    return this.defaultModel.getQuads(state, side, rand);
-  }
-
-  @Override
   public boolean usesBlockLight() {
     return true;
   }
@@ -52,6 +46,11 @@ public class HolderRenderer implements BakedModel {
   @Override
   public boolean isGui3d() {
     return defaultModel.isGui3d();
+  }
+
+  @Override
+  public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
+    return this.defaultModel.getQuads(blockState, direction, randomSource);
   }
 
   @Override

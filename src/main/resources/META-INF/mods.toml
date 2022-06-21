@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[39,)" #mandatory (24 is current forge version)
+loaderVersion="[41,)" #mandatory (24 is current forge version)
 license="MIT License"
 issueTrackerURL="https://github.com/aksource/MultiToolHolders/issues" #optional
 displayURL="https://github.com/aksource/MultiToolHolders" #optional
@@ -8,9 +8,9 @@ displayURL="https://github.com/aksource/MultiToolHolders" #optional
 authors="ak" #optional
 [[mods]] #mandatory
 modId="multitoolholders" #mandatory
-version="1.18.1-1.5.2.4" #mandatory
+version="1.19-1.5.2.5" #mandatory
 displayName="MultiToolHolders" #mandatory
-updateJSONURL="https://github.com/aksource/MultiToolHolders/update.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/aksource/MultiToolHolders/master/update.json" #optional
 description='''
 this add toolholders in Minecraft
 '''

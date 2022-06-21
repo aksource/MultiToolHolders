@@ -8,12 +8,12 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.Random;
 
 /**
  * GUIアイコンと手持ちアイコンの描画を変えるモデルクラス Created by A.K. on 15/01/30.
@@ -35,16 +35,15 @@ public class PerspectiveAwareModel implements BakedModel {
   @Override
   public BakedModel handlePerspective(
           ItemTransforms.TransformType cameraTransformType, PoseStack poseStack) {
-    BakedModel model =
+    var model =
             (cameraTransformType == ItemTransforms.TransformType.GUI) ? this.guiModel
                     : this.handHeldModel;
     return model.handlePerspective(cameraTransformType, poseStack);
   }
 
   @Override
-  public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side,
-                                  Random rand) {
-    return this.guiModel.getQuads(state, side, rand);
+  public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
+    return this.guiModel.getQuads(blockState, direction, randomSource);
   }
 
   @Override

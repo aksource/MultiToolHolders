@@ -5,7 +5,7 @@ import ak.mcmod.multitoolholders.item.MultiToolHolderItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ public class RenderingHolderInventoryHUD {
   private ItemRenderer itemRenderer;
 
   @SubscribeEvent
-  public void renderingOverlay(RenderGameOverlayEvent.Text event) {
+  public void renderingOverlay(RenderGuiOverlayEvent.Post event) {
     var player = mc.player;
     itemRenderer = mc.getItemRenderer();
     if (Objects.nonNull(player)) {

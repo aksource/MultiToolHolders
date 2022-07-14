@@ -14,8 +14,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -34,6 +34,12 @@ public class ClientSettingUtility {
   private static final Map<String, ModelResourceLocation> MODEL_RESOURCE_LOCATION_MAP = Maps
           .newHashMap();
 
+  public void registerKeyBinding(final RegisterKeyMappingsEvent event) {
+    event.register(OPEN_KEY);
+    event.register(NEXT_KEY);
+    event.register(PREV_KEY);
+  }
+
   public void registerClientInformation(final FMLClientSetupEvent event) {
     registerMap(RegistrationHandler.itemMultiToolHolder3.get());
     registerMap(RegistrationHandler.itemMultiToolHolder5.get());
@@ -44,9 +50,6 @@ public class ClientSettingUtility {
     if (ConfigUtils.COMMON.enableDisplayToolHolderInventory) {
       MinecraftForge.EVENT_BUS.register(new RenderingHolderInventoryHUD());
     }
-    ClientRegistry.registerKeyBinding(OPEN_KEY);
-    ClientRegistry.registerKeyBinding(NEXT_KEY);
-    ClientRegistry.registerKeyBinding(PREV_KEY);
 
     MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_3_CONTAINER_TYPE,(ToolHolderContainer container, Inventory inventory, Component component) -> new ToolHolderScreen(container, inventory, component, HolderType.HOLDER3));
     MenuScreens.register(ToolHolderContainer.TOOL_HOLDER_5_CONTAINER_TYPE,(ToolHolderContainer container, Inventory inventory, Component component) -> new ToolHolderScreen(container, inventory, component, HolderType.HOLDER5));
@@ -64,15 +67,15 @@ public class ClientSettingUtility {
   }
 
   @SubscribeEvent
-  public void bakedModelRegister(final ModelBakeEvent event) {
-    changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3);
-    changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5);
-    changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7);
-    changeModel(event.getModelRegistry(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9);
+  public void bakedModelRegister(final BakingCompleted event) {
+    changeModel(event.getModels(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3);
+    changeModel(event.getModels(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5);
+    changeModel(event.getModels(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7);
+    changeModel(event.getModels(), Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_9);
   }
 
-  private void changeModel(Map<ResourceLocation, BakedModel> modelRegistry, String name) {
+  private void changeModel(Map<ResourceLocation, BakedModel> models, String name) {
     var rl = MODEL_RESOURCE_LOCATION_MAP.get(name);
-    modelRegistry.computeIfPresent(rl, (r, m) -> new HolderRenderer(m));
+    models.computeIfPresent(rl, (r, m) -> new HolderRenderer(m));
   }
 }

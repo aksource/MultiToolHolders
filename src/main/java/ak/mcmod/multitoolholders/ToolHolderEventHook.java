@@ -17,13 +17,13 @@ public class ToolHolderEventHook {
   @SubscribeEvent
   public static void onLeftClickBlock(final PlayerInteractEvent.LeftClickBlock event) {
     if (ConfigUtils.COMMON.enableAutoChange
-            && !event.getWorld().isClientSide()
-            && !(event.getPlayer() instanceof FakePlayer)
-            && !event.getPlayer().getMainHandItem().isEmpty()
-            && event.getPlayer().getMainHandItem().getItem() instanceof MultiToolHolderItem) {
-      var player = event.getPlayer();
+            && !event.getLevel().isClientSide()
+            && !(event.getEntity() instanceof FakePlayer)
+            && !event.getEntity().getMainHandItem().isEmpty()
+            && event.getEntity().getMainHandItem().getItem() instanceof MultiToolHolderItem) {
+      var player = event.getEntity();
       var stack = player.getMainHandItem();
-      var world = event.getWorld();
+      var world = event.getLevel();
       var blockPos = event.getPos();
       var state = world.getBlockState(blockPos);
       var firstSlot = MultiToolHolderItem.getSlotNumFromItemStack(stack);

@@ -33,12 +33,12 @@ public class PerspectiveAwareModel implements BakedModel {
   }
 
   @Override
-  public BakedModel handlePerspective(
-          ItemTransforms.TransformType cameraTransformType, PoseStack poseStack) {
+  public BakedModel applyTransform(
+          ItemTransforms.TransformType cameraTransformType, PoseStack poseStack, boolean applyLeftHandTransform) {
     var model =
             (cameraTransformType == ItemTransforms.TransformType.GUI) ? this.guiModel
                     : this.handHeldModel;
-    return model.handlePerspective(cameraTransformType, poseStack);
+    return model.applyTransform(cameraTransformType, poseStack, applyLeftHandTransform);
   }
 
   @Override

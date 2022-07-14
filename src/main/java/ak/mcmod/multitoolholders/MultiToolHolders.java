@@ -64,6 +64,7 @@ public class MultiToolHolders {
     final var modEventBus =
             FMLJavaModLoadingContext.get().getModEventBus();
     modEventBus.addListener(proxy::bakedModelRegister);
+    modEventBus.addListener(proxy::registerKeyBinding);
     proxy.registerClientInformation(event);
   }
 }

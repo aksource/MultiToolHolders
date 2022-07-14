@@ -1,7 +1,7 @@
 {
   "homepage": "https://github.com/aksource/MultiToolHolders",
   "1.19": {
-    "1.5.2.4": "bump up to MC 1.19"
+    "1.5.2.6": "bump up to forge 41.0.98"
   },
   "promos": {
     "1.18.1-recommended": "1.5.2.4",

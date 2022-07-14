@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class RegistrationHandler {
   private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MOD_ID);
-  private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Constants.MOD_ID);
+  private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MOD_ID);
   public static final RegistryObject<Item> itemMultiToolHolder3 = ITEMS.register(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_3, () -> new MultiToolHolderItem(HolderType.HOLDER3));
   public static final RegistryObject<Item> itemMultiToolHolder5 = ITEMS.register(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_5, () -> new MultiToolHolderItem(HolderType.HOLDER5));
   public static final RegistryObject<Item> itemMultiToolHolder7 = ITEMS.register(Constants.REG_NAME_ITEM_MULTI_TOOL_HOLDER_7, () -> new MultiToolHolderItem(HolderType.HOLDER7));

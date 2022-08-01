@@ -5,8 +5,8 @@ plugins {
 }
 //apply from: 'https://raw.githubusercontent.com/SizableShrimp/ForgeUpdatesRemapper/main/remapper.gradle'
 def mc_version = '1.19'
-def forge_version = '41.0.98'
-version = "${mc_version}-1.5.2.6" as Object
+def forge_version = '41.1.0'
+version = "${mc_version}-1.5.2.7" as Object
 group = 'ak.mcmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'multi-tool-holders'
 def mod_id = 'multitoolholders'

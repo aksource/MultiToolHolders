@@ -8,7 +8,7 @@ displayURL="https://github.com/aksource/MultiToolHolders" #optional
 authors="ak" #optional
 [[mods]] #mandatory
 modId="multitoolholders" #mandatory
-version="1.19-1.5.2.6" #mandatory
+version="1.19-1.5.2.7" #mandatory
 displayName="MultiToolHolders" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/aksource/MultiToolHolders/master/update.json" #optional
 description='''

@@ -113,7 +113,10 @@ jar {
                     "Implementation-Title"    : project.name,
                     "Implementation-Version"  : archiveVersion,
                     "Implementation-Vendor"   : "ak",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                    "Built-On-Java"           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                    "Built-On"                : "${forge_version}"
+        ])
     }
 }
 
